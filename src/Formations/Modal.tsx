@@ -9,10 +9,9 @@ interface ModalProps {
   description: string;
   duree: string;
   price: number;
-  pay: boolean;
 }
 
-const Modal: React.FC<ModalProps> = ({ show, onClose, videoUrl, name, description, duree, price, pay }) => {
+const Modal: React.FC<ModalProps> = ({ show, onClose, videoUrl, name, description, duree, price}) => {
   if (!show) return null;
 
   return (
@@ -27,7 +26,7 @@ const Modal: React.FC<ModalProps> = ({ show, onClose, videoUrl, name, descriptio
           <p><strong>Duree:</strong> {duree}</p>
           <p><strong>Prix:</strong> {price.toFixed(2)} DH</p>
           <video controls src={videoUrl} className="w-full rounded mt-4 mb-4" />
-          {pay ? <CheckoutForm amount={price} /> : <p className="text-green-500">Free</p>}
+          <CheckoutForm amount={price} />
         </div>
       </div>
     </div>

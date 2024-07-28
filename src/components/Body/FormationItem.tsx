@@ -14,7 +14,6 @@ interface Formation {
   price: number;
   image: string;
   video: string;
-  pay:boolean;
 }
 
 interface FormationItemProps {
@@ -49,12 +48,11 @@ const FormationItem: React.FC<FormationItemProps> = ({ formation, index }) => {
       <Modal
         show={showModal}
         onClose={handleCloseModal}
-        videoUrl={formation.video}
+        videoUrl="/videos/RealCivilEngineerIntro.mp4"
         name={formation.name}
         description={formation.description}
         duree={formation.duree}
         price={formation.price}
-        pay={formation.pay}
       />
     </div>
   );

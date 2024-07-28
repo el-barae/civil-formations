@@ -1,5 +1,5 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('./config/database');
+const sequelize = require('../config/database');
 
 const Formation = sequelize.define('Formation', {
   id: {
@@ -30,11 +30,6 @@ const Formation = sequelize.define('Formation', {
   video: {
     type: DataTypes.STRING,
     allowNull: true,
-  },
-  pay: {
-    type: DataTypes.BOOLEAN,
-    allowNull: false,
-    defaultValue: false, // default value if not specified
   },
 }, {
   tableName: 'formations',

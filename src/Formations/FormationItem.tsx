@@ -13,7 +13,6 @@ interface Formation {
   price: number;
   image: string;
   video: string;
-  pay:boolean;
 }
 
 interface FormationItemProps {
@@ -53,7 +52,6 @@ const FormationItem: React.FC<FormationItemProps> = ({ formation, index }) => {
         description={formation.description}
         duree={formation.duree}
         price={formation.price}
-        pay={formation.pay}
       />
     </div>
   );

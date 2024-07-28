@@ -10,7 +10,6 @@ interface Formation {
   price: number;
   image: string;
   video: string;
-  pay:boolean;
 }
 
 /*const formations: Formation[] = [
