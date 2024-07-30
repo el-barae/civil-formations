@@ -19,6 +19,9 @@ module.exports = {
         'fade-slide-in-left': 'fade-slide-in-left 1s ease-out',
         'fade-slide-in-right': 'fade-slide-in-right 1s ease-out',
       },
+      boxShadow: {
+        'white': '0 2px 3px rgba(255, 255, 255, 0.3), 0 2px 25px rgba(255, 255, 255, 0.3)',
+      },
     },
   },
   plugins: [],

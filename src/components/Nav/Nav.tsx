@@ -1,6 +1,9 @@
 import React from 'react';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 const Nav: React.FC = () => {
+const navigate = useNavigate();
+
   const handleSmoothScroll = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>, targetId: string) => {
     event.preventDefault();
     const targetElement = document.getElementById(targetId);
@@ -8,6 +11,11 @@ const Nav: React.FC = () => {
       targetElement.scrollIntoView({ behavior: 'smooth' });
     }
   };
+
+  const handleLogin = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+    event.preventDefault();
+    navigate('/login');
+  }
 
   return (
     <nav className="flex justify-between bg-gradient-to-r from-yellow-500 to-orange-500 p-4 drop-shadow-lg fixed w-full">
@@ -29,6 +37,11 @@ const Nav: React.FC = () => {
           <li>
             <a href="#contact" onClick={(e) => handleSmoothScroll(e, 'contact')} className="text-white hover:text-orange-200">
               Contact
+            </a>
+          </li>
+          <li>
+            <a href="#login" onClick={(e) => handleLogin(e)} className="text-white hover:text-orange-200">
+              Login
             </a>
           </li>
         </ul>

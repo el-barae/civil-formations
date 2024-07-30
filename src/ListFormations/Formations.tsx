@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import FormationItem from './FormationItem';
+import Nav from '../components/Nav/Nav'
 
 interface Formation {
   id: number;
@@ -62,7 +63,9 @@ const Body: React.FC = () => {
   );
 
   return (
-    <div className="p-8 bg-orange-500" id='formations'>
+    <>
+    <Nav></Nav>
+    <div className="p-8 pt-24 bg-gradient-to-r from-amber-500 to-orange-600" id='formations'>
       <h1 className='text-white text-3xl font-bold mb-6'>Formations</h1>
       <div className="flex justify-center mb-8">
         <input
@@ -85,6 +88,7 @@ const Body: React.FC = () => {
         </div>
       )}
     </div>
+    </>
   );
 };
 

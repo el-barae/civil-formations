@@ -9,10 +9,9 @@ const port = 5000;
 
 app.use(cors());
 app.use(express.json());
+app.use(bodyParser.json());
 
 const stripe = Stripe('your-secret-key-here');
-
-app.use(bodyParser.json());
 
 app.post('/create-payment', async (req, res) => {
   const { amount } = req.body;
