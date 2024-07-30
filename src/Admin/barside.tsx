@@ -43,6 +43,18 @@ const Barside: React.FC<ChildProps> = ({ title }) => {
           <h2>Settings</h2>
         </NavLink>
       </li>
+      <li className="item">
+        <NavLink to="/Admin/client"   className={({ isActive }) => (isActive ? 'active' : '')}>
+        <i className="fa-solid fa-person"></i>
+          <h2>Clients</h2>
+        </NavLink>
+      </li>
+      <li className="item">
+        <NavLink to="/Admin/message"   className={({ isActive }) => (isActive ? 'active' : '')}>
+        <i className="fa-solid fa-envelope"></i>
+          <h2>Messages</h2>
+        </NavLink>
+      </li>
       <li className="logout">
         <NavLink to="/Admin/logout">
           <i className="fa-solid fa-right-from-bracket"></i>

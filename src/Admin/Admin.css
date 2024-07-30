@@ -1,13 +1,13 @@
-.admin{
+
+
+.body{
+    background-color: rgba(255, 72, 0, 0.96);
+    display: flex;
     padding: 0;
     margin: 0;
     color: rgb(255, 255, 255);
     font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
     font-weight: bold;
-
-.body{
-    background-color: rgba(255, 72, 0, 0.96);
-    display: flex;
 }
 
 ul li a i {
@@ -114,19 +114,19 @@ justify-content: space-between;
 gap: 10px;
 }
 .titlecontent #it1{
-    /*background-image: url(../../public/images/excavator.jpg);*/
+    background-image: url(../../public/images/excavator.jpg);
     background-size: cover;
 }
 .titlecontent #it2{
-   /* background-image: url(../../public/images/building.png);*/
+   background-image: url(../../public/images/building.png);
     background-size: cover;
 }
 .titlecontent #it3{
-   /* background-image: url(../../public/images/construction.jpg);*/
+   background-image: url(../../public/images/construction.jpg);
     background-size: cover;
 }
 .titlecontent #it4{
-    /*background-image: url(../../public/images/montreal.jpg);*/
+    background-image: url(../../public/images/montreal.jpg);
     background-size: cover;
 }
 .titlecontent .box:hover{
@@ -163,5 +163,4 @@ transition: 0.5s;
 .fa-regular:hover{
     color: rgb(255, 0, 0);
 transition: 0.5s;
-}
 }

@@ -9,6 +9,9 @@ import FormationPage from './Formation/Formation';
 import ProfilePage from './Profile/Profile';
 import LoginPage from './Login/Login';
 import RegisterPage from './components/Register';
+import DashboardPage from './Admin/Dashboard';
+import VisualiserPage from './Admin/Visualiser';
+import AddPage from './Admin/add';
 
 const App: React.FC = () => {
   return (
@@ -16,7 +19,10 @@ const App: React.FC = () => {
     <Router>
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/Admin" element={<AdminPage />} />
+        
+        <Route path="/Admin/dashboard" element={<DashboardPage />} />
+        <Route path="/Admin/Visualiser" element={<VisualiserPage />} />
+        <Route path="/Admin/add" element={<AddPage />} />
         <Route path="/Formations" element={<FormationsPage />} />
         <Route path="/Profile" element={<ProfilePage />} />
         <Route path="/Login" element={<LoginPage />} />
