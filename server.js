@@ -3,6 +3,10 @@ const Stripe = require('stripe');
 const bodyParser = require('body-parser');
 const sequelize = require('./config/database');
 const Formation = require('./models/Formation');
+const Video = require('./models/Video');
+const User = require('./models/User');
+const Subscribe = require('./models/Subscribe');
+const authRoutes = require('./routes/auth');
 const cors = require('cors');
 const app = express();
 const port = 5000;
@@ -37,6 +41,8 @@ sequelize.sync()
 app.get('/', (req, res) => {
   res.send('Hello World!');
 });
+
+app.use('/api/auth', authRoutes);
 
 app.get('/formations', async (req, res) => {
   try {

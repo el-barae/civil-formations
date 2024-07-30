@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Nav from '../components/Nav/Nav'
+import Swal from 'sweetalert2';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -9,22 +10,41 @@ const Login: React.FC = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
+  const handleSubmit = async (e:any) => {
+    e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5000/login', { email, password });
-      localStorage.setItem('token', response.data.token);
-      localStorage.setItem('login', 'true')
-      navigate('/admin');
+      const response = await axios.post('http://localhost:5000/api/auth/login', {
+        email,
+        password,
+      });
+      const { token, role } = response.data;
+
+      localStorage.setItem('login','true')
+      localStorage.setItem('token', token);
+      localStorage.setItem('role', role);
+
+      Swal.fire({
+        icon: 'success',
+        title: 'Login Successful',
+        text: 'You have been logged in successfully!',
+      }).then(() => {
+        navigate('/');
+      });
     } catch (err) {
-      setError('Invalid email or password');
+      setError('An error occurred');
+      Swal.fire({
+        icon: 'error',
+        title: 'Login Failed',
+        text: error,
+      });
     }
   };
 
   return (
     <>
     <Nav></Nav>
-    <div className="flex justify-center items-center min-h-screen bg-gradient-to-r from-amber-500 to-orange-600">
+    <div className="flex flex-col justify-center items-center min-h-screen bg-gradient-to-r from-amber-500 to-orange-600">
+      <img className='mb-10' width={'150px'} height={'150px'} src="/padlock.png" alt="" />
       <div className="w-full max-w-md p-8 space-y-4 text-white bg-gradient-to-r from-orange-400 to-red-400 rounded shadow-white">
         <h2 className="text-2xl font-bold text-center">Login</h2>
         {error && <p className="text-red-500">{error}</p>}
@@ -36,7 +56,7 @@ const Login: React.FC = () => {
               id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-3 py-2 mt-1 border rounded shadow-sm focus:ring focus:ring-opacity-50"
+              className="w-full px-3 py-2 mt-1 border rounded shadow-sm focus:ring focus:ring-opacity-50 text-black"
               required
             />
           </div>
@@ -47,7 +67,7 @@ const Login: React.FC = () => {
               id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-3 py-2 mt-1 border rounded shadow-sm focus:ring focus:ring-opacity-50"
+              className="w-full px-3 py-2 mt-1 border rounded shadow-sm focus:ring focus:ring-opacity-50 text-black"
               required
             />
           </div>

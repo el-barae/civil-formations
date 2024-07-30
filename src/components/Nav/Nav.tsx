@@ -1,5 +1,6 @@
 import React from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const Nav: React.FC = () => {
 const navigate = useNavigate();
@@ -15,8 +16,20 @@ const navigate = useNavigate();
   const handleLogin = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     event.preventDefault();
     const login = localStorage.getItem('login')
-    if(login)
-      navigate('/profile');
+    if(login){
+      try {
+        const token = localStorage.getItem('token')
+        axios.post('http://localhost:5000/api/auth/logout',{
+          token
+        });
+        localStorage.removeItem('token');
+        localStorage.removeItem('login');
+        localStorage.removeItem('role');
+        navigate('/login');
+      } catch (err) {
+        console.error('Logout failed:', err);
+      }
+    }
     else
       navigate('/login');
   }
@@ -45,7 +58,7 @@ const navigate = useNavigate();
           </li>
           <li>
             <a href="#login" onClick={(e) => handleLogin(e)} className="text-white hover:text-orange-200">
-              Login
+            {localStorage.getItem('login') ? 'Logout' : 'Login'}
             </a>
           </li>
         </ul>

@@ -14,25 +14,26 @@ const RegisterPage: React.FC = () => {
 
   const navigate = useNavigate();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e:any) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5000/register', {
+      const response = await axios.post('http://localhost:5000/api/auth/register', {
         firstName,
         lastName,
         email,
         password,
         phone,
-        address
+        address,
+        role: 'CLIENT',
       });
-      console.log('User registered:', response.data);
-      // Handle successful registration (e.g., redirect to login page)
-    } catch (error) {
-      console.error('Error registering user:', error);
-      setError('Failed to register user. Please try again.');
+      const { token, role } = response.data;
+      localStorage.setItem('token', token);
+      localStorage.setItem('role', role);
+      navigate('/');
+    } catch (err) {
+      setError('An error occurred');
     }
   };
-
   const validatePassword = (password: string) => {
     const strongPassword = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\\$%\\^&\\*])(?=.{8,})');
     const mediumPassword = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{6,})');
@@ -134,8 +135,8 @@ const RegisterPage: React.FC = () => {
           </div>
         </form>
         <div className="flex justify-center mt-4">
-          <button onClick={() => navigate('/login')} className="px-4 py-2 font-bold text-white bg-blue-400 rounded hover:bg-blue-500">
-            Return to Login
+          <button onClick={() => navigate('/login')} className="px-4 py-2 font-bold text-white bg-green-400 rounded hover:bg-green-500">
+            Login
           </button>
         </div>
       </div>
