@@ -8,6 +8,7 @@ import FormationsPage from './ListFormations/Formations';
 import FormationPage from './Formation/Formation';
 import ProfilePage from './Profile/Profile';
 import LoginPage from './Login/Login';
+import RegisterPage from './components/Register';
 
 const App: React.FC = () => {
   return (
@@ -19,6 +20,7 @@ const App: React.FC = () => {
         <Route path="/Formations" element={<FormationsPage />} />
         <Route path="/Profile" element={<ProfilePage />} />
         <Route path="/Login" element={<LoginPage />} />
+        <Route path="/register" Component={RegisterPage} />
         <Route path="/Formation/:id" element={<FormationPage />} /> 
       </Routes>
     </Router>

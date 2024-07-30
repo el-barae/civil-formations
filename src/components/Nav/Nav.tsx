@@ -14,7 +14,11 @@ const navigate = useNavigate();
 
   const handleLogin = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     event.preventDefault();
-    navigate('/login');
+    const login = localStorage.getItem('login')
+    if(login)
+      navigate('/profile');
+    else
+      navigate('/login');
   }
 
   return (

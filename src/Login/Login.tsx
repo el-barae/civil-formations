@@ -13,8 +13,8 @@ const Login: React.FC = () => {
     event.preventDefault();
     try {
       const response = await axios.post('http://localhost:5000/login', { email, password });
-      // Assuming the server returns a token
       localStorage.setItem('token', response.data.token);
+      localStorage.setItem('login', 'true')
       navigate('/admin');
     } catch (err) {
       setError('Invalid email or password');
@@ -57,6 +57,14 @@ const Login: React.FC = () => {
             </button>
           </div>
         </form>
+        <div className="flex justify-center mt-4">
+          <button
+            onClick={() => navigate('/register')}
+            className="px-4 py-2 font-bold text-white bg-green-400 rounded hover:bg-green-500"
+          >
+            Register
+          </button>
+        </div>
       </div>
     </div>
     </>
