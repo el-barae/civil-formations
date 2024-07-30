@@ -1,0 +1,21 @@
+
+@media (max-width: 1024px) {
+    .navbar{
+        display: flex;
+        flex-direction: column;
+    }
+    .nav{
+        justify-content: space-between;
+        position: relative;
+    }
+    .bmenu{
+        position: absolute;
+        right: 0px;
+    }
+    .list{
+        justify-content: center;
+    }
+    .list li{
+        justify-content: center;
+    }
+}
