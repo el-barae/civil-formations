@@ -9,7 +9,6 @@ const Contact: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Here you would typically handle form submission, e.g., send the data to your backend
     console.log({ name, email, message });
     alert('Message sent!');
     setName('');
@@ -18,8 +17,8 @@ const Contact: React.FC = () => {
   };
 
   return (
-    <div className="flex p-8 pb-0 bg-orange-500 w-full justify-between xl:flex-row" id='contact'>
-        <div className='w-1/3 text-left m-8 mb-0 text-white'>
+    <div className="flex p-8 pb-0 bg-orange-500 w-full justify-between" id='contact'>
+        <div className='w-1/3 text-left m-8 mb-0 text-white '>
         <h2 className="text-3xl font-bold mb-6">Contact Us</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
