@@ -2,16 +2,15 @@ import React from 'react';
 import './App.css';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import HomePage from './components/Home/Home';
-import AdminPage from './Admin/Admin';
 import StripeConfig from './StripeConfig';
 import FormationsPage from './ListFormations/Formations';
 import FormationPage from './Formation/Formation';
 import ProfilePage from './Profile/Profile';
 import LoginPage from './Login/Login';
 import RegisterPage from './components/Register';
-import DashboardPage from './Admin/Dashboard';
-import VisualiserPage from './Admin/Visualiser';
-import AddPage from './Admin/add';
+import DashboardPage from './Admin/dashboard/Dashboard';
+import VisualiserPage from './Admin/visualiser/Visualiser';
+import AddPage from './Admin/addFormation/add';
 
 const App: React.FC = () => {
   return (

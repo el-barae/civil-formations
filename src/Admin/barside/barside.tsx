@@ -1,17 +1,32 @@
-import './Admin.css';
-import './add.css'
+// import './Admin.css';
+import './barside.css'
 import React , { useState }from 'react';
 import axios from 'axios';
 import {NavLink} from 'react-router-dom'
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBars } from '@fortawesome/free-solid-svg-icons';
 interface ChildProps {
   title: string;
 }
 const Barside: React.FC<ChildProps> = ({ title }) => {
- 
+  const [isSidebarVisible, setIsSidebarVisible] = useState(false);
+
+  const toggleSidebar = () => {
+    setIsSidebarVisible(!isSidebarVisible);
+  };
+
+
   return (
+    <>
+   
+      <button className={`toggle-button${isSidebarVisible ? 'visible' : ''}`} onClick={toggleSidebar}>
+        <FontAwesomeIcon icon={faBars} />
+      </button>
+  
     
-    <div className="barside">
-    <ul>
+    <div className={`barside ${isSidebarVisible ? 'visible' : 'hidden'}`}>
+      
+    <ul >
       <li className="img">
         <img
           src="https://tse1.explicit.bing.net/th?id=OIP.ROJLMWQcPybcPj5Pn70_oAHaHa&pid=Api&P=0&h=180"
@@ -63,6 +78,8 @@ const Barside: React.FC<ChildProps> = ({ title }) => {
       </li>
     </ul>
   </div>
+    </>
+    
   
   );
 };

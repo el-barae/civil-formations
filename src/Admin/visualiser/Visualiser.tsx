@@ -1,7 +1,7 @@
-import './Admin.css';
+import './visualiser.css';
 import React from 'react';
 import axios from 'axios';
-import Barside from './barside';
+import Barside from '../barside/barside';
 
 const Dashboard: React.FC = () => {
   return (
