@@ -1,13 +1,14 @@
-import './Admin.css';
+import './dashboard.css';
 import React from 'react';
 import axios from 'axios';
-import Barside from './barside';
+import Barside from '../barside/barside';
 
 const Dashboard: React.FC = () => {
 
   return (
-    <div className='body'>
+    <div className='bodydashboard'>
     
+        
         <Barside title="dashboard"/>
         <div className="content">
         <div className="title"><h1>Dashborad</h1></div>

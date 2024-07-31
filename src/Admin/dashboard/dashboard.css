@@ -1,0 +1,95 @@
+
+
+.bodydashboard{
+  
+    background-color: rgba(255, 72, 0, 0.96);
+    display: flex;
+    padding: 0;
+    margin: 0;
+    color: rgb(255, 255, 255);
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    font-weight: bold;
+
+
+
+
+
+.content{
+    width: 100%;
+    margin: 10px;
+}
+.title{
+    display: flex;
+    background-color: #452009;
+    border-radius: 15px;
+    margin: 20px 0;
+    align-items: center;
+    justify-content: center;
+}
+.titlecontent{
+display: flex;
+align-items: center;
+flex-wrap: wrap;
+justify-content: space-between;
+gap: 10px;
+}
+.titlecontent #it1{
+    background-image: url(../../../public/images/excavator.jpg);
+    background-size: cover;
+}
+.titlecontent #it2{
+   background-image: url(../../../public/images/building.png);
+    background-size: cover;
+}
+.titlecontent #it3{
+   background-image: url(../../../public/images/construction.jpg);
+    background-size: cover;
+}
+.titlecontent #it4{
+    background-image: url(../../../public/images/montreal.jpg);
+    background-size: cover;
+}
+.titlecontent .box:hover{
+    opacity: 0.9;
+   cursor: pointer;
+    transition: 0.5s;
+}
+.titlecontent .box{
+    padding: 10px;
+    background-color:#452009;
+    flex-basis: 150px;
+    height: 150px;
+    flex-grow: 1;
+    border-radius: 15px;
+    display: flex;
+    justify-content: space-between;
+}
+.titlecontent .box a i{
+    font-size: xx-large;
+}
+.titlecontent .box a{
+    text-decoration: none;
+}
+.titlecontent .box h1{
+   align-content: center;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.titlecontent .box a #update:hover{
+color: greenyellow;
+transition: 0.5s;
+}
+.fa-regular:hover{
+    color: rgb(255, 0, 0);
+    transition: 0.5s;
+}
+
+
+}
+@media (max-width:700px) {
+    .bodydashboard{
+   height: 100vh;     
+    }
+    
+}
