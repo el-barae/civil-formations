@@ -76,11 +76,10 @@ const ProfilePage: React.FC = () => {
       <Nav/>
       {user && (
         <div className="pt-24 p-12 bg-orange-500 text-white">
-          <h2 className='text-2xl font-bold'>User Information</h2>
-          <p><strong>Name:</strong> {user.firstName} {user.lastName}</p>
-          <p><strong>Email:</strong> {user.email}</p>
-          <p><strong>Phone:</strong> {user.phone}</p>
-          <p><strong>Address:</strong> {user.address}</p>
+          <h2 className='text-3xl font-bold mb-4'>{user.firstName} {user.lastName}</h2>
+          <p className='text-lg'><strong>Email:</strong> {user.email}</p>
+          <p className='text-lg'><strong>Phone:</strong> {user.phone}</p>
+          <p className='text-lg'><strong>Address:</strong> {user.address}</p>
         </div>
       )}
       <div>

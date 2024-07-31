@@ -38,9 +38,9 @@ const FormationItem: React.FC<FormationItemProps> = ({ subscribe, index }) => {
         ref={ref}
         key={subscribe.Formation.id}
         onClick={handleClick}
-        className={`m-4 p-4 flex flex-col items-center border rounded-lg shadow-xl max-w-lg transition-opacity duration-1000 cursor-pointer ${inView ? animationClass : 'opacity-0'} hover:bg-gray-300`}
+        className={`m-4 p-4 flex flex-col items-center border rounded-lg shadow-xl max-w-lg transition-opacity duration-1000 cursor-pointer ${inView ? animationClass : 'opacity-0'} hover:bg-red-100`}
     >
-        <h3>{subscribe.Formation.name}</h3>
+        <h3 className='text-2xl font-semibold text-orange-400'>{subscribe.Formation.name}</h3>
         <img src={subscribe.Formation.image} alt={subscribe.Formation.name} />
         <p>Duration: {subscribe.Formation.duree}</p>
         <div className="mt-4 w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
