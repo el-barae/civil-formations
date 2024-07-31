@@ -1,4 +1,4 @@
-import './Admin.css';
+// import './Admin.css';
 import './add.css'
 import React , { useState }from 'react';
 import axios from 'axios';
@@ -8,10 +8,13 @@ interface ChildProps {
 }
 const Barside: React.FC<ChildProps> = ({ title }) => {
  
+
+
   return (
     
     <div className="barside">
-    <ul>
+      
+    <ul >
       <li className="img">
         <img
           src="https://tse1.explicit.bing.net/th?id=OIP.ROJLMWQcPybcPj5Pn70_oAHaHa&pid=Api&P=0&h=180"
