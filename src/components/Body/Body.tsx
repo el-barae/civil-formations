@@ -42,7 +42,7 @@ const Body: React.FC = () => {
   useEffect(() => {
     const fetchFormations = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/formations');
+        const response = await axios.get('http://localhost:5000/api/formations');
         setFormations(response.data);
       } catch (error) {
         console.error('Error fetching formations:', error);

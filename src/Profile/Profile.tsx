@@ -1,98 +1,98 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import FormationItem from './FormationItem';
+import Nav from '../components/Nav/Nav';
+import useIntersectionObserver from './useIntersectionObserver'
 
-const Profile: React.FC = () => {
-  const [user, setUser] = useState({ name: '', email: '' });
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-  const navigate = useNavigate();
+interface User{
+  id:number,
+  firstName: string,
+  lastName: string,
+  email: string,
+  password: string,
+  phone: string,
+  address: string,
+  Subscribes: Subscribe[];
+}
+
+interface Formation {
+  id: string;
+  name: string;
+  duree: string;
+  description: string;
+  price: number;
+  image: string;
+  video: string;
+}
+
+interface Subscribe {
+  id: string;
+  pourcentage: number;
+  formationId: string;
+  userId: string;
+  Formation: Formation;
+}
+
+interface FormationItemProps {
+  formation: Formation;
+  index: number;
+}
+
+const ProfilePage: React.FC = () => {
+  const [user, setUser] = useState<User | null>(null);
+  const [subscribes, setSubscribes] = useState<Subscribe[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchUserProfile = async () => {
+    const fetchProfile = async () => {
       try {
-        const token = localStorage.getItem('token');
-        if (!token) {
-          navigate('/login');
-          return;
-        }
-
-        const response = await axios.get('http://localhost:5000/profile', {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-
-        setUser(response.data);
-      } catch (err) {
-        setError('Failed to fetch user profile');
+        const response = await axios.get('http://localhost:5000/api/users/profile/1');
+        const userData = response.data;
+                setUser(userData);
+                if (userData && userData.Subscribes) {
+                    setSubscribes(userData.Subscribes);
+                }
+      } catch (error) {
+        setError('Error fetching profile data');
       } finally {
         setLoading(false);
       }
     };
 
-    fetchUserProfile();
-  }, [navigate]);
-
-  const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
-    try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        navigate('/login');
-        return;
-      }
-
-      await axios.put(
-        'http://localhost:5000/profile',
-        { name: user.name, email: user.email },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      setError('Profile updated successfully');
-    } catch (err) {
-      setError('Failed to update profile');
-    }
-  };
+    fetchProfile();
+  }, []);
 
   if (loading) {
     return <div>Loading...</div>;
   }
 
+  if (error) {
+    return <div>{error}</div>;
+  }
+
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <div className="w-full max-w-md p-8 space-y-4 bg-white rounded shadow-lg">
-        <h2 className="text-2xl font-bold text-center">Profile</h2>
-        {error && <p className="text-red-500">{error}</p>}
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label htmlFor="name" className="block text-sm font-medium text-gray-700">Name</label>
-            <input
-              type="text"
-              id="name"
-              value={user.name}
-              onChange={(e) => setUser({ ...user, name: e.target.value })}
-              className="w-full px-3 py-2 mt-1 border rounded shadow-sm focus:ring focus:ring-opacity-50"
-              required
-            />
-          </div>
-          <div className="mb-4">
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
-            <input
-              type="email"
-              id="email"
-              value={user.email}
-              onChange={(e) => setUser({ ...user, email: e.target.value })}
-              className="w-full px-3 py-2 mt-1 border rounded shadow-sm focus:ring focus:ring-opacity-50"
-              required
-            />
-          </div>
-          <div className="flex justify-center">
-            <button type="submit" className="px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700">
-              Update Profile
-            </button>
-          </div>
-        </form>
+    <div>
+      <Nav/>
+      {user && (
+        <div className="pt-24 p-12 bg-orange-500 text-white">
+          <h2 className='text-2xl font-bold'>User Information</h2>
+          <p><strong>Name:</strong> {user.firstName} {user.lastName}</p>
+          <p><strong>Email:</strong> {user.email}</p>
+          <p><strong>Phone:</strong> {user.phone}</p>
+          <p><strong>Address:</strong> {user.address}</p>
+        </div>
+      )}
+      <div>
+        <h2 className='text-orange-500 text-3xl font-bold my-6 ml-16'>Formations</h2>
+        <div className="grid grid-cols-2 gap-4 justify-items-center">
+        {subscribes.map((subscribe, index) => (
+                            <FormationItem key={subscribe.id} subscribe={subscribe} index={index} />
+                        ))}
+        </div>
       </div>
     </div>
   );
 };
 
-export default Profile;
+export default ProfilePage;

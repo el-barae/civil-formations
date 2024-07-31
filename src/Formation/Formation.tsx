@@ -10,7 +10,6 @@ interface Formation {
   price: number;
   image: string;
   video: string;
-  pay: boolean;
 }
 
 const FormationPage: React.FC = () => {
@@ -21,7 +20,7 @@ const FormationPage: React.FC = () => {
   useEffect(() => {
     const fetchFormation = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/formations/${id}`);
+        const response = await axios.get(`http://localhost:5000/api/formations/${id}`);
         setFormation(response.data);
       } catch (error) {
         console.error('Error fetching formation:', error);
@@ -45,8 +44,7 @@ const FormationPage: React.FC = () => {
   }
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100 p-4">
-      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-3xl">
+      <div className="bg-white p-8 rounded-lg shadow-lg w-full h-full">
         <img src={formation.image} alt={formation.name} className="w-full rounded mb-4" />
         <h2 className="text-3xl font-bold mb-4">{formation.name}</h2>
         <p className="mb-2"><strong>Duree:</strong> {formation.duree}</p>
@@ -59,7 +57,6 @@ const FormationPage: React.FC = () => {
           Watch Video
         </button>
       </div>
-    </div>
   );
 };
 
