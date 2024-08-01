@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import FormationItem from './FormationItem';
 import Nav from '../components/Nav/Nav';
+import API_URL from '../API_URL';
 import useIntersectionObserver from './useIntersectionObserver'
 
 interface User{
@@ -47,7 +48,7 @@ const ProfilePage: React.FC = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/users/profile/1');
+        const response = await axios.get(API_URL+'/api/users/profile/1');
         const userData = response.data;
                 setUser(userData);
                 if (userData && userData.Subscribes) {

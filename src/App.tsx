@@ -7,7 +7,7 @@ import FormationsPage from './ListFormations/Formations';
 import FormationPage from './Formation/Formation';
 import ProfilePage from './Profile/Profile';
 import LoginPage from './Login/Login';
-import RegisterPage from './components/Register';
+import RegisterPage from './components/Register/Register';
 import DashboardPage from './Admin/dashboard/Dashboard';
 import VisualiserPage from './Admin/visualiser/Visualiser';
 import AddPage from './Admin/addFormation/add';
