@@ -77,7 +77,7 @@ const Contact: React.FC = () => {
 
       </form>
         </div>
-        <div className="m-24 p-16 text-xl bg-white w-1/3 min-h-40 rounded-xl">
+        <div className="m-24 p-16 text-xl bg-white w-1/3 min-h-40 rounded-xl ">
           <h3 className="text-3xl font-bold mb-8">Our Information</h3>
           <p className="flex items-center mb-2">
             <FontAwesomeIcon icon={faMapMarkerAlt} className="mr-4" />
