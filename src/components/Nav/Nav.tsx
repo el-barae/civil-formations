@@ -1,6 +1,6 @@
 import React from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './Nav.css'
 import axios from 'axios';
 
@@ -8,14 +8,11 @@ const Nav: React.FC = () => {
 const navigate = useNavigate();
 const [isOpen, setIsOpen] = useState(false);
 
-  const handleSmoothScroll = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>, targetId: string) => {
-    event.preventDefault();
-    const targetElement = document.getElementById(targetId);
-    if (targetElement) {
-      targetElement.scrollIntoView({ behavior: 'smooth' });
-      setIsOpen(false);
-    }
-  };
+const handleSmoothScroll = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>, targetId: string) => {
+  event.preventDefault();
+  setIsOpen(false);
+  navigate(`/#${targetId}`);
+};
 
   const handleLogin = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     event.preventDefault();
