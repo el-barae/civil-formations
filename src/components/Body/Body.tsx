@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import FormationItem from './FormationItem';
 import { useNavigate } from 'react-router-dom';
+import API_URL from '../../API_URL';
 
 interface Formation {
   id: number;
@@ -42,7 +43,7 @@ const Body: React.FC = () => {
   useEffect(() => {
     const fetchFormations = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/formations');
+        const response = await axios.get(API_URL+'/api/formations');
         setFormations(response.data);
       } catch (error) {
         console.error('Error fetching formations:', error);

@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Nav from '../components/Nav/Nav'
 import Swal from 'sweetalert2';
+import API_URL from '../API_URL';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -13,7 +14,7 @@ const Login: React.FC = () => {
   const handleSubmit = async (e:any) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/login', {
+      const response = await axios.post(API_URL+'/api/auth/login', {
         email,
         password,
       });

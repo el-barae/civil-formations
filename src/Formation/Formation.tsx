@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import Nav from '../components/Nav/Nav';
+import API_URL from '../API_URL';
 
 interface Formation {
   id: number;
@@ -14,12 +15,11 @@ interface Formation {
 }
 
 interface Video {
-  id: string;
+  id: number;
   title: string;
   numero: number;
   link: string;
   description: string;
-  formationId: string;
 }
 
 const FormationPage: React.FC = () => {
@@ -31,7 +31,7 @@ const FormationPage: React.FC = () => {
   useEffect(() => {
     const fetchFormation = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/formations/${id}`);
+        const response = await axios.get(API_URL+`/api/formations/${id}`);
         setFormation(response.data);
       } catch (error) {
         console.error('Error fetching formation:', error);
@@ -39,8 +39,12 @@ const FormationPage: React.FC = () => {
     };
     const fetchVideos = async () => {
       try {
-          const response = await axios.get<Video[]>(`http://localhost:5000/api/formation/${id}/videos`);
-          setVideos(response.data);
+          const response = await axios.get<Video[]>(API_URL+`/api/videos/formation/${id}`);
+          if (Array.isArray(response.data)) {
+            setVideos(response.data);
+        } else {
+            throw new Error('Invalid data format');
+        }
       } catch (error) {
           console.error('Error fetching videos:', error);
       }
@@ -71,26 +75,30 @@ const FormationPage: React.FC = () => {
         </div>
         <p className="mb-2"><strong>Duree:</strong> {formation.duree}</p>
         <p className="mb-2"><strong>Description:</strong> {formation.description}</p>
-        <div>
-        <h2 className="text-2xl font-bold">Videos</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {videos.map(video => (
-                        <div key={video.id} className="bg-gray-100 rounded-lg p-4 shadow">
-                            <h3 className="text-xl font-bold">{video.title}</h3>
-                            <iframe
-                                width="100%"
-                                height="200"
-                                src={video.link}
-                                title={video.title}
-                                frameBorder="0"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                allowFullScreen
-                            ></iframe>
-                            <p className="mt-2">{video.description}</p>
-                        </div>
-                    ))}
-                </div>
-        </div>
+        <div className='m-10'>
+                <h2 className="text-2xl font-bold text-orange-500 mb-6">Videos</h2>
+                {videos.length > 0 ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                        {videos.map(video => (
+                            <div key={video.id} className="bg-gray-100 rounded-lg p-4 shadow">
+                                <h3 className="text-xl font-bold">{video.title}</h3>
+                                <iframe
+                                    width="100%"
+                                    height="300"
+                                    src={video.link}
+                                    title={video.title}
+                                    frameBorder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allowFullScreen
+                                ></iframe>
+                                <p className="mt-2">{video.description}</p>
+                            </div>
+                        ))}
+                    </div>
+                ) : (
+                    <p>No videos available</p>
+                )}
+            </div>
       </div>
   );
 };

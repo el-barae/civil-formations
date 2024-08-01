@@ -15,7 +15,7 @@ exports.createVideo = async (req, res) => {
 exports.getAllVideos = async (req, res) => {
   try {
     const videos = await Video.findAll();
-    res.status(200).json({ videos });
+    res.status(200).json(videos);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error });
   }
@@ -26,7 +26,7 @@ exports.getVideosByFormation = async (req, res) => {
   const { formationId } = req.params;
   try {
     const videos = await Video.findAll({ where: { formationId } });
-    res.status(200).json({ videos });
+    res.status(200).json(videos);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error });
   }
@@ -40,7 +40,7 @@ exports.getVideoById = async (req, res) => {
     if (!video) {
       return res.status(404).json({ message: 'Video not found' });
     }
-    res.status(200).json({ video });
+    res.status(200).json(video);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error });
   }
