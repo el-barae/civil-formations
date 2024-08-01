@@ -32,7 +32,7 @@
         gap: 15px;
         border-radius: 15px;
         background-color:  #452009 ;
-    }
+    } 
    
     form input{
         background-color:#2c1405;
@@ -53,6 +53,48 @@
         border: none;
         box-shadow: #4e270f;
     }
-    
 
+
+
+
+
+
+
+
+
+
+    .formvideo{
+        display: flex;
+        flex-flow: column nowrap;
+        justify-content: center;
+        align-items: center;
+        gap: 15px;
     }
+      
+      .item  {
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: space-around;
+        align-items: center;
+        gap: 5px;
+        flex-grow: 1;
+        background-color: #a95f31;
+        height: 65px;
+        border-radius: 20px;
+        padding: 10px;
+      }
+      
+      #iconadd {
+        font-size: 35px;
+        color: #000; /* Changez la couleur selon vos besoins */
+        cursor: pointer;
+      }
+      #iconremove{
+        font-size: 35px;
+        color: #000; /* Changez la couleur selon vos besoins */
+        cursor: pointer;
+      }
+      
+    }
+
+

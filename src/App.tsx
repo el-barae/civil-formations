@@ -10,8 +10,8 @@ import LoginPage from './Login/Login';
 import RegisterPage from './components/Register';
 import DashboardPage from './Admin/dashboard/Dashboard';
 import VisualiserPage from './Admin/visualiser/Visualiser';
-import AddPage from './Admin/addFormation/add';
-
+import AddPage1 from './Admin/addFormation/add1';
+import AddPage2 from './Admin/addFormation/add2';
 const App: React.FC = () => {
   return (
     <StripeConfig>
@@ -21,7 +21,8 @@ const App: React.FC = () => {
         
         <Route path="/Admin/dashboard" element={<DashboardPage />} />
         <Route path="/Admin/Visualiser" element={<VisualiserPage />} />
-        <Route path="/Admin/add" element={<AddPage />} />
+        <Route path="/Admin/add1" element={<AddPage1 />} />
+        <Route path="/Admin/add2" element={<AddPage2 />} />
         <Route path="/Formations" element={<FormationsPage />} />
         <Route path="/Profile" element={<ProfilePage />} />
         <Route path="/Login" element={<LoginPage />} />
