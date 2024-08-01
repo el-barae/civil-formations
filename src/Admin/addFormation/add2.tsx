@@ -12,7 +12,14 @@ const Add2: React.FC = () => {
     };
 
      const removeItems = (id: number) => {
-    setItems(items.filter(item => item.id !== id));
+      if (window.confirm(`Are you sure you want to delete video number ${id}?`)) {
+        let updatedItems = items.filter(item => item.id !== id);
+        updatedItems = updatedItems.map((item, index) => ({
+          ...item,
+          id: index + 1
+        }));
+        setItems(updatedItems);
+      }
   };
     
   return (
@@ -21,10 +28,10 @@ const Add2: React.FC = () => {
       
        <form className='formvideo' action="">
       {items.map((item, index) => (
-        <div className="item" key={item.id}>
-          <input type="text" name={`titre-${item.id}`} placeholder="Titre" />
-          <input type="text" name={`desc-${item.id}`} placeholder="Description" />
-          <input type="file" name={`video-${item.id}`} placeholder="video" />
+        <div className="itemvideo" key={item.id}>
+          <input type="text" name={`titre-${item.id}`} placeholder={`titre-${item.id}`} />
+          <input type="text" name={`desc-${item.id}`} placeholder={`description-${item.id}`} />
+          <input type="file" name={`video-${item.id}`} placeholder={`video-${item.id}`} />
           <a onClick={addItems}><i id='iconadd' className="fa-solid fa-plus"></i></a>
           <a onClick={() => removeItems(item.id)}><i id='iconremove' className="fa-solid fa-trash-can"></i></a>
         </div>

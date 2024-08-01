@@ -12,8 +12,8 @@ const Add1: React.FC = () => {
             <input placeholder="Duree" type="text" name="duree" id="duree"/>
             <input placeholder="description" type="text" name="description" id="description"/>
             <input placeholder="prix" type="text" name="price" id="price"/>
-            <input placeholder="choisir une image" type="file" name="image" id="image"/> 
-            <input placeholder="video de presentation" type="file" name="video" id="video"/>
+            <label >Image :</label><input placeholder="choisir une image" type="file" name="image" id="image"/> 
+            <label >Video presentative : </label> <input placeholder="video de presentation" type="file" name="video" id="video"/>
             <input type="submit" id="submit" value="Suivant" name="submit"/>
         </form>
     </div>

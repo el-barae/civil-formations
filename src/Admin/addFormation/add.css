@@ -71,7 +71,7 @@
         gap: 15px;
     }
       
-      .item  {
+       .itemvideo  {
         display: flex;
         flex-flow: row nowrap;
         justify-content: space-around;
@@ -82,7 +82,7 @@
         height: 65px;
         border-radius: 20px;
         padding: 10px;
-      }
+      } 
       
       #iconadd {
         font-size: 35px;
