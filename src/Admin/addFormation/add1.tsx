@@ -3,11 +3,11 @@ import React from 'react';
 import axios from 'axios';
 import Barside from '../barside/barside';
 
-const Add: React.FC = () => {
+const Add1: React.FC = () => {
   return (
     <div className='bodyform add'>
         <Barside title='Ajouter une formation'/>
-        <form action="" method="post">
+        <form action="./add2" >
             <input placeholder="Nom du formation" type="text" name="name" id="name"/>
             <input placeholder="Duree" type="text" name="duree" id="duree"/>
             <input placeholder="description" type="text" name="description" id="description"/>
@@ -25,5 +25,5 @@ const Add: React.FC = () => {
   );
 };
 
-export default Add;
+export default Add1;
 

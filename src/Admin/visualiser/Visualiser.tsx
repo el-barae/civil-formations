@@ -5,7 +5,7 @@ import Barside from '../barside/barside';
 
 const Dashboard: React.FC = () => {
   return (
-    <div className='body'>
+    <div className='bodyvisualiser'>
     
         <Barside title='visualiser'/>
         <div className="content">
