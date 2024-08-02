@@ -29,7 +29,7 @@ const Login: React.FC = () => {
         title: 'Login Successful',
         text: 'You have been logged in successfully!',
       }).then(() => {
-        navigate('/');
+        navigate('/profile');
       });
     } catch (err) {
       setError('An error occurred');

@@ -17,8 +17,8 @@ const Contact: React.FC = () => {
   };
 
   return (
-    <div className="flex p-8 pb-0 bg-orange-500 w-full justify-between" id='contact'>
-        <div className='w-1/3 text-left m-8 mb-0 text-white '>
+    <div className="flex p-8 pb-0 bg-orange-500 w-full justify-between flex-col lg:flex-row" id='contact'>
+        <div className='w-5/6 text-left m-8 mb-0 text-white lg:w-1/3'>
         <h2 className="text-3xl font-bold mb-6">Contact Us</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
@@ -77,7 +77,7 @@ const Contact: React.FC = () => {
 
       </form>
         </div>
-        <div className="m-24 p-16 text-xl bg-white w-1/3 min-h-40 rounded-xl ">
+        <div className="m-14 ml-8 p-16 text-xl bg-white w-5/6 min-h-40 rounded-xl lg:w-1/3">
           <h3 className="text-3xl font-bold mb-8">Our Information</h3>
           <p className="flex items-center mb-2">
             <FontAwesomeIcon icon={faMapMarkerAlt} className="mr-4" />
@@ -89,7 +89,7 @@ const Contact: React.FC = () => {
           </p>
           <p className="flex items-center mb-4">
             <FontAwesomeIcon icon={faEnvelope} className="mr-4" />
-            Email: contact@geniecivilformations.com
+            Email: contact@geniecivil.com
           </p>
           <p>Feel free to reach out to us for any inquiries or further information!</p>
       </div>

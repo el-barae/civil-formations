@@ -5,6 +5,8 @@ import Nav from '../components/Nav/Nav';
 import API_URL from '../API_URL';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {faClock } from '@fortawesome/free-solid-svg-icons';
 
 interface Formation {
   id: number;
@@ -103,8 +105,10 @@ const FormationPage: React.FC = () => {
       <div className="bg-cover bg-center p-8 text-center" style={{ backgroundImage: `url(${formation.image})`, height:"500px" }} id='header'>
         <h1 className="text-4xl mt-32 font-bold">{formation.name}</h1>
       </div>
-      <p className="mb-2"><strong>Durée:</strong> {formation.duree}</p>
-      <p className="mb-2"><strong>Description:</strong> {formation.description}</p>
+      <div className='m-12'>
+        <p className="mb-4"><strong className='text-2xl text-orange-500'>Description:</strong><br /> {formation.description}</p>
+        <p className="font-bold"><FontAwesomeIcon icon={faClock} className="mr-2 text-xl" />{formation.duree}</p>
+      </div>
       <div className='m-10'>
         <h2 className="text-2xl font-bold text-orange-500 mb-6">Vidéos</h2>
         {videos.length > 0 ? (
