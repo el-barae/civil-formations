@@ -35,6 +35,16 @@ const handleSmoothScroll = (event: React.MouseEvent<HTMLAnchorElement, MouseEven
       navigate('/login');
   }
 
+  const handleProfile = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+    event.preventDefault();
+    const login = localStorage.getItem('login')
+    if(login){
+      navigate('/profile');
+    }
+    else
+      navigate('/login');
+  }
+
   return (
 <nav className="flex justify-between bg-gradient-to-r from-yellow-500 to-orange-500 p-4 drop-shadow-lg fixed w-full z-50 navbar">
       <div className='ml-8 nav'>
@@ -70,6 +80,11 @@ const handleSmoothScroll = (event: React.MouseEvent<HTMLAnchorElement, MouseEven
           <li>
             <a href="#login" onClick={(e) => handleLogin(e)} className="text-white hover:text-orange-200 block px-2 py-1">
               {localStorage.getItem('login') ? 'Logout' : 'Login'}
+            </a>
+          </li>
+          <li>
+            <a href="#profile" onClick={(e) => handleProfile(e)} className="text-white hover:text-orange-200 block px-2 py-1">
+              <img src="/user.png" width={'40px'} height={'40px'} alt="" />
             </a>
           </li>
         </ul>
