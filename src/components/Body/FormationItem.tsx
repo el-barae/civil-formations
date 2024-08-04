@@ -44,7 +44,7 @@ const FormationItem: React.FC<FormationItemProps> = ({ formation, index }) => {
       <h3 className="text-xl font-bold mb-2">{formation.name}</h3>
       <p><strong>Duree:</strong> {formation.duree}</p>
       <p><strong>Prix:</strong> {formation.price.toFixed(2)} DH</p>
-      <a href="#" onClick={handleVideoClick} className="text-blue-500">Details</a>
+      <a href="#" onClick={handleVideoClick} className="text-white bg-yellow-400 py-2 px-4 mt-2 rounded font-semibold">Details</a>
       <Modal
         show={showModal}
         onClose={handleCloseModal}

@@ -6,7 +6,8 @@ import API_URL from '../API_URL';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom'; 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEnvelope, faPhone, faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons';
+import { faEnvelope, faPhone, faMapMarkerAlt, faGear } from '@fortawesome/free-solid-svg-icons';
+import ProfileEditModal from './ProfileEditModal'
 import useIntersectionObserver from './useIntersectionObserver'
 
 interface User{
@@ -14,7 +15,6 @@ interface User{
   firstName: string,
   lastName: string,
   email: string,
-  password: string,
   phone: string,
   address: string,
   Subscribes: Subscribe[];
@@ -49,7 +49,8 @@ const ProfilePage: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-  const navigate = useNavigate(); // Initialize the navigate function
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const navigate = useNavigate(); 
 
   useEffect(() => {
     const checkLoginStatus = () => {
@@ -71,32 +72,42 @@ const ProfilePage: React.FC = () => {
     checkLoginStatus();
   }, [navigate]);
 
-  useEffect(() => {
-    if (isLoggedIn) {
-      const fetchProfile = async () => {
-        try {
-          const response = await axios.get(`${API_URL}/api/users/profile/1`);
-          const userData = response.data;
-          setUser(userData);
-          if (userData && userData.Subscribes) {
-            setSubscribes(userData.Subscribes);
-          }
-        } catch (error) {
-          setError('Error fetching profile data');
-        } finally {
-          setLoading(false);
-        }
-      };
+  const fetchProfile = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/api/users/profile/1`);
+      const userData = response.data;
+      setUser(userData);
+      if (userData && userData.Subscribes) {
+        setSubscribes(userData.Subscribes);
+      }
+    } catch (error) {
+      setError('Error fetching profile data');
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
+    if (isLoggedIn && !isModalOpen) {
       fetchProfile();
     } else {
       setLoading(false);
     }
-  }, [isLoggedIn]);
+  }, [isLoggedIn, isModalOpen]);
+
+  const handleSave = async (updatedUser: User) => {
+    try {
+      const response = await axios.put(`http://localhost:5000/api/users/profile/${user?.id}`, updatedUser);
+      setUser(response.data); // Update the local state with the new user data
+      setIsModalOpen(false);
+    } catch (error) {
+      console.error('Error updating profile:', error);
+    }
+  };
 
   if (loading) {
     return <div>Loading...</div>;
-  }
+  }// Update the local state with the new user data
 
   if (error) {
     return <div>{error}</div>;
@@ -110,24 +121,33 @@ const ProfilePage: React.FC = () => {
           <div>
           <h2 className="text-4xl font-bold mb-6">{user.firstName} {user.lastName}</h2>
           <p className="text-lg mb-2">
-            <strong className="text-orange-600">
+            <strong className="text-orange-700 mr-2">
               <FontAwesomeIcon icon={faEnvelope} className="mr-2" />
               Email:
             </strong> {user.email}
           </p>
           <p className="text-lg mb-2">
-            <strong className="text-orange-600">
+            <strong className="text-orange-700 mr-2">
               <FontAwesomeIcon icon={faPhone} className="mr-2" />
               Téléphone:
             </strong> {user.phone}
           </p>
           <p className="text-lg mb-2">
-            <strong className="text-orange-600">
+            <strong className="text-orange-700 mr-2">
               <FontAwesomeIcon icon={faMapMarkerAlt} className="mr-2" />
               Adresse:
             </strong> {user.address}
           </p>
+          <button onClick={() => setIsModalOpen(true)}>
+          <FontAwesomeIcon icon={faGear} className='mt-4 ml-6 text-3xl text-gray-700 cursor-pointer' />
+        </button>
           </div>
+          <ProfileEditModal
+        show={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        user={user}
+        onSave={handleSave}
+      />
           <div className='mr-32 hidden lg:flex'>
             <img src="/profile.png" width={'200px'} height={'200px'} alt="" />
           </div>
