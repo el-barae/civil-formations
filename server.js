@@ -10,6 +10,16 @@ const port = 5000;
 app.use(cors());
 app.use(express.json());
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.post('/api/videos', (req, res) => {
+  const videos = req.body.videos;
+  console.log("dada :"+ videos);
+  // Logic to save videos to database goes here
+  res.status(200).send('Videos received ');
+});
+
+
 
 const stripe = Stripe('your-secret-key-here');
 
