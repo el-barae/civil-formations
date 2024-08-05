@@ -7,6 +7,7 @@ import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {faClock } from '@fortawesome/free-solid-svg-icons';
+import VideoDescriptionModal from './VideoDescriptionModal';
 
 interface Formation {
   id: number;
@@ -29,7 +30,8 @@ interface Video {
 const FormationPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [formation, setFormation] = useState<Formation | null>(null);
-  const [showModal, setShowModal] = useState(false);
+  const [selectedVideo, setSelectedVideo] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [videos, setVideos] = useState<Video[]>([]);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const navigate = useNavigate();
@@ -86,15 +88,15 @@ const FormationPage: React.FC = () => {
     }
   }, [id, isLoggedIn]);
 
-  const handleVideoClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    setShowModal(true);
+  const handleVideoClick = (video:any) => {
+    setSelectedVideo(video);
+    setIsModalOpen(true);
   };
 
-  const handleCloseModal = () => {
-    setShowModal(false);
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedVideo(null);
   };
-
   if (!formation) {
     return <div>Loading...</div>;
   }
@@ -117,13 +119,19 @@ const FormationPage: React.FC = () => {
               <div key={video.id} className="bg-gray-100 rounded-lg p-4 shadow-xl">
                 <h3 className="text-xl font-bold">{video.numero}. {video.title}</h3>
                 <video controls controlsList="nodownload" src={video.link} className="w-full rounded mt-4 mb-4" />
-                <p className="mt-2">{video.description}</p>
+                <button
+                onClick={() => handleVideoClick(video)}
+                className="mt-4 bg-orange-500 text-white py-2 px-4 rounded-lg"
+              >
+                Voir plus
+              </button>
               </div>
             ))}
           </div>
         ) : (
           <p>Aucune vidéo disponible</p>
         )}
+        <VideoDescriptionModal show={isModalOpen} onClose={closeModal} video={selectedVideo} />
       </div>
     </div>
   );

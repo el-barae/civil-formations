@@ -74,7 +74,8 @@ const ProfilePage: React.FC = () => {
 
   const fetchProfile = async () => {
     try {
-      const response = await axios.get(`${API_URL}/api/users/profile/1`);
+      const id = localStorage.getItem('ID')
+      const response = await axios.get(`${API_URL}/api/users/profile/`+id);
       const userData = response.data;
       setUser(userData);
       if (userData && userData.Subscribes) {
@@ -139,7 +140,7 @@ const ProfilePage: React.FC = () => {
             </strong> {user.address}
           </p>
           <button onClick={() => setIsModalOpen(true)}>
-          <FontAwesomeIcon icon={faGear} className='mt-4 ml-6 text-3xl text-gray-700 cursor-pointer' />
+          <FontAwesomeIcon icon={faGear} className='mt-6 ml-6 text-4xl text-gray-700 cursor-pointer' />
         </button>
           </div>
           <ProfileEditModal
@@ -149,7 +150,7 @@ const ProfilePage: React.FC = () => {
         onSave={handleSave}
       />
           <div className='mr-32 hidden lg:flex'>
-            <img src="/profile.png" width={'200px'} height={'200px'} alt="" />
+            <img src="/profile.png" width={'250px'} height={'200px'} alt="" />
           </div>
         </div>
       )}
