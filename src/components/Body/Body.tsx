@@ -67,7 +67,7 @@ const Body: React.FC = () => {
     </div>
     <button 
       onClick={handleMoreFormations}
-      className='mt-8 px-6 py-2 rounded bg-orange-500 text-white font-bold text-xl'
+      className='mt-8 px-6 py-2 rounded bg-gradient-to-r from-amber-500 to-orange-600 text-white font-bold text-xl hover:bg-gradient-to-l from-amber-500 to-orange-600'
     >
       Autres
     </button>
