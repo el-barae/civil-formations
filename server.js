@@ -54,10 +54,12 @@ const formationRoutes = require('./routes/formation');
 const userRoutes = require('./routes/user'); 
 const subscribeRoutes = require('./routes/subscribe');
 const videoRoutes = require('./routes/video');
+const viewRoutes = require('./routes/view');
 app.use('/api/formations', formationRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/subscribes', subscribeRoutes);
 app.use('/api/videos', videoRoutes);
+app.use('/api/views', viewRoutes);
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);

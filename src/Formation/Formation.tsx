@@ -6,7 +6,7 @@ import API_URL from '../API_URL';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {faClock } from '@fortawesome/free-solid-svg-icons';
+import {faClock ,faEye, faEyeSlash} from '@fortawesome/free-solid-svg-icons';
 import VideoDescriptionModal from './VideoDescriptionModal';
 
 interface Formation {
@@ -25,6 +25,14 @@ interface Video {
   numero: number;
   link: string;
   description: string;
+  View: View | null;
+}
+
+interface View {
+  id: number;
+  view: boolean;
+  userId: number;
+  videoId: number;
 }
 
 const FormationPage: React.FC = () => {
@@ -73,11 +81,17 @@ const FormationPage: React.FC = () => {
       const fetchVideos = async () => {
         try {
           const response = await axios.get<Video[]>(`${API_URL}/api/videos/formation/${id}`);
-          if (Array.isArray(response.data)) {
-            setVideos(response.data);
-          } else {
-            throw new Error('Invalid data format');
-          }
+          const videosData = response.data;
+
+        const viewsResponse = await axios.get<View[]>(`${API_URL}/api/views/user/1`);
+        const viewsData = viewsResponse.data;
+
+        const videosWithViews = videosData.map(video => {
+          const view = viewsData.find(v => v.videoId === video.id);
+          return { ...video, View: view || null };
+        });
+
+        setVideos(videosWithViews);
         } catch (error) {
           console.error('Error fetching videos:', error);
         }
@@ -119,12 +133,17 @@ const FormationPage: React.FC = () => {
               <div key={video.id} className="bg-gray-100 rounded-lg p-4 shadow-xl">
                 <h3 className="text-xl font-bold">{video.numero}. {video.title}</h3>
                 <video controls controlsList="nodownload" src={video.link} className="w-full rounded mt-4 mb-4" />
-                <button
+                <div className='flex justify-between'>
+                    <button
                 onClick={() => handleVideoClick(video)}
                 className="mt-4 bg-orange-500 text-white py-2 px-4 rounded-lg"
               >
                 Voir plus
               </button>
+              <span className={`mt-6 p-2 rounded text-white  ${video.View?.view ? 'bg-yellow-500' : 'bg-gray-600'}`}>
+                {video.View?.view ? <FontAwesomeIcon icon={faEye} className="text-xl" />: <FontAwesomeIcon icon={faEyeSlash} className="text-xl" />}
+              </span>
+                </div>
               </div>
             ))}
           </div>
