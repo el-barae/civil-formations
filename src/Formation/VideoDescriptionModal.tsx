@@ -22,7 +22,6 @@ const VideoDescriptionModal: React.FC<VideoDescriptionModalProps> = ({ show, onC
         </div>
         <div className="mt-4">
           <h2 className="text-2xl font-bold mb-2">{video.numero}. {video.title}</h2>
-          <video controls controlsList="nodownload" src={video.link} className="w-full rounded mt-4 mb-4" />
           <p className="mt-2">{video.description}</p>
         </div>
       </div>

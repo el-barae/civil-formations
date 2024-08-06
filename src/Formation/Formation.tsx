@@ -83,6 +83,7 @@ const FormationPage: React.FC = () => {
           const response = await axios.get<Video[]>(`${API_URL}/api/videos/formation/${id}`);
           const videosData = response.data;
 
+
         const viewsResponse = await axios.get<View[]>(`${API_URL}/api/views/user/1`);
         const viewsData = viewsResponse.data;
 
@@ -115,6 +116,21 @@ const FormationPage: React.FC = () => {
     return <div>Loading...</div>;
   }
 
+  const handlePlay = async (videoId:number) => {
+    const idU = Number(localStorage.getItem('ID'))
+    try {
+      await axios.post(`${API_URL}/api/views/set/${idU}/${videoId}`);
+      setVideos(videos.map(video => 
+        video.id === videoId 
+          ? { ...video, View: video.View ? { ...video.View, view: true } : { id: videoId, view: true, userId: idU, videoId } } 
+          : video
+      ));
+    } catch (error) {
+      console.error('Error updating view status:', error);
+    }
+  };
+
+
   return (
     <div className="bg-white rounded-lg shadow-lg w-full h-full">
       <Nav/>
@@ -132,13 +148,13 @@ const FormationPage: React.FC = () => {
             {videos.map(video => (
               <div key={video.id} className="bg-gray-100 rounded-lg p-4 shadow-xl">
                 <h3 className="text-xl font-bold">{video.numero}. {video.title}</h3>
-                <video controls controlsList="nodownload" src={video.link} className="w-full rounded mt-4 mb-4" />
+                <video controls controlsList="nodownload" src={video.link} className="w-full rounded mt-4 mb-4" onPlay={() => handlePlay(video.id)} />
                 <div className='flex justify-between'>
                     <button
                 onClick={() => handleVideoClick(video)}
                 className="mt-4 bg-orange-500 text-white py-2 px-4 rounded-lg"
               >
-                Voir plus
+                Description
               </button>
               <span className={`mt-6 p-2 rounded text-white  ${video.View?.view ? 'bg-yellow-500' : 'bg-gray-600'}`}>
                 {video.View?.view ? <FontAwesomeIcon icon={faEye} className="text-xl" />: <FontAwesomeIcon icon={faEyeSlash} className="text-xl" />}
