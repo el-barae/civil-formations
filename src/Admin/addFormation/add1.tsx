@@ -1,29 +1,42 @@
 import './add.css';
-import React from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import Barside from '../barside/barside';
+import { useNavigate } from 'react-router-dom';
+
 
 const Add1: React.FC = () => {
+  const [info, setInfo] = useState({ name: '', duree: '', desc: '', price: '', image: null as File | null, video: null as File | null });
+  const navigate = useNavigate();
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setInfo({ ...info, [name]: value });
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, files } = e.target;
+    if (files && files.length > 0) {
+      setInfo({ ...info, [name]: files[0] });
+    }
+  };
+
+
+
   return (
     <div className='bodyform add'>
-        <Barside title='Ajouter une formation'/>
-          <form action="./add2" >
-              <input placeholder="Nom du formation" type="text" name="name" id="name"/>
-              <input placeholder="Duree" type="text" name="duree" id="duree"/>
-              <input placeholder="description" type="text" name="description" id="description"/>
-              <input placeholder="prix" type="text" name="price" id="price"/>
-              <label >Image :</label><input placeholder="choisir une image" type="file" name="image" id="image"/> 
-              <label >Video presentative : </label> <input placeholder="video de presentation" type="file" name="video" id="video"/>
-              <input type="submit" id="submit" value="Suivant" name="submit"/>
-          </form>
+      <Barside title='Ajouter une formation' />
+      <form >
+        <input value={info.name} onChange={handleInputChange} placeholder="Nom du formation" type="text" name="name" id="name" />
+        <input value={info.duree} onChange={handleInputChange} placeholder="Durée" type="text" name="duree" id="duree" />
+        <input value={info.desc} onChange={handleInputChange} placeholder="Description" type="text" name="desc" id="description" />
+        <input value={info.price} onChange={handleInputChange} placeholder="Prix" type="text" name="price" id="price" />
+        <label>Image :</label><input onChange={handleFileChange} type="file" name="image" id="image" />
+        <label>Vidéo présentative :</label><input onChange={handleFileChange} type="file" name="video" id="video" />
+        <input  onClick={()=>navigate('/Admin/add2', { state: { info } })} type="submit" id="submit" value="Suivant" name="submit"  />
+      </form>
     </div>
-    
-
-   
-
-  
   );
 };
 
 export default Add1;
-

@@ -95,6 +95,30 @@
         cursor: pointer;
       }
       
+
+      .item{
+        display: flex;
+        gap: 8px;
+
+      }
+      form input{
+        border-radius: 10px;
+      }
+      form input:hover{
+        background-color: white;
+        color: #000;
+        transition: 0.5s;
+      }
+
+      .item input{
+        border-radius: 10px;
+      }
+      .item input:hover{
+        background-color: white;
+        color: #000;
+        transition: 0.5s;
+      }
+
     }
 
 
