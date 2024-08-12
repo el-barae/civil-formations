@@ -31,8 +31,8 @@ const Add1: React.FC = () => {
         <input value={info.duree} onChange={handleInputChange} placeholder="Durée" type="text" name="duree" id="duree" />
         <input value={info.desc} onChange={handleInputChange} placeholder="Description" type="text" name="desc" id="description" />
         <input value={info.price} onChange={handleInputChange} placeholder="Prix" type="text" name="price" id="price" />
-        <label>Image :</label><input onChange={handleFileChange} type="file" name="image" id="image" />
-        <label>Vidéo présentative :</label><input onChange={handleFileChange} type="file" name="video" id="video" />
+        <label>Image :</label><input accept='.png , .jpeg, .jpg , .img' onChange={handleFileChange} type="file" name="image" id="image" />
+        <label>Vidéo présentative :</label><input accept='.mp4' onChange={handleFileChange} type="file" name="video" id="video" />
         <input  onClick={()=>navigate('/Admin/add2', { state: { info } })} type="submit" id="submit" value="Suivant" name="submit"  />
       </form>
     </div>

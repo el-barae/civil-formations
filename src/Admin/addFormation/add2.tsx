@@ -70,21 +70,20 @@ const Add2: React.FC = () => {
       }
       const response1 = await axios.post('http://localhost:5000/api/formation', formData1);
       console.log("Réponse depuis backend formation :", response1.data);
-
-
-
-      
-    } catch (error) {
+    } 
+    catch (error) {
       console.error('There was an error submitting the form 2!', error);
     }
   };
-    
+  
+  
+
   return (
     <div className='bodyform'>
-      {/* <p>{info.name}</p>
+     
       <p>{info.desc}</p>
       <p>{info.price}</p>
-      <p>{info.duree}</p>  */}
+      <p>{info.duree}</p> 
        <form className='formvideo' onSubmit={handleSubmit}>
       {items.map((item) => (
         <div className="item" key={item.id}>
@@ -94,6 +93,7 @@ const Add2: React.FC = () => {
             placeholder={`titre ${item.id}`} 
             value={item.titre}
             onChange={(e) => handleInputChange(item.id, 'titre', e.target.value)}
+            required
           />
           <input 
             type="text" 
@@ -101,12 +101,14 @@ const Add2: React.FC = () => {
             placeholder="Description" 
             value={item.desc}
             onChange={(e) => handleInputChange(item.id, 'desc', e.target.value)}
+            required
           />
-            
           <input 
             type="file" 
             name={`video-${item.id}`} 
             onChange={(e) => handleFileChange(item.id, e)}
+            accept='.mp4'
+            required
           />
 
 
