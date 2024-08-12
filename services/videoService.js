@@ -1,13 +1,42 @@
-const Video = require('../models/Video'); // Adjust this to your Video model file
+const Video = require('../models/Video');
+const path = require('path');
+const fs = require('fs');
 
 // Create a new video
 exports.createVideo = async (req, res) => {
-  const { title, numero, link, description, formationId } = req.body;
   try {
-    const video = await Video.create({ title, numero, link, description, formationId });
-    res.status(201).json({ message: 'Video created successfully', video });
+      const videos = req.body.videos;
+      const files = req.files;
+      const videoData = [];
+
+      // Ensure the directory exists
+      const videosDir = path.join(__dirname, 'public/videos');
+      if (!fs.existsSync(videosDir)) {
+          fs.mkdirSync(videosDir, { recursive: true });
+      }
+
+      // Process each file
+      files.forEach((file, index) => {
+          const targetPath = path.join(videosDir, file.originalname);
+          fs.renameSync(file.path, targetPath);
+          const videoPath = `public/videos/${file.originalname}`;
+
+          // Push video metadata into the array
+          videoData.push({
+              title: videos[index]['title'], // Changed 'titre' to 'title' for consistency
+              numero: index + 1, // Incrementing the numero based on the index
+              link: videoPath,
+              description: videos[index]['description'], // Changed 'desc' to 'description' for consistency
+              formationId: videos[index]['formationId'] || 1 // Using formationId from videos data, default to 1 if not provided
+          });
+      });
+
+      console.log('Form data:', { videos: videoData });
+      res.status(200).json(videoData);
+
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error });
+      console.error('Error creating videos:', error);
+      res.status(500).json({ message: 'Error creating videos', error });
   }
 };
 

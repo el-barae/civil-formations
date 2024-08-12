@@ -2,6 +2,7 @@ import './add.css';
 import React , { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
+import API_URL from '../../API_URL';
 
 
 const Add2: React.FC = () => {
@@ -39,41 +40,40 @@ const Add2: React.FC = () => {
   const handleSubmit = async (e:any) => {
     e.preventDefault();
     try {
+      const formData1 = new FormData();
+    formData1.append('name', info.name);
+    formData1.append('duree', info.duree);
+    formData1.append('description', info.description);
+    formData1.append('price', info.price);
+    if (info.image) {
+        formData1.append('image', info.image);
+    }
+    if (info.video) {
+        formData1.append('video', info.video);
+    }
+
+    const response1 = await axios.post(`${API_URL}/api/formations`, formData1);
+    console.log("Réponse depuis backend formation :", response1.data);
+  } catch (error) {
+      console.error('There was an error submitting the formation form!', error);
+  }
+  
+  try {
       const formData = new FormData();
       items.forEach((item, index) => {
-        formData.append(`videos[${index}][titre]`, item.titre);
-        formData.append(`videos[${index}][desc]`, item.desc);
-        if (item.video!=null) {
-                  formData.append(`videos[${index}][video]`, item.video);
-        }
+          formData.append(`videos[${index}][title]`, item.titre);
+          formData.append(`videos[${index}][description]`, item.desc);
+          if (item.video) {
+              formData.append(`videos[${index}][link]`, item.video);
+          }
       });
-      const response = await axios.post('http://localhost:5000/api/videos', formData);
-      console.log("response depuis backend:"+response.data);
-
-
-
-
-
-
-
-
-      const formData1 = new FormData();
-      formData1.append('videos[name]', info.name);
-      formData1.append('videos[desc]', info.desc);
-      formData1.append('videos[duree]', info.duree);
-      formData1.append('videos[price]', info.price);
-      if (info.image) {
-        formData1.append('videos[image]', info.image);
-      }
-      if (info.video) {
-        formData1.append('videos[video]', info.video);
-      }
-      const response1 = await axios.post('http://localhost:5000/api/formation', formData1);
-      console.log("Réponse depuis backend formation :", response1.data);
-    } 
-    catch (error) {
-      console.error('There was an error submitting the form 2!', error);
-    }
+  
+      const response = await axios.post(`${API_URL}/api/videos`, formData);
+      console.log("Réponse depuis backend videos :", response.data);
+  } catch (error) {
+      console.error('There was an error submitting the videos form!', error);
+  }
+  
   };
   
   

@@ -1,4 +1,6 @@
 const Formation = require('../models/Formation'); 
+const path = require('path');
+const fs = require('fs');
 
 exports.getFormationById = async (req, res) => {
     try {
@@ -24,12 +26,51 @@ exports.getFormations = async (req, res) => {
   
   exports.createFormation = async (req, res) => {
     try {
-      const formation = await Formation.create(req.body);
-      res.status(201).json(formation);
-    } catch (err) {
-      res.status(500).json({ error: err.message });
+        const videos = req.body;
+        const files = req.files;
+
+        // Create directories if they don't exist
+        if (!fs.existsSync(path.join(__dirname, 'public/images'))) {
+            fs.mkdirSync(path.join(__dirname, 'public/images'), { recursive: true });
+        } else {
+            console.log("The images directory already exists");
+        }
+
+        if (!fs.existsSync(path.join(__dirname, 'public/videos'))) {
+            fs.mkdirSync(path.join(__dirname, 'public/videos'), { recursive: true });
+        } else {
+            console.log("The videos directory already exists");
+        }
+
+        // Save image and video files
+        const fileimage = files[0];
+        const targetPathimage = path.join(__dirname, 'public/images', fileimage.originalname);
+        fs.renameSync(fileimage.path, targetPathimage);
+        const imagePath = `public/images/${fileimage.originalname}`;
+
+        const filevideo = files[1];
+        const targetPathvideo = path.join(__dirname, 'public/videos', filevideo.originalname);
+        fs.renameSync(filevideo.path, targetPathvideo);
+        const videoPath = `public/videos/${filevideo.originalname}`;
+
+        // Prepare the data for database insertion
+        const formationData = {
+            name: videos['name'],
+            duree: videos['duree'],
+            description: videos['description'],
+            price: videos['price'],
+            image: imagePath,
+            video: videoPath
+        };
+
+        // Save formation data to the database
+        const newFormation = await Formation.create(formationData);
+        res.status(200).json(newFormation);
+    } catch (error) {
+        console.error('Error creating formation:', error);
+        res.status(500).json({ message: 'Error creating formation', error });
     }
-  };
+};
   
   exports.updateFormation = async (req, res) => {
     try {

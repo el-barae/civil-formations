@@ -7,13 +7,7 @@ const authRoutes = require('./routes/auth');
 const cors = require('cors');
 const app = express();
 const port = 5000;
-const multer = require('multer');
-const path = require('path');
-const fs = require('fs');
 const bodyParser = require('body-parser');
-
-
-const upload = multer({ dest: 'uploads/' }); // Temporary upload destination
 
 // Middleware to parse JSON bodies
 
@@ -22,7 +16,7 @@ app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.post('/api/formation', upload.any(),async (req, res) => {
+/*app.post('/api/formation', upload.any(),async (req, res) => {
     const videos = req.body.videos;
   const files = req.files;
   const infoData = [];
@@ -92,7 +86,7 @@ if (!fs.existsSync(path.join(__dirname, 'public/videos'))) {
     res.status(200).send({ videos: videoData });
   });
 
-
+*/
 
 const stripe = Stripe('your-secret-key-here');
 
