@@ -3,10 +3,10 @@ import React , { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 import API_URL from '../../API_URL';
-
+import { useNavigate } from 'react-router-dom';
 
 const Add2: React.FC = () => {
-  
+  const navigate = useNavigate();
   const [items, setItems] = useState([{ id: 1, titre: '', desc: '', video: null }]);
   const location = useLocation();
   const { info } = location.state;
@@ -39,6 +39,7 @@ const Add2: React.FC = () => {
 
   const handleSubmit = async (e:any) => {
     e.preventDefault();
+
     try {
       const formData1 = new FormData();
     formData1.append('name', info.name);
@@ -57,23 +58,27 @@ const Add2: React.FC = () => {
   } catch (error) {
       console.error('There was an error submitting the formation form!', error);
   }
-  
   try {
-      const formData = new FormData();
-      items.forEach((item, index) => {
-          formData.append(`videos[${index}][title]`, item.titre);
-          formData.append(`videos[${index}][description]`, item.desc);
-          if (item.video) {
-              formData.append(`videos[${index}][link]`, item.video);
-          }
-      });
+    const formData = new FormData();
+    items.forEach((item, index) => {
+        formData.append(`videos[${index}][title]`, item.titre);
+        formData.append(`videos[${index}][description]`, item.desc);
+        if (item.video) {
+            formData.append(`videos[${index}][link]`, item.video);
+        }
+    });
+    formData.append(`videos[formationname]`, info.name);
+
+
+    const response = await axios.post(`${API_URL}/api/videos`, formData);
+    console.log("Réponse depuis backend videos :", response.data);
+    
+} catch (error) {
+    console.error('There was an error submitting the videos form!', error);
+}
   
-      const response = await axios.post(`${API_URL}/api/videos`, formData);
-      console.log("Réponse depuis backend videos :", response.data);
-  } catch (error) {
-      console.error('There was an error submitting the videos form!', error);
-  }
   
+navigate('../Admin/dashboard');
   };
   
   
@@ -113,8 +118,13 @@ const Add2: React.FC = () => {
 
 
 
-          <a onClick={addItems}><i id='iconadd' className="fa-solid fa-plus"></i></a>
-          <a onClick={() => removeItems(item.id)}><i id='iconremove' className="fa-solid fa-trash-can"></i></a>
+          <button type="button" onClick={addItems} className="icon-button">
+            <i id='iconadd' className="fa-solid fa-plus"></i>
+          </button>
+          
+          <button type="button" onClick={() => removeItems(item.id)} className="icon-button">
+            <i id='iconremove' className="fa-solid fa-trash-can"></i>
+          </button>
         </div>
       ))}
       <button type="submit">Ajouter</button>

@@ -62,7 +62,7 @@ exports.getFormations = async (req, res) => {
             image: imagePath,
             video: videoPath
         };
-
+console.log("les information du formations")
         // Save formation data to the database
         const newFormation = await Formation.create(formationData);
         res.status(200).json(newFormation);

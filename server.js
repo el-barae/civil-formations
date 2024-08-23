@@ -122,6 +122,7 @@ const userRoutes = require('./routes/user');
 const subscribeRoutes = require('./routes/subscribe');
 const videoRoutes = require('./routes/video');
 app.use('/api/formations', formationRoutes);
+app.use('/formations', formationRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/subscribes', subscribeRoutes);
 app.use('/api/videos', videoRoutes);

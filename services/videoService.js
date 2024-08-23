@@ -1,4 +1,7 @@
-const Video = require('../models/Video');
+const Videoo = require('../models/Video');
+const Formation = require('../models/Formation');
+
+
 const path = require('path');
 const fs = require('fs');
 
@@ -15,8 +18,15 @@ exports.createVideo = async (req, res) => {
           fs.mkdirSync(videosDir, { recursive: true });
       }
 
+      const formationName = videos['formationname']; // Assuming you're getting the formation name from the request body
+      const formation = await Formation.findOne({ where: { name: formationName } });
+
+      if (!formation) {
+          throw new Error('Formation not found');
+      }
+
       // Process each file
-      files.forEach((file, index) => {
+      files.forEach( (file, index) => {
           const targetPath = path.join(videosDir, file.originalname);
           fs.renameSync(file.path, targetPath);
           const videoPath = `public/videos/${file.originalname}`;
@@ -27,12 +37,16 @@ exports.createVideo = async (req, res) => {
               numero: index + 1, // Incrementing the numero based on the index
               link: videoPath,
               description: videos[index]['description'], // Changed 'desc' to 'description' for consistency
-              formationId: videos[index]['formationId'] || 1 // Using formationId from videos data, default to 1 if not provided
+              formationId: formation.id // Using formationId from videos data, default to 1 if not provided
           });
+         
       });
-
-      console.log('Form data:', { videos: videoData });
-      res.status(200).json(videoData);
+      const newVideos = await Videoo.bulkCreate(videoData);
+      res.status(200).json(newVideos);
+      
+     
+      // console.log('Form data:', { videos: videoData });
+      // res.status(200).json(videoData);
 
   } catch (error) {
       console.error('Error creating videos:', error);
