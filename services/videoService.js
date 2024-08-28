@@ -45,7 +45,7 @@ exports.createVideo = async (req, res) => {
       res.status(200).json(newVideos);
       
      
-      // console.log('Form data:', { videos: videoData });
+      console.log('Form data:', { videos: videoData });
       // res.status(200).json(videoData);
 
   } catch (error) {

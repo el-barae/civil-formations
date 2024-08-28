@@ -3,6 +3,9 @@ import React from 'react';
 import axios from 'axios';
 import Barside from '../barside/barside';
 import { useEffect,useState } from 'react';
+import API_URL from '../../API_URL';
+import { it } from 'node:test';
+import { url } from 'node:inspector';
 
 const Dashboard: React.FC = () => {
   const [formations, setFormations] = useState<any[]>([]); // État pour stocker les formations
@@ -13,7 +16,7 @@ const Dashboard: React.FC = () => {
       // Fonction pour récupérer les formations
       const fetchFormations = async () => {
           try {
-              const response = await axios.get('http://localhost:3000/formations'); // Remplacez l'URL par celle de votre API
+              const response = await axios.get(API_URL+'/formations'); // Remplacez l'URL par celle de votre API
               setFormations(response.data);
               setLoading(false);
           } catch (err) {
@@ -21,6 +24,17 @@ const Dashboard: React.FC = () => {
               setLoading(false);
           }
       };
+
+    //  const backgroundstyle = ()=>{
+    //   formations.map((formation) => (
+    //   document.getElementById(`it${formation.id}`)
+
+
+      
+
+    //  )) 
+    //  }
+     
 
       fetchFormations(); // Appel de la fonction lors du montage du composant
   }, []); // Le tableau vide [] signifie que ce useEffect se déclenche une seule fois
@@ -33,6 +47,10 @@ const Dashboard: React.FC = () => {
   if (error) {
       return <div>{error}</div>;
   }
+  console.log(`url(../../../services/public/images/iphone.jpeg)`);
+
+  
+
   const deleteformation = async (id: any) => {
     try {
       // Utiliser les backticks pour créer une chaîne de caractères dynamique
@@ -55,11 +73,21 @@ const Dashboard: React.FC = () => {
             <div className="titlecontent">
             {
               formations.map((formation) => (
-                 <div id="it1" key={formation.id} className="box">
+               
+
+                <div 
+                key={formation.id}
+                id={"it"+ formation.id}
+                className="box"
+                style={{
+                  backgroundImage: `url(${formation.image})`,
+                  backgroundSize: 'cover',
+                }}
+                >
                   <a href="#"><i id="update" className="fa-sharp fa-solid fa-pen-to-square" ></i></a>
-                  <h1>{formation.name}</h1>
+                        <h1>{formation.image}</h1>
                   <a onClick={() => deleteformation(formation.id)}><i className="fa-regular fa-trash-can"></i></a>
-                  </div>
+                </div>
               ))
             }
                
@@ -67,11 +95,6 @@ const Dashboard: React.FC = () => {
             </div>
             </div>
     </div>
-    
-
-   
-
-  
   );
 };
 

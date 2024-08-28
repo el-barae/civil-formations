@@ -24,17 +24,23 @@ const Add1: React.FC = () => {
 
 
   return (
-    <div className='bodyform add'>
-      <Barside title='Ajouter une formation' />
-      <form >
-        <input value={info.name} onChange={handleInputChange} placeholder="Nom du formation" type="text" name="name" id="name" />
-        <input value={info.duree} onChange={handleInputChange} placeholder="Durée" type="text" name="duree" id="duree" />
-        <input value={info.desc} onChange={handleInputChange} placeholder="Description" type="text" name="desc" id="description" />
-        <input value={info.price} onChange={handleInputChange} placeholder="Prix" type="text" name="price" id="price" />
-        <label>Image :</label><input accept='.png , .jpeg, .jpg , .img' onChange={handleFileChange} type="file" name="image" id="image" />
-        <label>Vidéo présentative :</label><input accept='.mp4' onChange={handleFileChange} type="file" name="video" id="video" />
-        <input  onClick={()=>navigate('/Admin/add2', { state: { info } })} type="submit" id="submit" value="Suivant" name="submit"  />
-      </form>
+    <div className='bodyform'>
+    
+        <Barside title='add'/>
+        <div className="content">
+       
+            <div className="titlecontent">
+            <form onSubmit={()=>navigate('/Admin/add2', { state: { info } })}>
+                  <input required value={info.name} onChange={handleInputChange} placeholder="Nom du formation" type="text" name="name" id="name" />
+                  <input required value={info.duree} onChange={handleInputChange} placeholder="Durée" type="text" name="duree" id="duree" />
+                  <input required value={info.desc} onChange={handleInputChange} placeholder="Description" type="text" name="desc" id="description" />
+                  <input required value={info.price} onChange={handleInputChange} placeholder="Prix" type="text" name="price" id="price" />
+                  <label>Image :</label><input required accept='.png , .jpeg, .jpg , .img' onChange={handleFileChange} type="file" name="image" id="image" />
+                  <label>Vidéo présentative :</label><input required accept='.mp4' onChange={handleFileChange} type="file" name="video" id="video" />
+                  <input  type="submit" id="submit" value="Suivant" name="submit"  />
+                </form>
+            </div>
+        </div>
     </div>
   );
 };

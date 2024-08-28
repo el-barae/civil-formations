@@ -44,14 +44,14 @@ exports.getFormations = async (req, res) => {
 
         // Save image and video files
         const fileimage = files[0];
-        const targetPathimage = path.join(__dirname, 'public/images', fileimage.originalname);
+        const targetPathimage = path.join(__dirname, '../public/images', fileimage.originalname);
         fs.renameSync(fileimage.path, targetPathimage);
-        const imagePath = `public/images/${fileimage.originalname}`;
+        const imagePath = `/images/${fileimage.originalname}`;
 
         const filevideo = files[1];
-        const targetPathvideo = path.join(__dirname, 'public/videos', filevideo.originalname);
+        const targetPathvideo = path.join(__dirname, '../public/videos', filevideo.originalname);
         fs.renameSync(filevideo.path, targetPathvideo);
-        const videoPath = `public/videos/${filevideo.originalname}`;
+        const videoPath = `/videos/${filevideo.originalname}`;
 
         // Prepare the data for database insertion
         const formationData = {

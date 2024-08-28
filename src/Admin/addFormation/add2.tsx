@@ -55,6 +55,7 @@ const Add2: React.FC = () => {
 
     const response1 = await axios.post(`${API_URL}/api/formations`, formData1);
     console.log("Réponse depuis backend formation :", response1.data);
+   
   } catch (error) {
       console.error('There was an error submitting the formation form!', error);
   }
@@ -72,22 +73,23 @@ const Add2: React.FC = () => {
 
     const response = await axios.post(`${API_URL}/api/videos`, formData);
     console.log("Réponse depuis backend videos :", response.data);
+   
     
 } catch (error) {
     console.error('There was an error submitting the videos form!', error);
 }
   
-  
-navigate('../Admin/dashboard');
+
+ 
   };
   
   
 
   return (
-    <div className='bodyform'>
-     
-      <p>{info.desc}</p>
-      <p>{info.price}</p>
+    <div className='bodyform2'>
+      <p>{info.name}</p><br />
+      <p>{info.desc}</p><br />
+      <p>{info.price}</p><br />
       <p>{info.duree}</p> 
        <form className='formvideo' onSubmit={handleSubmit}>
       {items.map((item) => (
@@ -127,7 +129,7 @@ navigate('../Admin/dashboard');
           </button>
         </div>
       ))}
-      <button type="submit">Ajouter</button>
+      <button  type="submit">Ajouter</button>
     </form>
     </div>
       );
