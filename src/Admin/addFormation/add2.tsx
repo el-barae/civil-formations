@@ -39,6 +39,9 @@ const Add2: React.FC = () => {
 
   const handleSubmit = async (e:any) => {
     e.preventDefault();
+    setTimeout(function() {
+      navigate("/Admin/dashboard");
+  }, 3000);
 
     try {
       const formData1 = new FormData();
@@ -55,11 +58,7 @@ const Add2: React.FC = () => {
 
     const response1 = await axios.post(`${API_URL}/api/formations`, formData1);
     console.log("Réponse depuis backend formation :", response1.data);
-   
-  } catch (error) {
-      console.error('There was an error submitting the formation form!', error);
-  }
-  try {
+
     const formData = new FormData();
     items.forEach((item, index) => {
         formData.append(`videos[${index}][title]`, item.titre);
@@ -73,13 +72,11 @@ const Add2: React.FC = () => {
 
     const response = await axios.post(`${API_URL}/api/videos`, formData);
     console.log("Réponse depuis backend videos :", response.data);
-   
     
 } catch (error) {
     console.error('There was an error submitting the videos form!', error);
 }
   
-
  
   };
   
