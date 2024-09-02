@@ -6,12 +6,24 @@ import { useEffect,useState } from 'react';
 import API_URL from '../../API_URL';
 import { it } from 'node:test';
 import { url } from 'node:inspector';
-
+import FormationItem from './formationItem'
 const Dashboard: React.FC = () => {
-  const [formations, setFormations] = useState<any[]>([]); // État pour stocker les formations
+  const [formations, setFormations] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true); // État pour le chargement
   const [error, setError] = useState<string | null>(null); // État pour les erreurs
 
+  const deleteformation = async (id: any) => {
+    try {
+      // Utiliser les backticks pour créer une chaîne de caractères dynamique
+      const response = await axios.delete(`http://localhost:5000/formations/${id}`);
+      console.log('Formation supprimée:', response.data);
+      setFormations(formations.filter(formation => formation.id !== id));
+
+    } catch (error) {
+      console.error('Erreur lors de la suppression de la formation:', error);
+    }
+  };
+ 
   useEffect(() => {
       // Fonction pour récupérer les formations
       const fetchFormations = async () => {
@@ -47,21 +59,10 @@ const Dashboard: React.FC = () => {
   if (error) {
       return <div>{error}</div>;
   }
-  console.log(`url(../../../services/public/images/iphone.jpeg)`);
 
   
 
-  const deleteformation = async (id: any) => {
-    try {
-      // Utiliser les backticks pour créer une chaîne de caractères dynamique
-      const response = await axios.delete(`http://localhost:3000/formations/${id}`);
-      console.log('Formation supprimée:', response.data);
-      setFormations(formations.filter(formation => formation.id !== id));
-
-    } catch (error) {
-      console.error('Erreur lors de la suppression de la formation:', error);
-    }
-  };
+ 
   
   return (
     <div className='bodydashboard'>
@@ -72,28 +73,25 @@ const Dashboard: React.FC = () => {
         <div className="title"><h1>Dashborad</h1></div>
             <div className="titlecontent">
             {
-              formations.map((formation) => (
+              formations.map((formation,index) => (
                
 
-                <div 
-                key={formation.id}
-                id={"it"+ formation.id}
-                className="box"
-                style={{
-                  backgroundImage: `url(${formation.image})`,
-                  backgroundSize: 'cover',
-                }}
-                >
-                  <a href="#"><i id="update" className="fa-sharp fa-solid fa-pen-to-square" ></i></a>
-                        <h1>{formation.image}</h1>
-                  <a onClick={() => deleteformation(formation.id)}><i className="fa-regular fa-trash-can"></i></a>
-                </div>
+               <FormationItem
+               key={formation.id}
+               formation={formation}
+               index={index}
+               deleteformation={() => deleteformation(formation.id)}
+               />
+               
+                
+                
               ))
             }
                
 
             </div>
             </div>
+              
     </div>
   );
 };

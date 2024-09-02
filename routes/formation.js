@@ -10,7 +10,7 @@ router.get('/', formationController.getFormations);
   
 router.post('/', upload.any(), formationController.createFormation);
   
-router.put('/:id', formationController.updateFormation);
+router.put('/:id',upload.none(), formationController.updateFormation);
   
 router.delete('/:id', formationController.DeleteFormation);
 

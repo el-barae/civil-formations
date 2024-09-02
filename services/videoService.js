@@ -1,4 +1,4 @@
-const Videoo = require('../models/Video');
+const Video = require('../models/Video');
 const Formation = require('../models/Formation');
 
 
@@ -41,7 +41,7 @@ exports.createVideo = async (req, res) => {
           });
          
       });
-      const newVideos = await Videoo.bulkCreate(videoData);
+      const newVideos = await Video.bulkCreate(videoData);
       res.status(200).json(newVideos);
       
      
@@ -71,7 +71,7 @@ exports.getVideosByFormation = async (req, res) => {
     const videos = await Video.findAll({ where: { formationId } });
     res.status(200).json(videos);
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error });
+    res.status(500).json({ message: 'Server error get videos by formation', error });
   }
 };
 
@@ -85,14 +85,23 @@ exports.getVideoById = async (req, res) => {
     }
     res.status(200).json(video);
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error });
+    res.status(500).json({ message: 'Server error get video by id', error });
   }
 };
 
 // Update a video
 exports.updateVideo = async (req, res) => {
   const { id } = req.params;
-  const { title, numero, link, description, formationId } = req.body;
+//  const obj =
+//   {title:"intro",
+//     numero:1,
+//     link:"public/videos/vivd.mp4",
+//     description:"gezaaaa",
+//     formationId:148
+//   };
+  const { title, numero, link, description, formationId } =req.body;
+
+  
   try {
     const video = await Video.findByPk(id);
     if (!video) {
@@ -101,7 +110,7 @@ exports.updateVideo = async (req, res) => {
     await video.update({ title, numero, link, description, formationId });
     res.status(200).json({ message: 'Video updated successfully', video });
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error });
+    res.status(500).json({ message: 'Server error update video', error });
   }
 };
 

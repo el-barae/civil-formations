@@ -39,25 +39,11 @@ const Add2: React.FC = () => {
 
   const handleSubmit = async (e:any) => {
     e.preventDefault();
-    setTimeout(function() {
-      navigate("/Admin/dashboard");
-  }, 3000);
+ 
 
     try {
-      const formData1 = new FormData();
-    formData1.append('name', info.name);
-    formData1.append('duree', info.duree);
-    formData1.append('description', info.description);
-    formData1.append('price', info.price);
-    if (info.image) {
-        formData1.append('image', info.image);
-    }
-    if (info.video) {
-        formData1.append('video', info.video);
-    }
-
-    const response1 = await axios.post(`${API_URL}/api/formations`, formData1);
-    console.log("Réponse depuis backend formation :", response1.data);
+    
+    
 
     const formData = new FormData();
     items.forEach((item, index) => {
@@ -70,13 +56,13 @@ const Add2: React.FC = () => {
     formData.append(`videos[formationname]`, info.name);
 
 
-    const response = await axios.post(`${API_URL}/api/videos`, formData);
-    console.log("Réponse depuis backend videos :", response.data);
+     axios.post(`${API_URL}/api/videos`, formData);
+    
     
 } catch (error) {
     console.error('There was an error submitting the videos form!', error);
 }
-  
+  navigate("/Admin/dashboard");
  
   };
   
@@ -84,10 +70,7 @@ const Add2: React.FC = () => {
 
   return (
     <div className='bodyform2'>
-      <p>{info.name}</p><br />
-      <p>{info.desc}</p><br />
-      <p>{info.price}</p><br />
-      <p>{info.duree}</p> 
+      
        <form className='formvideo' onSubmit={handleSubmit}>
       {items.map((item) => (
         <div className="item" key={item.id}>
