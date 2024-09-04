@@ -19,10 +19,10 @@ const handleSmoothScroll = (event: React.MouseEvent<HTMLAnchorElement, MouseEven
     const login = localStorage.getItem('login')
     if(login){
       try {
-        const token = localStorage.getItem('token')
+        /*const token = localStorage.getItem('token')
         axios.post('http://localhost:5000/api/auth/logout',{
           token
-        });
+        });*/
         localStorage.removeItem('token');
         localStorage.removeItem('login');
         localStorage.removeItem('role');
@@ -48,7 +48,7 @@ const handleSmoothScroll = (event: React.MouseEvent<HTMLAnchorElement, MouseEven
   return (
 <nav className="flex justify-between bg-gradient-to-r from-yellow-500 to-orange-500 p-4 drop-shadow-lg fixed w-full z-50 navbar">
       <div className='ml-8 nav'>
-        <a href="#header" onClick={(e) => handleSmoothScroll(e, 'header')} className='text-orange-100 text-3xl font-bold'>
+        <a href="#header" onClick={(e) => handleSmoothScroll(e, 'header')} className='text-orange-100 text-3xl font-bold hover:text-orange-200'>
           Formations Civil
         </a>
         <button 

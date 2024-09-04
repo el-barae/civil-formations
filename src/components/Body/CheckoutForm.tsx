@@ -1,30 +1,33 @@
 import React from 'react';
 import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
+import API_URL from '../../API_URL';
+
+/*const handleSubmit1 = async (event: React.FormEvent) => {
+  event.preventDefault();
+
+  if (!stripe || !elements) {
+    return;
+  }
+
+  const cardElement = elements.getElement(CardElement);
+  const { error, paymentMethod } = await stripe.createPaymentMethod({
+    type: 'card',
+    card: cardElement!,
+  });
+
+  if (error) {
+    console.error('[error]', error);
+  } else {
+    console.log('[PaymentMethod]', paymentMethod);
+    // Send paymentMethod.id to your server to create a charge
+  }
+};*/
 
 const CheckoutForm: React.FC<{ amount: number }> = ({ amount }) => {
   const stripe = useStripe();
   const elements = useElements();
 
-  const handleSubmit1 = async (event: React.FormEvent) => {
-    event.preventDefault();
-
-    if (!stripe || !elements) {
-      return;
-    }
-
-    const cardElement = elements.getElement(CardElement);
-    const { error, paymentMethod } = await stripe.createPaymentMethod({
-      type: 'card',
-      card: cardElement!,
-    });
-
-    if (error) {
-      console.error('[error]', error);
-    } else {
-      console.log('[PaymentMethod]', paymentMethod);
-      // Send paymentMethod.id to your server to create a charge
-    }
-  };
+  
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -39,7 +42,7 @@ const CheckoutForm: React.FC<{ amount: number }> = ({ amount }) => {
     });
   
     if (!error) {
-      const response = await fetch('http://localhost:3001/create-payment-intent', {
+      const response = await fetch(API_URL+'/create-payment-intent', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

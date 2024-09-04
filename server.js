@@ -1,5 +1,5 @@
 const Formation = require('./models/Formation');
-
+require('dotenv').config();
 const express = require('express');
 const Stripe = require('stripe');
 const sequelize = require('./config/database');
@@ -8,6 +8,7 @@ const cors = require('cors');
 const app = express();
 const port = 5000;
 const bodyParser = require('body-parser');
+
 
 // Middleware to parse JSON bodies
 
@@ -88,19 +89,25 @@ if (!fs.existsSync(path.join(__dirname, 'public/videos'))) {
 
 */
 
-const stripe = Stripe('your-secret-key-here');
+const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 
-app.post('/create-payment', async (req, res) => {
+app.post('/create-payment-intent', async (req, res) => {
   const { amount } = req.body;
-  
-  const paymentIntent = await stripe.paymentIntents.create({
-    amount: amount * 100,
-    currency: 'usd',
-  });
 
-  res.send({
-    clientSecret: paymentIntent.client_secret,
-  });
+  try {
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: amount * 100,
+      currency: 'usd',
+      payment_method_types: ['card'],
+    });
+
+    res.send({
+      clientSecret: paymentIntent.client_secret,
+    });
+  } catch (error) {
+    console.error('Error creating payment intent:', error);
+    res.status(500).send({ error: 'Internal Server Error' });
+  }
 });
 
 sequelize.sync()
@@ -121,11 +128,14 @@ const formationRoutes = require('./routes/formation');
 const userRoutes = require('./routes/user'); 
 const subscribeRoutes = require('./routes/subscribe');
 const videoRoutes = require('./routes/video');
+const viewRoutes = require('./routes/view');
+
 app.use('/api/formations', formationRoutes);
 app.use('/formations', formationRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/subscribes', subscribeRoutes);
 app.use('/api/videos', videoRoutes);
+app.use('/api/views', viewRoutes);
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
