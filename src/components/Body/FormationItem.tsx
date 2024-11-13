@@ -1,10 +1,7 @@
 import React from 'react';
 import { useState } from 'react';
-import MVideo from './MVideo';
 import Modal from './Modal';
 import useIntersectionObserver from './useIntersectionObserver';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faVideo } from '@fortawesome/free-solid-svg-icons';
 
 interface Formation {
   id: number;

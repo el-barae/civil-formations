@@ -89,6 +89,18 @@ if (!fs.existsSync(path.join(__dirname, 'public/videos'))) {
 
 */
 
+sequelize.sync()
+  .then(() => {
+    console.log('Database & tables created!');
+  })
+  .catch(err => {
+    console.error('Unable to connect to the database:', err);
+  });
+
+app.get('/', (req, res) => {
+  res.send('Hello World!');
+});
+
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 
 app.post('/create-payment-intent', async (req, res) => {
@@ -108,18 +120,6 @@ app.post('/create-payment-intent', async (req, res) => {
     console.error('Error creating payment intent:', error);
     res.status(500).send({ error: 'Internal Server Error' });
   }
-});
-
-sequelize.sync()
-  .then(() => {
-    console.log('Database & tables created!');
-  })
-  .catch(err => {
-    console.error('Unable to connect to the database:', err);
-  });
-
-app.get('/', (req, res) => {
-  res.send('Hello World!');
 });
 
 app.use('/api/auth', authRoutes);

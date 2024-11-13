@@ -1,5 +1,6 @@
 import React from 'react';
 import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
+import Swal from 'sweetalert2';
 import API_URL from '../../API_URL';
 
 /*const handleSubmit1 = async (event: React.FormEvent) => {
@@ -27,22 +28,36 @@ const CheckoutForm: React.FC<{ amount: number }> = ({ amount }) => {
   const stripe = useStripe();
   const elements = useElements();
 
-  
-
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
   
+    const stripe = useStripe();
+    const elements = useElements();
+  
     if (!stripe || !elements) {
+      console.error('Stripe or Elements not loaded');
       return;
     }
   
-    const { error, paymentMethod } = await stripe.createPaymentMethod({
-      type: 'card',
-      card: elements.getElement(CardElement)!,
-    });
+    try {
+      // Create a PaymentMethod
+      const { error: paymentMethodError, paymentMethod } = await stripe.createPaymentMethod({
+        type: 'card',
+        card: elements.getElement(CardElement)!,
+      });
   
-    if (!error) {
-      const response = await fetch(API_URL+'/create-payment-intent', {
+      if (paymentMethodError) {
+        console.error('[PaymentMethod Error]', paymentMethodError);
+        Swal.fire({
+          icon: 'error',
+          title: 'Payment Failed',
+          text: paymentMethodError.message,
+        });
+        return;
+      }
+  
+      // Create a PaymentIntent
+      const response = await fetch(`${API_URL}/create-payment-intent`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -50,23 +65,48 @@ const CheckoutForm: React.FC<{ amount: number }> = ({ amount }) => {
         body: JSON.stringify({ amount }),
       });
   
+      if (!response.ok) {
+        console.error('Failed to create PaymentIntent');
+        Swal.fire({
+          icon: 'error',
+          title: 'Payment Failed',
+          text: 'Unable to process payment. Please try again.',
+        });
+        return;
+      }
+  
       const { clientSecret } = await response.json();
   
+      // Confirm the Card Payment
       const { error: confirmError, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
-        payment_method: paymentMethod.id,
+        payment_method: paymentMethod!.id,
       });
   
       if (confirmError) {
-        console.error('[error]', confirmError);
-      } else {
+        console.error('[Payment Confirmation Error]', confirmError);
+        Swal.fire({
+          icon: 'error',
+          title: 'Payment Failed',
+          text: confirmError.message,
+        });
+      } else if (paymentIntent?.status === 'succeeded') {
         console.log('[PaymentIntent]', paymentIntent);
-        // Handle successful payment here
+        Swal.fire({
+          icon: 'success',
+          title: 'Payment Successful',
+          text: 'You have paid successfully!',
+        });
+        // Handle successful payment here (e.g., redirect, update UI)
       }
-    } else {
-      console.error('[error]', error);
+    } catch (err) {
+      console.error('Unexpected Error', err);
+      Swal.fire({
+        icon: 'error',
+        title: 'Payment Failed',
+        text: 'An unexpected error occurred. Please try again.',
+      });
     }
   };
-  
 
   return (
     <form onSubmit={handleSubmit}>
