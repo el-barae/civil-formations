@@ -76,6 +76,7 @@ exports.login = async (req, res) => {
     };
 
     const role = user.role;
+    const id = user.id;
 
     jwt.sign(
       payload,
@@ -86,7 +87,7 @@ exports.login = async (req, res) => {
           console.error(err.message);
           return res.status(500).send('Server error');
         }
-        res.json({ token, role });
+        res.json({ token, role, id });
       }
     );
   } catch (err) {

@@ -67,7 +67,7 @@ const RegisterPage: React.FC = () => {
               id="firstName"
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
-              className="w-full px-3 py-2 mt-1 border rounded shadow-sm focus:ring focus:ring-opacity-50"
+              className="w-full text-black px-3 py-2 mt-1 border rounded shadow-sm focus:ring focus:ring-opacity-50"
               required
             />
           </div>
@@ -78,7 +78,7 @@ const RegisterPage: React.FC = () => {
               id="lastName"
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
-              className="w-full px-3 py-2 mt-1 border rounded shadow-sm focus:ring focus:ring-opacity-50"
+              className="w-full text-black px-3 py-2 mt-1 border rounded shadow-sm focus:ring focus:ring-opacity-50"
               required
             />
           </div>
@@ -89,7 +89,7 @@ const RegisterPage: React.FC = () => {
               id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-3 py-2 mt-1 border rounded shadow-sm focus:ring focus:ring-opacity-50"
+              className="w-full text-black px-3 py-2 mt-1 border rounded shadow-sm focus:ring focus:ring-opacity-50"
               required
             />
           </div>
@@ -114,7 +114,7 @@ const RegisterPage: React.FC = () => {
               id="phone"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
-              className="w-full px-3 py-2 mt-1 border rounded shadow-sm focus:ring focus:ring-opacity-50"
+              className="w-full text-black px-3 py-2 mt-1 border rounded shadow-sm focus:ring focus:ring-opacity-50"
               required
             />
           </div>
@@ -125,7 +125,7 @@ const RegisterPage: React.FC = () => {
               id="address"
               value={address}
               onChange={(e) => setAddress(e.target.value)}
-              className="w-full px-3 py-2 mt-1 border rounded shadow-sm focus:ring focus:ring-opacity-50"
+              className="w-full text-black px-3 py-2 mt-1 border rounded shadow-sm focus:ring focus:ring-opacity-50"
               required
             />
           </div>

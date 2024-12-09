@@ -18,9 +18,10 @@ const Login: React.FC = () => {
         email,
         password,
       });
-      const { token, role } = response.data;
+      const { id, token, role } = response.data;
 
       localStorage.setItem('login','true')
+      localStorage.setItem('ID', id);
       localStorage.setItem('token', token);
       localStorage.setItem('role', role);
 

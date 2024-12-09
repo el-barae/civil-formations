@@ -29,7 +29,7 @@ const CheckoutForm: React.FC<{ amount: number }> = ({ amount }) => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
   
-    if (!stripe || !elements) {
+    /*if (!stripe || !elements) {
       return;
     }
   
@@ -61,7 +61,7 @@ const CheckoutForm: React.FC<{ amount: number }> = ({ amount }) => {
       }
     } else {
       console.error('[error]', error);
-    }
+    }*/
   };
   
 

@@ -3,9 +3,9 @@ import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import Swal from 'sweetalert2';
 import API_URL from '../../API_URL';
 
-/*const handleSubmit1 = async (event: React.FormEvent) => {
+const handleSubmit1 = async (event: React.FormEvent) => {
   event.preventDefault();
-
+  /*
   if (!stripe || !elements) {
     return;
   }
@@ -21,8 +21,8 @@ import API_URL from '../../API_URL';
   } else {
     console.log('[PaymentMethod]', paymentMethod);
     // Send paymentMethod.id to your server to create a charge
-  }
-};*/
+  }*/
+};
 
 const CheckoutForm: React.FC<{ amount: number }> = ({ amount }) => {
   const stripe = useStripe();
@@ -30,7 +30,7 @@ const CheckoutForm: React.FC<{ amount: number }> = ({ amount }) => {
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-  
+  /*
     const stripe = useStripe();
     const elements = useElements();
   
@@ -105,7 +105,7 @@ const CheckoutForm: React.FC<{ amount: number }> = ({ amount }) => {
         title: 'Payment Failed',
         text: 'An unexpected error occurred. Please try again.',
       });
-    }
+    }*/
   };
 
   return (
