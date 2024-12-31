@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {faClock ,faEye, faEyeSlash} from '@fortawesome/free-solid-svg-icons';
 import VideoDescriptionModal from './VideoDescriptionModal';
+import { jwtDecode } from "jwt-decode";
 
 interface Formation {
   id: number;
@@ -46,7 +47,7 @@ const FormationPage: React.FC = () => {
 
   useEffect(() => {
     const checkLoginStatus = () => {
-      const loginStatus = localStorage.getItem('login');
+      const loginStatus = localStorage.getItem('token');
       if (loginStatus) {
         setIsLoggedIn(true);
       } else {
@@ -80,11 +81,22 @@ const FormationPage: React.FC = () => {
       
       const fetchVideos = async () => {
         try {
-          const response = await axios.get<Video[]>(`${API_URL}/api/videos/formation/${id}`);
+          const token = localStorage.getItem('token')
+          const response = await axios.get<Video[]>(`${API_URL}/api/videos/formation/${id}`,{
+            headers :{
+              'Content-Type': 'application/json',
+              'x-auth-token': token
+            }
+          });
           const videosData = response.data;
 
 
-        const viewsResponse = await axios.get<View[]>(`${API_URL}/api/views/user/1`);
+        const viewsResponse = await axios.get<View[]>(`${API_URL}/api/views/user/1`,{
+          headers :{
+            'Content-Type': 'application/json',
+            'x-auth-token': token
+          }
+        });
         const viewsData = viewsResponse.data;
 
         const videosWithViews = videosData.map(video => {
@@ -117,14 +129,23 @@ const FormationPage: React.FC = () => {
   }
 
   const handlePlay = async (videoId:number) => {
-    const idU = Number(localStorage.getItem('ID'))
     try {
-      await axios.post(`${API_URL}/api/views/set/${idU}/${videoId}`);
+      const token = localStorage.getItem('token')
+      if(token){
+        const decoded = jwtDecode(token) as { id: string };
+        const { id} = decoded;
+      await axios.post(`${API_URL}/api/views/set/${id}/${videoId}`,{
+        headers :{
+          'Content-Type': 'application/json',
+          'x-auth-token': token
+        }
+      });
       setVideos(videos.map(video => 
         video.id === videoId 
-          ? { ...video, View: video.View ? { ...video.View, view: true } : { id: videoId, view: true, userId: idU, videoId } } 
+          ? { ...video, View: video.View ? { ...video.View, view: true } : { id: videoId, view: true, userId: Number(id), videoId } } 
           : video
       ));
+    }
     } catch (error) {
       console.error('Error updating view status:', error);
     }

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import API_URL from '../../API_URL';
+import { jwtDecode } from "jwt-decode";
 
 const RegisterPage: React.FC = () => {
   const [firstName, setFirstName] = useState('');
@@ -27,10 +28,14 @@ const RegisterPage: React.FC = () => {
         address,
         role: 'CLIENT',
       });
-      const { token, role } = response.data;
+      const { token} = response.data;
       localStorage.setItem('token', token);
-      localStorage.setItem('role', role);
-      navigate('/');
+      const decoded = jwtDecode(token) as { id: string, role: string };
+              const { id,role} = decoded;
+              localStorage.setItem('id', id);
+              localStorage.setItem('role', role);
+
+      navigate('/profile');
     } catch (err) {
       setError('An error occurred');
     }

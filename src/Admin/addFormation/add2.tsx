@@ -55,8 +55,13 @@ const Add2: React.FC = () => {
     if (info.video) {
         formData1.append('video', info.video);
     }
-
-    const response1 = await axios.post(`${API_URL}/api/formations`, formData1);
+    const token = localStorage.getItem('token')
+    const response1 = await axios.post(`${API_URL}/api/formations`, formData1,{
+      headers :{
+        'Content-Type': 'multipart/form-data',
+        'x-auth-token': token
+      }
+    });
     console.log("Réponse depuis backend formation :", response1.data);
 
     const formData = new FormData();
@@ -70,7 +75,12 @@ const Add2: React.FC = () => {
     formData.append(`videos[formationname]`, info.name);
 
 
-    const response = await axios.post(`${API_URL}/api/videos`, formData);
+    const response = await axios.post(`${API_URL}/api/videos`, formData,{
+      headers :{
+        'Content-Type': 'multipart/form-data',
+        'x-auth-token': token
+      }
+    });
     console.log("Réponse depuis backend videos :", response.data);
     
 } catch (error) {
