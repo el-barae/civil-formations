@@ -1,5 +1,4 @@
-const Formation = require('./models/Formation');
-require('dotenv').config();
+//require('dotenv').config();
 const express = require('express');
 const Stripe = require('stripe');
 const sequelize = require('./config/database');
@@ -101,7 +100,7 @@ app.get('/', (req, res) => {
   res.send('Hello World!');
 });
 
-const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
+const stripe = Stripe("process.env.STRIPE_SECRET_KEY");
 
 app.post('/create-payment-intent', async (req, res) => {
   const { amount } = req.body;
@@ -129,6 +128,7 @@ const userRoutes = require('./routes/user');
 const subscribeRoutes = require('./routes/subscribe');
 const videoRoutes = require('./routes/video');
 const viewRoutes = require('./routes/view');
+const avisRoutes = require('./routes/avisRoutes');
 
 app.use('/api/formations', formationRoutes);
 app.use('/formations', formationRoutes);
@@ -136,6 +136,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/subscribes', subscribeRoutes);
 app.use('/api/videos', videoRoutes);
 app.use('/api/views', viewRoutes);
+app.use('/api/avis', avisRoutes);
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);

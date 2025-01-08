@@ -37,7 +37,7 @@ const FormationItem: React.FC<FormationItemProps> = ({ formation, index }) => {
       ref={ref}
       className={`m-4 p-4 flex flex-col items-center border rounded-lg shadow-lg max-w-lg transition-opacity duration-1000 ${inView ? animationClass : 'opacity-0'}`}
     >
-      <img src={formation.image} alt={formation.name} className="rounded mb-4" />
+      <img src={formation.image} alt={formation.name} className="rounded mb-4 w-72 h-80" />
       <h3 className="text-xl font-bold mb-2">{formation.name}</h3>
       <p><strong>Duree:</strong> {formation.duree}</p>
       <p><strong>Prix:</strong> {formation.price.toFixed(2)} DH</p>

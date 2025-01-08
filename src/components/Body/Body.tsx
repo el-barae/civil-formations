@@ -60,7 +60,7 @@ const Body: React.FC = () => {
   return (
     <div className="p-8 flex flex-col items-center" id='formations'>
     <h1 className='text-orange-500 text-3xl font-bold mb-6'>Formations</h1>
-    <div className="grid grid-cols-2 gap-4 justify-items-center">
+    <div className="grid grid-cols-2 gap-20 justify-items-center">
       {formations.slice(0, 4).map((formation, index) => (
         <FormationItem key={formation.id} formation={formation} index={index} />
       ))}

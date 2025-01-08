@@ -1,10 +1,24 @@
 const Formation = require('../models/Formation'); 
+const Avis = require('../models/Avis'); 
+const User = require('../models/User'); 
 const path = require('path');
 const fs = require('fs');
 
 exports.getFormationById = async (req, res) => {
     try {
-        const formation = await Formation.findByPk(req.params.id);
+        const formation = await Formation.findByPk(req.params.id, {
+          include: [
+            {
+              model: Avis,
+              include: [
+                {
+                  model: User,
+                  attributes: ['id', 'firstName', 'lastName'],
+                },
+              ],
+            },
+          ],
+        });
         if (formation) {
             res.json(formation);
           } else {
