@@ -65,14 +65,20 @@ const FormationPage: React.FC = () => {
   // Handle new comment submission
   const handleSubmitComment = async () => {
     try {
+      const token = localStorage.getItem('token')
+      if(token){
+        const decoded = jwtDecode(token) as { id: string };
+        const userId: string = decoded.id;
+        
       const response = await fetch(API_URL+'/api/avis', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'x-auth-token': token
         },
         body: JSON.stringify({
           commentaire: newComment,
-          userId: 1,
+          userId: userId,
           formationId: id,
         }),
       });
@@ -84,6 +90,7 @@ const FormationPage: React.FC = () => {
       } else {
         console.error('Error submitting comment');
       }
+    }
     } catch (error) {
       console.error('Error submitting comment:', error);
     }
@@ -161,7 +168,7 @@ const FormationPage: React.FC = () => {
       };
 
       fetchFormation();
-      fetchVideos();
+      //fetchVideos();
     }
   }, [id, isLoggedIn]);
 

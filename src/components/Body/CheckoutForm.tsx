@@ -2,37 +2,16 @@ import React from 'react';
 import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import Swal from 'sweetalert2';
 import API_URL from '../../API_URL';
+import { jwtDecode } from 'jwt-decode';
+import { useNavigate } from 'react-router-dom';
 
-const handleSubmit1 = async (event: React.FormEvent) => {
-  event.preventDefault();
-  /*
-  if (!stripe || !elements) {
-    return;
-  }
-
-  const cardElement = elements.getElement(CardElement);
-  const { error, paymentMethod } = await stripe.createPaymentMethod({
-    type: 'card',
-    card: cardElement!,
-  });
-
-  if (error) {
-    console.error('[error]', error);
-  } else {
-    console.log('[PaymentMethod]', paymentMethod);
-    // Send paymentMethod.id to your server to create a charge
-  }*/
-};
-
-const CheckoutForm: React.FC<{ amount: number }> = ({ amount }) => {
+const CheckoutForm: React.FC<{ amount: number, formationID: number }> = ({ amount,formationID }) => {
   const stripe = useStripe();
   const elements = useElements();
+  const navigate = useNavigate();
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-  /*
-    const stripe = useStripe();
-    const elements = useElements();
   
     if (!stripe || !elements) {
       console.error('Stripe or Elements not loaded');
@@ -41,13 +20,16 @@ const CheckoutForm: React.FC<{ amount: number }> = ({ amount }) => {
   
     try {
       // Create a PaymentMethod
+      const token = localStorage.getItem('token')
+            if(token){
+              const decoded = jwtDecode(token) as { id: string };
+              const { id} = decoded;
       const { error: paymentMethodError, paymentMethod } = await stripe.createPaymentMethod({
         type: 'card',
         card: elements.getElement(CardElement)!,
       });
   
       if (paymentMethodError) {
-        console.error('[PaymentMethod Error]', paymentMethodError);
         Swal.fire({
           icon: 'error',
           title: 'Payment Failed',
@@ -56,17 +38,22 @@ const CheckoutForm: React.FC<{ amount: number }> = ({ amount }) => {
         return;
       }
   
-      // Create a PaymentIntent
+      // Create a PaymentIntent and Subscription
       const response = await fetch(`${API_URL}/create-payment-intent`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'x-auth-token': token
         },
-        body: JSON.stringify({ amount }),
+        body: JSON.stringify({
+          amount,
+          pourcentage: 0,
+          formationId: formationID,
+          userId: id, 
+        }),
       });
   
       if (!response.ok) {
-        console.error('Failed to create PaymentIntent');
         Swal.fire({
           icon: 'error',
           title: 'Payment Failed',
@@ -75,7 +62,7 @@ const CheckoutForm: React.FC<{ amount: number }> = ({ amount }) => {
         return;
       }
   
-      const { clientSecret } = await response.json();
+      const { clientSecret, subscription } = await response.json();
   
       // Confirm the Card Payment
       const { error: confirmError, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
@@ -83,21 +70,21 @@ const CheckoutForm: React.FC<{ amount: number }> = ({ amount }) => {
       });
   
       if (confirmError) {
-        console.error('[Payment Confirmation Error]', confirmError);
         Swal.fire({
           icon: 'error',
           title: 'Payment Failed',
           text: confirmError.message,
         });
       } else if (paymentIntent?.status === 'succeeded') {
-        console.log('[PaymentIntent]', paymentIntent);
         Swal.fire({
           icon: 'success',
           title: 'Payment Successful',
           text: 'You have paid successfully!',
         });
-        // Handle successful payment here (e.g., redirect, update UI)
+        navigate('/Formation/'+formationID)
+        console.log('Subscription created:', subscription);
       }
+    }
     } catch (err) {
       console.error('Unexpected Error', err);
       Swal.fire({
@@ -105,7 +92,7 @@ const CheckoutForm: React.FC<{ amount: number }> = ({ amount }) => {
         title: 'Payment Failed',
         text: 'An unexpected error occurred. Please try again.',
       });
-    }*/
+    }
   };
 
   return (

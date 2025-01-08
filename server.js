@@ -1,11 +1,11 @@
-//require('dotenv').config();
+require('dotenv').config();
 const express = require('express');
 const Stripe = require('stripe');
 const sequelize = require('./config/database');
 const authRoutes = require('./routes/auth');
 const cors = require('cors');
 const app = express();
-const port = 5000;
+const port = process.env.PORTSERVER;
 const bodyParser = require('body-parser');
 
 
@@ -100,7 +100,7 @@ app.get('/', (req, res) => {
   res.send('Hello World!');
 });
 
-const stripe = Stripe("process.env.STRIPE_SECRET_KEY");
+const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 
 app.post('/create-payment-intent', async (req, res) => {
   const { amount } = req.body;
