@@ -99,7 +99,7 @@ const CheckoutForm: React.FC<{ amount: number, formationID: number }> = ({ amoun
     <form onSubmit={handleSubmit}>
       <CardElement />
       <button className='bg-green-500 px-4 py-2 text-white font-bold rounded mt-2' type="submit" disabled={!stripe}>
-        Payer ${amount.toFixed(2)}
+        Payer ${amount.toFixed(3)}
       </button>
     </form>
   );

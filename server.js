@@ -1,6 +1,5 @@
 require('dotenv').config();
 const express = require('express');
-const Stripe = require('stripe');
 const sequelize = require('./config/database');
 const authRoutes = require('./routes/auth');
 const cors = require('cors');
@@ -98,27 +97,6 @@ sequelize.sync()
 
 app.get('/', (req, res) => {
   res.send('Hello World!');
-});
-
-const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
-
-app.post('/create-payment-intent', async (req, res) => {
-  const { amount } = req.body;
-
-  try {
-    const paymentIntent = await stripe.paymentIntents.create({
-      amount: amount * 100,
-      currency: 'usd',
-      payment_method_types: ['card'],
-    });
-
-    res.send({
-      clientSecret: paymentIntent.client_secret,
-    });
-  } catch (error) {
-    console.error('Error creating payment intent:', error);
-    res.status(500).send({ error: 'Internal Server Error' });
-  }
 });
 
 app.use('/api/auth', authRoutes);
