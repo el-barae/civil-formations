@@ -17,6 +17,16 @@ const CheckoutForm: React.FC<{ amount: number, formationID: number }> = ({ amoun
       console.error('Stripe or Elements not loaded');
       return;
     }
+
+    const MIN_AMOUNT = 0.20;
+    if (amount < MIN_AMOUNT) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Invalid Amount',
+        text: `Minimum payment is $${MIN_AMOUNT}`,
+      });
+      return;
+    }
   
     try {
       // Create a PaymentMethod
@@ -39,7 +49,7 @@ const CheckoutForm: React.FC<{ amount: number, formationID: number }> = ({ amoun
       }
   
       // Create a PaymentIntent and Subscription
-      const response = await fetch(`${API_URL}/create-payment-intent`, {
+      const response = await fetch(`${API_URL}/api/subscribes/create-payment-intent`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
