@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 
+
 const useIntersectionObserver = () => {
   const [inView, setInView] = useState(false);
   const ref = useRef<HTMLDivElement>(null);

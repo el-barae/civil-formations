@@ -34,19 +34,19 @@ justify-content: space-between;
 gap: 10px;
 }
 .titlecontent #it1{
-    background-image: url(../../../public/images/excavator.jpg);
+    /* background-image: url(../../../public/images/excavator.jpg); */
     background-size: cover;
 }
 .titlecontent #it2{
-   background-image: url(../../../public/images/building.png);
+   /* background-image: url(../../../public/images/building.png); */
     background-size: cover;
 }
 .titlecontent #it3{
-   background-image: url(../../../public/images/construction.jpg);
+   /* background-image: url(../../../public/images/construction.jpg); */
     background-size: cover;
 }
 .titlecontent #it4{
-    background-image: url(../../../public/images/montreal.jpg);
+    /* background-image: url(../../../public/images/montreal.jpg); */
     background-size: cover;
 }
 .titlecontent .box:hover{

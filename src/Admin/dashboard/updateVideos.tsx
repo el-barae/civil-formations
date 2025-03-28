@@ -8,7 +8,7 @@ interface Videos{
     id:number;
     title:string;
     numero:number;
-    link:string;
+    link:string | File;
     description:string;
     formationId:number
 }
@@ -32,7 +32,7 @@ const navigate = useNavigate();
       const handleFileChange = (id: number, e: React.ChangeEvent<HTMLInputElement>) => {
         const files = e.target.files;
         if (files && files.length > 0) {
-          handleInputChange(id, 'video', files[0]);
+          handleInputChange(id, 'link', files[0]);
         }
       };
 
@@ -45,27 +45,32 @@ const handleSubmit = async (e:any) => {
         try {
 // const formData = new FormData();
         items.forEach(async (item, index) => {
-          const obj =
-            {
-              title: item.title,   //la methode append n'accept que des string et des bool.
-              numero:item.numero,
-              link:item.link,
-              description:item.description,
-              formationId:formationIde
-            };
+console.log("file fromupdatevideo :",item.link)
 
-            console.log(formationIde+" "+item.formationId)
-            // formData.append(`videos[${index}][title]`, item.title);
-            // formData.append(`videos[${index}][description]`, item.description);
-            // formData.append(`videos[${index}][id]`, item.id);
-            // formData.append(`videos[${index}][numero]`, item.numero.toString());
+const obj ={
+  id:item.id,
+  title:item.title,
+  numero:item.numero,
+  link:item.link,
+  description:item.description,
+  formationId:formationIde
 
-            // if (item.link) {
-            //     formData.append(`videos[${index}][link]`, item.link);
-            // }
-            // formData.append(`videos[formationId]`, item.formationId.toString());
-           await axios.put(`${API_URL}/api/videos/${item.id}`, obj);
+}
 
+const  formData = new FormData();
+formData.append('title', item.title);
+formData.append('numero', item.numero.toString());
+formData.append('file', item.link); // Si `item.link` est un fichier, assurez-vous qu'il est sous la forme d'un objet `File`
+formData.append('description', item.description);
+formData.append('formationId', formationIde.toString());
+
+ if (item.link instanceof File) {
+  await axios.put(`${API_URL}/api/videos/file/${item.id}`, formData);
+ }else{
+  await axios.put(`${API_URL}/api/videos/${item.id}`, obj);
+ }    
+
+            
         });
     
     
@@ -91,13 +96,13 @@ const handleSubmit = async (e:any) => {
   <div className="video-container">
     {items.map((video) => (
       <div className="video" key={video.id}>
+
         <input 
           type="text" 
           name={`titre-${video.id}`} 
           onChange={(e) => handleInputChange(video.id, 'title', e.target.value)}
           placeholder={`titre ${video.id}`} 
           value={video.title}
-          
         />
         
         <input 
@@ -106,15 +111,14 @@ const handleSubmit = async (e:any) => {
           onChange={(e) => handleInputChange(video.id, 'description', e.target.value)}
           placeholder="Description" 
           value={video.description}
-          
         />
+
         <input 
         style={{backgroundColor:"black"}}
           type="file" 
           name={`video-${video.id}`} 
           onChange={(e) => handleFileChange(video.id, e)}
           accept='.mp4'
-          
         />
 
         {/* 

@@ -53,6 +53,7 @@ const Add2: React.FC = () => {
             formData.append(`videos[${index}][link]`, item.video);
         }
     });
+
     formData.append(`videos[formationname]`, info.name);
 
 
@@ -69,6 +70,7 @@ const Add2: React.FC = () => {
   
 
   return (
+    
     <div className='bodyform2'>
       
        <form className='formvideo' onSubmit={handleSubmit}>
@@ -112,6 +114,7 @@ const Add2: React.FC = () => {
       <button  type="submit">Ajouter</button>
     </form>
     </div>
+
       );
 };
 

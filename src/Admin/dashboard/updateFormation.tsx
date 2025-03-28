@@ -10,7 +10,7 @@ interface Videos{
     id:number;
     title:string;
     numero:number;
-    link:string;
+    link:string | File;
     description:string;
     formationId:number
 }

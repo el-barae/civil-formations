@@ -29,6 +29,7 @@ const Modal: React.FC<ModalProps> = ({ show, onClose, videoUrl, name, descriptio
           <CheckoutForm amount={price} />
         </div>
       </div>
+     
     </div>
   );
 };

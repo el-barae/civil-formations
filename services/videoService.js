@@ -10,6 +10,12 @@ exports.createVideo = async (req, res) => {
   try {
       const videos = req.body.videos;
       const files = req.files;
+
+      console.log("les filesss : ", files)
+      console.log("les req body : ", req.body)
+      console.log("les req body videos : ", req.body.videos)
+
+
       const videoData = [];
 
       // Ensure the directory exists
@@ -107,11 +113,61 @@ exports.updateVideo = async (req, res) => {
     if (!video) {
       return res.status(404).json({ message: 'Video not found' });
     }
+    console.log('obj updated without file :',{ title, numero,link, description, formationId })
+
     await video.update({ title, numero, link, description, formationId });
     res.status(200).json({ message: 'Video updated successfully', video });
   } catch (error) {
     res.status(500).json({ message: 'Server error update video', error });
   }
+};
+
+//update a video with file
+exports.updateVideoFile = async (req,res)=>{
+  const { id } = req.params;
+ 
+  // const { title, numero, description, formationId } =req.body;
+  console.log("req of video updated with file :",req.body)
+    const file = req.files;
+   
+console.log("file ():",file[0])
+if(file[0]==null){
+  console.log("file not exist in the req")
+}
+
+
+  // Convertir les valeurs en nombres
+  const numero = parseInt(req.body.numero, 10); // Base 10
+  const formationId = parseInt(req.body.formationId, 10);
+  const title = req.body.title;
+  const description = req.body.description;
+
+    // Ensure the directory exists
+    if (!file[0].path || !file[0].originalname) {
+      console.log("Le fichier est invalide.");
+      return res.status(400).send('Le fichier est invalide.');
+    }
+    const videosDir = path.join(__dirname, 'public/videos');
+    if (!fs.existsSync(videosDir)) {
+        fs.mkdirSync(videosDir, { recursive: true });
+    }
+    const targetPath = path.join(videosDir, file[0].originalname);
+    fs.renameSync(file[0].path, targetPath);
+    const link = `public/videos/${file[0].originalname}`;
+
+    
+    try {
+      const video = await Video.findByPk(id);
+      if (!video) {
+        return res.status(404).json({ message: 'Video (file) not found' });
+      }
+      console.log('obj updated with file :',{ title, numero,link, description, formationId })
+      await video.update({ title, numero,link, description, formationId });
+      res.status(200).json({ message: 'Video updated (file) successfully', video });
+    } catch (error) {
+      res.status(500).json({ message: 'Server error update(file) video', error });
+    }
+  
 };
 
 // Delete a video

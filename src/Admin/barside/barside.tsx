@@ -5,11 +5,38 @@ import axios from 'axios';
 import {NavLink} from 'react-router-dom'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars } from '@fortawesome/free-solid-svg-icons';
+import { useNavigate } from 'react-router-dom';
 interface ChildProps {
   title: string;
 }
+
 const Barside: React.FC<ChildProps> = ({ title }) => {
+
   const [isSidebarVisible, setIsSidebarVisible] = useState(false);
+
+
+  const navigate = useNavigate() 
+  const handleLogin = (event: any) => {
+    event.preventDefault();
+    
+    const login = localStorage.getItem('login')
+    if(login){
+      try {
+        const token = localStorage.getItem('token')
+        axios.post('http://localhost:5000/api/auth/logout',{
+          token
+        });
+        localStorage.removeItem('token');
+        localStorage.removeItem('login');
+        localStorage.removeItem('role');
+        navigate('/login');
+      } catch (err) {
+        console.error('Logout failed:', err);
+      }
+    }
+    else
+      navigate('/login');
+  }
 
   const toggleSidebar = () => {
     setIsSidebarVisible(!isSidebarVisible);
@@ -70,11 +97,11 @@ const Barside: React.FC<ChildProps> = ({ title }) => {
           <h2>Messages</h2>
         </NavLink>
       </li>
-      <li className="logout">
-        <NavLink to="/Admin/logout">
+      <li  onClick={(e) => handleLogin(e)} className="logout">
+       
           <i className="fa-solid fa-right-from-bracket"></i>
           <h2>Logout</h2>
-        </NavLink>
+       
       </li>
     </ul>
   </div>
