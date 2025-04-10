@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import API_URL from '../../API_URL';
+import { jwtDecode } from "jwt-decode";
 
 const RegisterPage: React.FC = () => {
   const [firstName, setFirstName] = useState('');
@@ -27,10 +28,14 @@ const RegisterPage: React.FC = () => {
         address,
         role: 'CLIENT',
       });
-      const { token, role } = response.data;
+      const { token} = response.data;
       localStorage.setItem('token', token);
-      localStorage.setItem('role', role);
-      navigate('/');
+      const decoded = jwtDecode(token) as { id: string, role: string };
+              const { id,role} = decoded;
+              localStorage.setItem('id', id);
+              localStorage.setItem('role', role);
+
+      navigate('/profile');
     } catch (err) {
       setError('An error occurred');
     }
@@ -67,7 +72,7 @@ const RegisterPage: React.FC = () => {
               id="firstName"
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
-              className="w-full px-3 py-2 mt-1 border rounded shadow-sm focus:ring focus:ring-opacity-50"
+              className="w-full text-black px-3 py-2 mt-1 border rounded shadow-sm focus:ring focus:ring-opacity-50"
               required
             />
           </div>
@@ -78,7 +83,7 @@ const RegisterPage: React.FC = () => {
               id="lastName"
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
-              className="w-full px-3 py-2 mt-1 border rounded shadow-sm focus:ring focus:ring-opacity-50"
+              className="w-full text-black px-3 py-2 mt-1 border rounded shadow-sm focus:ring focus:ring-opacity-50"
               required
             />
           </div>
@@ -89,7 +94,7 @@ const RegisterPage: React.FC = () => {
               id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-3 py-2 mt-1 border rounded shadow-sm focus:ring focus:ring-opacity-50"
+              className="w-full text-black px-3 py-2 mt-1 border rounded shadow-sm focus:ring focus:ring-opacity-50"
               required
             />
           </div>
@@ -114,7 +119,7 @@ const RegisterPage: React.FC = () => {
               id="phone"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
-              className="w-full px-3 py-2 mt-1 border rounded shadow-sm focus:ring focus:ring-opacity-50"
+              className="w-full text-black px-3 py-2 mt-1 border rounded shadow-sm focus:ring focus:ring-opacity-50"
               required
             />
           </div>
@@ -125,7 +130,7 @@ const RegisterPage: React.FC = () => {
               id="address"
               value={address}
               onChange={(e) => setAddress(e.target.value)}
-              className="w-full px-3 py-2 mt-1 border rounded shadow-sm focus:ring focus:ring-opacity-50"
+              className="w-full text-black px-3 py-2 mt-1 border rounded shadow-sm focus:ring focus:ring-opacity-50"
               required
             />
           </div>

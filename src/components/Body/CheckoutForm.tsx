@@ -1,75 +1,115 @@
 import React from 'react';
 import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
+import Swal from 'sweetalert2';
+import API_URL from '../../API_URL';
+import { jwtDecode } from 'jwt-decode';
+import { useNavigate } from 'react-router-dom';
 
-const CheckoutForm: React.FC<{ amount: number }> = ({ amount }) => {
+const CheckoutForm: React.FC<{ amount: number, formationID: number }> = ({ amount,formationID }) => {
   const stripe = useStripe();
   const elements = useElements();
-
-  const handleSubmit1 = async (event: React.FormEvent) => {
-    event.preventDefault();
-
-    if (!stripe || !elements) {
-      return;
-    }
-
-    const cardElement = elements.getElement(CardElement);
-    const { error, paymentMethod } = await stripe.createPaymentMethod({
-      type: 'card',
-      card: cardElement!,
-    });
-
-    if (error) {
-      console.error('[error]', error);
-    } else {
-      console.log('[PaymentMethod]', paymentMethod);
-      // Send paymentMethod.id to your server to create a charge
-    }
-  };
+  const navigate = useNavigate();
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
   
     if (!stripe || !elements) {
+      console.error('Stripe or Elements not loaded');
       return;
     }
+
+    const MIN_AMOUNT = 0.20;
+        if (amount < MIN_AMOUNT) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Invalid Amount',
+            text: `Minimum payment is $${MIN_AMOUNT}`,
+          });
+          return;
+        }
   
-    const { error, paymentMethod } = await stripe.createPaymentMethod({
-      type: 'card',
-      card: elements.getElement(CardElement)!,
-    });
+    try {
+      // Create a PaymentMethod
+      const token = localStorage.getItem('token')
+            if(token){
+              const decoded = jwtDecode(token) as { id: string };
+              const { id} = decoded;
+      const { error: paymentMethodError, paymentMethod } = await stripe.createPaymentMethod({
+        type: 'card',
+        card: elements.getElement(CardElement)!,
+      });
   
-    if (!error) {
-      const response = await fetch('http://localhost:3001/create-payment-intent', {
+      if (paymentMethodError) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Payment Failed',
+          text: paymentMethodError.message,
+        });
+        return;
+      }
+  
+      // Create a PaymentIntent and Subscription
+      const response = await fetch(`${API_URL}/api/subscribes/create-payment-intent`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'x-auth-token': token
         },
-        body: JSON.stringify({ amount }),
+        body: JSON.stringify({
+          amount,
+          pourcentage: 0,
+          formationId: formationID,
+          userId: id, 
+        }),
       });
   
-      const { clientSecret } = await response.json();
+      if (!response.ok) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Payment Failed',
+          text: 'Unable to process payment. Please try again.',
+        });
+        return;
+      }
   
+      const { clientSecret, subscription } = await response.json();
+  
+      // Confirm the Card Payment
       const { error: confirmError, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
-        payment_method: paymentMethod.id,
+        payment_method: paymentMethod!.id,
       });
   
       if (confirmError) {
-        console.error('[error]', confirmError);
-      } else {
-        console.log('[PaymentIntent]', paymentIntent);
-        // Handle successful payment here
+        Swal.fire({
+          icon: 'error',
+          title: 'Payment Failed',
+          text: confirmError.message,
+        });
+      } else if (paymentIntent?.status === 'succeeded') {
+        Swal.fire({
+          icon: 'success',
+          title: 'Payment Successful',
+          text: 'You have paid successfully!',
+        });
+        navigate('/Formation/'+formationID)
+        console.log('Subscription created:', subscription);
       }
-    } else {
-      console.error('[error]', error);
+    }
+    } catch (err) {
+      console.error('Unexpected Error', err);
+      Swal.fire({
+        icon: 'error',
+        title: 'Payment Failed',
+        text: 'An unexpected error occurred. Please try again.',
+      });
     }
   };
-  
 
   return (
     <form onSubmit={handleSubmit}>
       <CardElement />
       <button className='bg-green-500 px-4 py-2 text-white font-bold rounded mt-2' type="submit" disabled={!stripe}>
-        Payer ${amount.toFixed(2)}
+        Payer ${amount.toFixed(3)}
       </button>
     </form>
   );

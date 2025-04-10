@@ -1,13 +1,12 @@
-const Formation = require('./models/Formation');
-
+require('dotenv').config();
 const express = require('express');
-const Stripe = require('stripe');
 const sequelize = require('./config/database');
 const authRoutes = require('./routes/auth');
 const cors = require('cors');
 const app = express();
-const port = 5000;
+const port = process.env.PORTSERVER;
 const bodyParser = require('body-parser');
+
 
 // Middleware to parse JSON bodies
 
@@ -88,21 +87,6 @@ if (!fs.existsSync(path.join(__dirname, 'public/videos'))) {
 
 */
 
-const stripe = Stripe('your-secret-key-here');
-
-app.post('/create-payment', async (req, res) => {
-  const { amount } = req.body;
-  
-  const paymentIntent = await stripe.paymentIntents.create({
-    amount: amount * 100,
-    currency: 'usd',
-  });
-
-  res.send({
-    clientSecret: paymentIntent.client_secret,
-  });
-});
-
 sequelize.sync()
   .then(() => {
     console.log('Database & tables created!');
@@ -121,11 +105,16 @@ const formationRoutes = require('./routes/formation');
 const userRoutes = require('./routes/user'); 
 const subscribeRoutes = require('./routes/subscribe');
 const videoRoutes = require('./routes/video');
+const viewRoutes = require('./routes/view');
+const avisRoutes = require('./routes/avisRoutes');
+
 app.use('/api/formations', formationRoutes);
 app.use('/formations', formationRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/subscribes', subscribeRoutes);
 app.use('/api/videos', videoRoutes);
+app.use('/api/views', viewRoutes);
+app.use('/api/avis', avisRoutes);
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);

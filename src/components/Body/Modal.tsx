@@ -4,6 +4,7 @@ import CheckoutForm from './CheckoutForm';
 interface ModalProps {
   show: boolean;
   onClose: () => void;
+  formationID: number;
   videoUrl: string;
   name: string;
   description: string;
@@ -11,7 +12,7 @@ interface ModalProps {
   price: number;
 }
 
-const Modal: React.FC<ModalProps> = ({ show, onClose, videoUrl, name, description, duree, price}) => {
+const Modal: React.FC<ModalProps> = ({ show, onClose, formationID, videoUrl, name, description, duree, price}) => {
   if (!show) return null;
 
   return (
@@ -23,10 +24,10 @@ const Modal: React.FC<ModalProps> = ({ show, onClose, videoUrl, name, descriptio
         <div className="mt-4">
           <h2 className="text-2xl font-bold mb-2">{name}</h2>
           <p className="mb-4">{description}</p>
-          <p><strong>Duree:</strong> {duree}</p>
-          <p><strong>Prix:</strong> {price.toFixed(2)} DH</p>
-          <video controls controlsList="nodownload" src={videoUrl} className="w-full rounded mt-4 mb-4" />
-          <CheckoutForm amount={price} />
+          <p><strong>Duree:</strong> {duree}     <strong>Prix:</strong> {price.toFixed(2)} DH</p>
+          <p></p>
+          <video controls controlsList="nodownload" src={videoUrl} className="w-full rounded mt-4 mb-4 max-h-60 max-w-96" />
+          <CheckoutForm amount={price} formationID={formationID}/>
         </div>
       </div>
      

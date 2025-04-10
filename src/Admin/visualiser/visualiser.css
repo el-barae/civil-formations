@@ -89,7 +89,7 @@ transition: 0.5s;
 }
 @media (max-width:700px) {
     .bodydashboard{
-   height: 100vh;     
+   /* height: 100vh;      */
     }
     
 }

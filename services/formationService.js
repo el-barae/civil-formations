@@ -1,13 +1,26 @@
 const Formation = require('../models/Formation'); 
+const Avis = require('../models/Avis'); 
+const User = require('../models/User'); 
 const path = require('path');
 const fs = require('fs');
-import Video from '../models/video';
 const { validationResult } = require('express-validator');
-const Video = require('../models/video');
+const Video = require('../models/Video');
 
 exports.getFormationById = async (req, res) => {
     try {
-        const formation = await Formation.findByPk(req.params.id);
+        const formation = await Formation.findByPk(req.params.id, {
+          include: [
+            {
+              model: Avis,
+              include: [
+                {
+                  model: User,
+                  attributes: ['id', 'firstName', 'lastName'],
+                },
+              ],
+            },
+          ],
+        });
         if (formation) {
             res.json(formation);
           } else {
@@ -77,16 +90,16 @@ exports.getFormations = async (req, res) => {
 
 
 // Validation rules
-exports.validateFormation = [
-  body('name').notEmpty().withMessage('Name is required'),
-  body('duree').notEmpty().withMessage('Duration is required'),
-  body('description').notEmpty().withMessage('Description is required'),
-  body('price').notEmpty().withMessage('Price is required').isNumeric().withMessage('Price must be a number'),
-  body('videos').isArray({ min: 1 }).withMessage('At least one video is required'),
-  body('videos.*.title').notEmpty().withMessage('Video title is required'),
-  body('videos.*.numero').isInt({ min: 1 }).withMessage('Video number must be a positive integer'),
-  body('videos.*.link').notEmpty().withMessage('Video link is required')
-];
+// exports.validateFormation = [
+//   body('name').notEmpty().withMessage('Name is required'),
+//   body('duree').notEmpty().withMessage('Duration is required'),
+//   body('description').notEmpty().withMessage('Description is required'),
+//   body('price').notEmpty().withMessage('Price is required').isNumeric().withMessage('Price must be a number'),
+//   body('videos').isArray({ min: 1 }).withMessage('At least one video is required'),
+//   body('videos.*.title').notEmpty().withMessage('Video title is required'),
+//   body('videos.*.numero').isInt({ min: 1 }).withMessage('Video number must be a positive integer'),
+//   body('videos.*.link').notEmpty().withMessage('Video link is required')
+// ];
 
 exports.createFormation = async (req, res) => {
   // Validate request

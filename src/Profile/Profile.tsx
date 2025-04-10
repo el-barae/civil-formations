@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEnvelope, faPhone, faMapMarkerAlt, faGear } from '@fortawesome/free-solid-svg-icons';
 import ProfileEditModal from './ProfileEditModal'
+import { jwtDecode } from 'jwt-decode';
 import useIntersectionObserver from './useIntersectionObserver'
 
 interface User{
@@ -54,7 +55,7 @@ const ProfilePage: React.FC = () => {
 
   useEffect(() => {
     const checkLoginStatus = () => {
-      const loginStatus = localStorage.getItem('login');
+      const loginStatus = localStorage.getItem('token');
       if (loginStatus) {
         setIsLoggedIn(true);
       } else {
@@ -74,13 +75,22 @@ const ProfilePage: React.FC = () => {
 
   const fetchProfile = async () => {
     try {
-      const id = localStorage.getItem('ID')
-      const response = await axios.get(`${API_URL}/api/users/profile/`+id);
+      const token = localStorage.getItem('token')
+      if(token){
+        const decoded = jwtDecode(token) as { id: string };
+        const { id} = decoded;
+      const response = await axios.get(`${API_URL}/api/users/profile/`+id,{
+        headers :{
+          'Content-Type': 'application/json',
+          'x-auth-token': token
+        }
+      });
       const userData = response.data;
       setUser(userData);
       if (userData && userData.Subscribes) {
         setSubscribes(userData.Subscribes);
       }
+    }
     } catch (error) {
       setError('Error fetching profile data');
     } finally {
@@ -98,7 +108,13 @@ const ProfilePage: React.FC = () => {
 
   const handleSave = async (updatedUser: User) => {
     try {
-      const response = await axios.put(`http://localhost:5000/api/users/profile/${user?.id}`, updatedUser);
+      const token = localStorage.getItem('token')
+      const response = await axios.put(`http://localhost:5000/api/users/profile/${user?.id}`, updatedUser,{
+        headers :{
+          'Content-Type': 'application/json',
+          'x-auth-token': token
+        }
+      });
       setUser(response.data); // Update the local state with the new user data
       setIsModalOpen(false);
     } catch (error) {

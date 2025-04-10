@@ -74,7 +74,7 @@ const Barside: React.FC<ChildProps> = ({ title }) => {
         </NavLink>
       </li>
       <li className="item">
-        <NavLink to="/Admin/add1"   className={({ isActive }) => (isActive ? 'active' : '')}>
+        <NavLink to="/Admin/addFormation"   className={({ isActive }) => (isActive ? 'active' : '')}>
           <i className="fa-solid fa-pen"></i>
           <h2>Add formation</h2>
         </NavLink>

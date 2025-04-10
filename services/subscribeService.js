@@ -5,11 +5,26 @@ const Formation = require('../models/Formation');
 // Create a new subscription
 exports.createSubscription = async (req, res) => {
   const { pourcentage, formationId, userId } = req.body;
+
   try {
+    // Check if formation exists
+    const formation = await Formation.findByPk(formationId);
+    if (!formation) {
+      return res.status(400).json({ message: 'Formation not found' });
+    }
+
+    // Check if user exists
+    const user = await User.findByPk(userId);
+    if (!user) {
+      return res.status(400).json({ message: 'User not found' });
+    }
+
+    // Create subscription
     const subscription = await Subscribe.create({ pourcentage, formationId, userId });
     res.status(201).json({ message: 'Subscription created successfully', subscription });
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error });
+    console.error('Error creating subscription:', error); // Log the error
+    res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
 

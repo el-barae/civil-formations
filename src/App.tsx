@@ -12,17 +12,16 @@ import DashboardPage from './Admin/dashboard/Dashboard';
 import VisualiserPage from './Admin/visualiser/Visualiser';
 import AddPage1 from './Admin/addFormation/add1';
 import AddPage2 from './Admin/addFormation/add2';
+import AddFormation from './Admin/addFormation/addFormation';
 const App: React.FC = () => {
   return (
     <StripeConfig>
     <Router>
       <Routes>
         <Route path="/" element={<HomePage />} />
-        
         <Route path="/Admin/dashboard" element={<DashboardPage />} />
         <Route path="/Admin/Visualiser" element={<VisualiserPage />} />
-        <Route path="/Admin/add1" element={<AddPage1 />} />
-        <Route path="/Admin/add2" element={<AddPage2 />} />
+        <Route path="/Admin/addFormation" element={<AddFormation />} />
         <Route path="/Formations" element={<FormationsPage />} />
         <Route path="/Profile" element={<ProfilePage />} />
         <Route path="/Login" element={<LoginPage />} />

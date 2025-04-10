@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import Nav from '../components/Nav/Nav'
 import Swal from 'sweetalert2';
 import API_URL from '../API_URL';
+import { jwtDecode } from "jwt-decode";
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -18,18 +19,23 @@ const Login: React.FC = () => {
         email,
         password,
       });
-      const { token, role } = response.data;
+      const { token} = response.data;
 
-      localStorage.setItem('login','true')
-      localStorage.setItem('token', token);
-      localStorage.setItem('role', role);
+      localStorage.setItem('token', token);     
+        const decoded = jwtDecode(token) as { id: string, role: string };
+        const { id,role} = decoded;
+        localStorage.setItem('id', id);
+        localStorage.setItem('role', role);
 
       Swal.fire({
         icon: 'success',
         title: 'Login Successful',
         text: 'You have been logged in successfully!',
       }).then(() => {
-        navigate('/profile');
+        if(role === 'CLIENT')
+          navigate('/profile');
+        else  
+          navigate('/Admin/dashboard');
       });
     } catch (err) {
       setError('An error occurred');

@@ -1,64 +1,60 @@
 const Video = require('../models/Video');
 const Formation = require('../models/Formation');
-
-
 const path = require('path');
 const fs = require('fs');
 
 // Create a new video
 exports.createVideo = async (req, res) => {
   try {
-      const videos = req.body.videos;
-      const files = req.files;
+    const videos = req.body.videos;
+    const files = req.files;
+    const videoData = [];
 
-      console.log("les filesss : ", files)
-      console.log("les req body : ", req.body)
-      console.log("les req body videos : ", req.body.videos)
+    console.log('Request body:', req.body); // Log the whole request body to check if formationname is included
 
+    const formationName = videos?.formationname; // Use optional chaining for safety
 
-      const videoData = [];
+    if (!formationName) {
+      return res.status(400).json({ message: 'Formation name is missing from the request' });
+    }
 
-      // Ensure the directory exists
-      const videosDir = path.join(__dirname, 'public/videos');
-      if (!fs.existsSync(videosDir)) {
-          fs.mkdirSync(videosDir, { recursive: true });
-      }
+    const formation = await Formation.findOne({ where: { name: formationName } });
 
-      const formationName = videos['formationname']; // Assuming you're getting the formation name from the request body
-      const formation = await Formation.findOne({ where: { name: formationName } });
+    if (!formation) {
+      throw new Error('Formation not found');
+    }
 
-      if (!formation) {
-          throw new Error('Formation not found');
-      }
+    console.log('Found formation:', formation);
 
-      // Process each file
-      files.forEach( (file, index) => {
-          const targetPath = path.join(videosDir, file.originalname);
-          fs.renameSync(file.path, targetPath);
-          const videoPath = `public/videos/${file.originalname}`;
+    // Process each file
+    files.forEach((file, index) => {
+      const targetPath = path.join(videosDir, file.originalname);
+      console.log('Renaming file from:', file.path, 'to:', targetPath);
+      fs.renameSync(file.path, targetPath);
+      const videoPath = `public/videos/${file.originalname}`;
 
-          // Push video metadata into the array
-          videoData.push({
-              title: videos[index]['title'], // Changed 'titre' to 'title' for consistency
-              numero: index + 1, // Incrementing the numero based on the index
-              link: videoPath,
-              description: videos[index]['description'], // Changed 'desc' to 'description' for consistency
-              formationId: formation.id // Using formationId from videos data, default to 1 if not provided
-          });
-         
+      // Push video metadata into the array
+      videoData.push({
+        title: videos[index]?.title,  // Check if title is present
+        numero: index + 1,
+        link: videoPath,
+        description: videos[index]?.description,  // Check if description is present
+        formationId: formation.id
       });
-      const newVideos = await Video.bulkCreate(videoData);
-      res.status(200).json(newVideos);
-      
-     
-      console.log('Form data:', { videos: videoData });
-      // res.status(200).json(videoData);
+    });
+
+    console.log('Videos to be inserted:', videoData);
+    const newVideos = await Videoo.bulkCreate(videoData);
+
+    res.status(200).json(newVideos);
 
   } catch (error) {
-      console.error('Error creating videos:', error);
-      res.status(500).json({ message: 'Error creating videos', error });
+    console.error('Error creating videos:', error); 
+    res.status(500).json({ message: 'Error creating videos', error: error.message });
   }
 };
+
+
 
 // Get all videos
 exports.getAllVideos = async (req, res) => {

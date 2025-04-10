@@ -1,10 +1,7 @@
 import React from 'react';
 import { useState } from 'react';
-import MVideo from './MVideo';
 import Modal from './Modal';
 import useIntersectionObserver from './useIntersectionObserver';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faVideo } from '@fortawesome/free-solid-svg-icons';
 
 interface Formation {
   id: number;
@@ -40,14 +37,15 @@ const FormationItem: React.FC<FormationItemProps> = ({ formation, index }) => {
       ref={ref}
       className={`m-4 p-4 flex flex-col items-center border rounded-lg shadow-lg max-w-lg transition-opacity duration-1000 ${inView ? animationClass : 'opacity-0'}`}
     >
-      <img src={formation.image}  alt={formation.name} className="rounded mb-4" />
+      <img src={formation.image} alt={formation.name} className="rounded mb-4 w-72 h-80" />
       <h3 className="text-xl font-bold mb-2">{formation.name}</h3>
       <p><strong>Duree:</strong> {formation.duree}</p>
-      <p><strong>Prix:</strong> {formation.price.toFixed(2)} DH</p>
+      <p><strong>Prix:</strong> {formation.price.toFixed(3)} $</p>
       <a href="#" onClick={handleVideoClick} className="text-white bg-yellow-400 py-2 px-4 mt-2 rounded font-semibold">Details</a>
       <Modal
         show={showModal}
         onClose={handleCloseModal}
+        formationID={formation.id}
         videoUrl={formation.video}
         name={formation.name}
         description={formation.description}

@@ -2,6 +2,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
+
 const jwtSecret = 'e7a7b3a7abc3d2a39e7d8e2b1a4f3a8b1e3d7c8f3b6e4a3d9e2b3a7d2f4c9b1e8b7f2a3d4e3b7d8f2c3a6e4f7d2e9c3b8a7f2e3d7a6f5';
 
 // Register user
@@ -68,27 +69,16 @@ exports.login = async (req, res) => {
       return res.status(400).json({ msg: 'Invalid credentials' });
     }
 
-    const payload = {
-      user: {
-        id: user.id,
-        role: user.role
-      },
-    };
-
     const role = user.role;
+    const id = user.id;
 
-    jwt.sign(
-      payload,
+    const token = jwt.sign(
+      { id: id, role: role },
       jwtSecret,
-      { expiresIn: 3600 },
-      (err, token) => {
-        if (err) {
-          console.error(err.message);
-          return res.status(500).send('Server error');
-        }
-        res.json({ token, role });
-      }
+      { expiresIn: '24h' }
     );
+
+    res.json({ token });
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server error');
@@ -103,7 +93,7 @@ exports.logout = (req, res) => {
     return res.status(401).json({ msg: 'No token provided' });
   }
 
-  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+  jwt.verify(token, jwtSecret, (err, user) => {
     if (err) {
       return res.status(403).json({ msg: 'Invalid token' });
     }

@@ -42,8 +42,27 @@ const Add2: React.FC = () => {
  
 
     try {
-    
-    
+
+      const formData1 = new FormData();
+    formData1.append('name', info.name);
+    formData1.append('duree', info.duree);
+    formData1.append('description', info.description);
+    formData1.append('price', info.price);
+    if (info.image) {
+        formData1.append('image', info.image);
+    }
+    if (info.video) {
+        formData1.append('video', info.video);
+    }
+    const token = localStorage.getItem('token')
+    const response1 = await axios.post(`${API_URL}/api/formations`, formData1,{
+      headers :{
+        'Content-Type': 'multipart/form-data',
+        'x-auth-token': token
+      }
+    });
+    console.log("Réponse depuis backend formation :", response1.data);
+
 
     const formData = new FormData();
     items.forEach((item, index) => {
@@ -57,8 +76,15 @@ const Add2: React.FC = () => {
     formData.append(`videos[formationname]`, info.name);
 
 
-     axios.post(`${API_URL}/api/videos`, formData);
-    
+
+    const response = await axios.post(`${API_URL}/api/videos`, formData,{
+      headers :{
+        'Content-Type': 'multipart/form-data',
+        'x-auth-token': token
+      }
+    });
+    console.log("Réponse depuis backend videos :", response.data);
+
     
 } catch (error) {
     console.error('There was an error submitting the videos form!', error);
