@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import Barside from '../barside/barside';
 import Swal from 'sweetalert2';
+import API_URL from '../../API_URL';
 
 interface Formation {
     name: string;
@@ -54,11 +55,16 @@ export default function AddFormation() {
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, files } = e.target;
-        if (files) {
+        if (files && name=="image") {
             setFormation(prev => ({
                 ...prev,
                 image:files[0]
             }));
+        }else if(files && name=="video"){
+          setFormation(prev => ({
+            ...prev,
+            video:files[0]
+        }));
         }
     };
    
@@ -118,34 +124,35 @@ const handelNext = (e:any)=>{
         formData.append('videos', JSON.stringify(videos));
 
 
-        console.log('Formation created:',JSON.stringify(formation) );
-        console.log('Formation video:', formation.video);
-        console.log('Formation image:', formation.image);
+        // console.log('Formation created:',JSON.stringify(formation) );
+        // console.log('Formation video:', formation.video);
+        // console.log('Formation image:', formation.image);
 
 
-        if (formation.video) {
-            console.log('Video name:', formation.video.name);
-            console.log('Video size:', formation.video.size);
-            console.log('Video type:', formation.video.type);
-          }
+        // if (formation.video) {
+        //     console.log('Video name:', formation.video.name);
+        //     console.log('Video size:', formation.video.size);
+        //     console.log('Video type:', formation.video.type);
+        //   }
           
-          if (formation.image) {
-            console.log('Image name:', formation.image.name);
-            console.log('Image size:', formation.image.size);
-            console.log('Image type:', formation.image.type);
-          }
+        //   if (formation.image) {
+        //     console.log('Image name:', formation.image.name);
+        //     console.log('Image size:', formation.image.size);
+        //     console.log('Image type:', formation.image.type);
+        //   }
 
-        // try {
-        //     const response = await axios.post('http://your-api-url/formations', formData, {
-        //         headers: {
-        //             'Content-Type': 'multipart/form-data'
-        //         }
-        //     });
-        //     console.log('Formation created:', response.data);
-        //     // Reset form or redirect
-        // } catch (error) {
-        //     console.error('Error creating formation:', error);
-        // }
+        try {
+            const response = await axios.post(`${API_URL}/api/formations`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    'X-Auth-Token': localStorage.getItem("token"),
+                }
+            });
+            console.log('Formation created:', response.data);
+            // Reset form or redirect
+        } catch (error) {
+            console.error('Error creating formation:', error);
+        }
     };
 
     return (

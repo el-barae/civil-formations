@@ -3,8 +3,13 @@ const Avis = require('../models/Avis');
 const User = require('../models/User'); 
 const path = require('path');
 const fs = require('fs');
-const { validationResult } = require('express-validator');
 const Video = require('../models/Video');
+
+
+
+
+
+
 
 exports.getFormationById = async (req, res) => {
     try {
@@ -40,128 +45,154 @@ exports.getFormations = async (req, res) => {
     }
   };
   
-//   exports.createFormation = async (req, res) => {
-//     try {
-//         const videos = req.body;
-//         const files = req.files;
+  exports.createFormation = async (req, res) => {
+    try {
+   
+        const { name, duree, description, price } = req.body;
+        const videos = JSON.parse(req.body.videos || '[]');
+        
+        // Vérification des fichiers
+        if (!req.files) {
+            return res.status(400).json({ message: 'Aucun fichier téléchargé' });
+        }
 
-//         // Create directories if they don't exist
-//         if (!fs.existsSync(path.join(__dirname, 'public/images'))) {
-//             fs.mkdirSync(path.join(__dirname, 'public/images'), { recursive: true });
-//         } else {
-//             console.log("The images directory already exists");
-//         }
+        // Création des répertoires s'ils n'existent pas
+        const stockDir = path.join(__dirname, '../public/formation');
+     
+      
+            if (!fs.existsSync(stockDir)) {
+                fs.mkdirSync(dir, { recursive: true });
+            }
+   
 
-//         if (!fs.existsSync(path.join(__dirname, 'public/videos'))) {
-//             fs.mkdirSync(path.join(__dirname, 'public/videos'), { recursive: true });
-//         } else {
-//             console.log("The videos directory already exists");
-//         }
-//         // Save image and video files
-//         const fileimage = files[0];
-//         const targetPathimage = path.join(__dirname, '../public/images', fileimage.originalname);
-//         fs.renameSync(fileimage.path, targetPathimage);
-//         const imagePath = `/images/${fileimage.originalname}`;
+        // Traitement de l'image principale
+        let imagePath = null;
+        if (req.files['image']) {
+            const imageFile = req.files['image'][0];
+            imagePath =imageFile?`/formation/${req.files['image'][0].filename}`:null;
+        }else{
+          console.log("image not exist !!!")
+        }
 
-//         const filevideo = files[1];
-//         const targetPathvideo = path.join(__dirname, '../public/videos', filevideo.originalname);
-//         fs.renameSync(filevideo.path, targetPathvideo);
-//         const videoPath = `/videos/${filevideo.originalname}`;
+        // Traitement de la vidéo principale
+        let mainVideoPath = null;
+        if (req.files['video']) {
+            const videoFile = req.files['video'][0];
+            mainVideoPath = videoFile?`/formation/${req.files['video'][0].filename}`:null;
+        }else{
+          console.log("video not exist !!!")
+        }
 
-//         // Prepare the data for database insertion
-//         const formationData = {
-//             name: videos['name'],
-//             duree: videos['duree'],
-//             description: videos['description'],
-//             price: videos['price'],
-//             image: imagePath,
-//             video: videoPath
-//         };
-// console.log("les information du formations")
-//         // Save formation data to the database
-//         const newFormation = await Formation.create(formationData);
-//         res.status(200).json(newFormation);
-//     } catch (error) {
-//         console.error('Error creating formation:', error);
-//         res.status(500).json({ message: 'Error creating formation', error });
+        // Traitement des vidéos supplémentaires
+        const processedVideos = [];
+        if (req.files['videos']) {
+            req.files['videos'].forEach((file, index) => {
+                const videoExt = path.extname(file.originalname);
+                const videoFilename = Date.now() + '_' + index + videoExt;
+                const targetPath = path.join(stockDir, videoFilename);
+                fs.renameSync(file.path, targetPath);
+                
+                // Mise à jour de l'objet vidéo avec le chemin
+                if (videos[index]) {
+                    videos[index].videoPath = `/formation/${videoFilename}`;
+                    processedVideos.push(videos[index]);
+                }
+            });
+        }
+
+        // Création de l'objet formation
+        const formationData = {
+            name,
+            duree,
+            description,
+            price,
+            image: imagePath,
+            video: mainVideoPath,
+        };
+
+        // Enregistrement dans la base de données
+        const newFormation = await Formation.create(formationData);
+        
+        res.status(201).json({
+            message: 'Formation créée avec succès',
+            data: newFormation
+        });
+
+    } catch (error) {
+        console.error('Erreur lors de la création de la formation:', error);
+        res.status(500).json({ 
+            message: 'Erreur lors de la création de la formation',
+            error: error.message
+        });
+    }
+};
+
+
+
+
+// exports.createFormation = async (req, res) => {
+//   // Validate request
+//   const errors = validationResult(req);
+//   if (!errors.isEmpty()) {
+//     return res.status(400).json({ errors: errors.array() });
+//   }
+
+//   try {
+//     // Check if files were uploaded
+//     if (!req.files || !Array.isArray(req.files)) {
+//       return res.status(400).json({ message: 'No files uploaded' });
 //     }
+
+//     // Extract files
+//     const files = req.files;
+//     const imageFile = files.find(file => file.fieldname === 'image');
+//     const videoFile = files.find(file => file.fieldname === 'video');
+
+//     if (!imageFile) {
+//       return res.status(400).json({ message: 'Image file is required' });
+//     }
+
+//     // Create the formation
+//     const newFormation = new Formation({
+//       name: req.body.name,
+//       duree: req.body.duree,
+//       description: req.body.description,
+//       price: req.body.price,
+//       imagePath: imageFile.path,
+//       videoPath: videoFile ? videoFile.path : null
+//     });
+
+//     // Save the formation
+//     const savedFormation = await newFormation.save();
+
+//     // Create and associate videos
+//     const videos = req.body.videos.map(video => ({
+//       title: video.title,
+//       description: video.description || '',
+//       numero: video.numero,
+//       link: video.link,
+//       formation: savedFormation._id
+//     }));
+
+//     await Video.insertMany(videos);
+
+//     return res.status(201).json({
+//       success: true,
+//       message: 'Formation created successfully',
+//       formation: savedFormation
+//     });
+
+//   } catch (error) {
+//     console.error('Error creating formation:', error);
+//     return res.status(500).json({ 
+//       success: false,
+//       message: 'Server error while creating formation',
+//       error: error.message 
+//     });
+//   }
 // };
 
 
-
-// Validation rules
-// exports.validateFormation = [
-//   body('name').notEmpty().withMessage('Name is required'),
-//   body('duree').notEmpty().withMessage('Duration is required'),
-//   body('description').notEmpty().withMessage('Description is required'),
-//   body('price').notEmpty().withMessage('Price is required').isNumeric().withMessage('Price must be a number'),
-//   body('videos').isArray({ min: 1 }).withMessage('At least one video is required'),
-//   body('videos.*.title').notEmpty().withMessage('Video title is required'),
-//   body('videos.*.numero').isInt({ min: 1 }).withMessage('Video number must be a positive integer'),
-//   body('videos.*.link').notEmpty().withMessage('Video link is required')
-// ];
-
-exports.createFormation = async (req, res) => {
-  // Validate request
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-
-  try {
-    // Check if files were uploaded
-    if (!req.files || !Array.isArray(req.files)) {
-      return res.status(400).json({ message: 'No files uploaded' });
-    }
-
-    // Extract files
-    const files = req.files;
-    const imageFile = files.find(file => file.fieldname === 'image');
-    const videoFile = files.find(file => file.fieldname === 'video');
-
-    if (!imageFile) {
-      return res.status(400).json({ message: 'Image file is required' });
-    }
-
-    // Create the formation
-    const newFormation = new Formation({
-      name: req.body.name,
-      duree: req.body.duree,
-      description: req.body.description,
-      price: req.body.price,
-      imagePath: imageFile.path,
-      videoPath: videoFile ? videoFile.path : null
-    });
-
-    // Save the formation
-    const savedFormation = await newFormation.save();
-
-    // Create and associate videos
-    const videos = req.body.videos.map(video => ({
-      title: video.title,
-      description: video.description || '',
-      numero: video.numero,
-      link: video.link,
-      formation: savedFormation._id
-    }));
-
-    await Video.insertMany(videos);
-
-    return res.status(201).json({
-      success: true,
-      message: 'Formation created successfully',
-      formation: savedFormation
-    });
-
-  } catch (error) {
-    console.error('Error creating formation:', error);
-    return res.status(500).json({ 
-      success: false,
-      message: 'Server error while creating formation',
-      error: error.message 
-    });
-  }
-};
   exports.updateFormation = async (req, res) => {
     try {
       const formation = await Formation.findByPk(req.params.id);

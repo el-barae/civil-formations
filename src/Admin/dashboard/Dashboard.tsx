@@ -15,7 +15,9 @@ const Dashboard: React.FC = () => {
   const deleteformation = async (id: any) => {
     try {
       // Utiliser les backticks pour créer une chaîne de caractères dynamique
-      const response = await axios.delete(`http://localhost:5000/formations/${id}`);
+      const response = await axios.delete(`${API_URL}/formations/${id}`, {headers: {
+        'X-Auth-Token': localStorage.getItem("token"),
+    }});
       console.log('Formation supprimée:', response.data);
       setFormations(formations.filter(formation => formation.id !== id));
 
