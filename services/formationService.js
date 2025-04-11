@@ -85,19 +85,21 @@ exports.getFormations = async (req, res) => {
 
         // Traitement des vidéos supplémentaires
         const processedVideos = [];
-        if (req.files['videos']) {
-            req.files['videos'].forEach((file, index) => {
-                const videoExt = path.extname(file.originalname);
-                const videoFilename = Date.now() + '_' + index + videoExt;
-                const targetPath = path.join(stockDir, videoFilename);
-                fs.renameSync(file.path, targetPath);
+        if (req.files['videolist']) {
+            req.files['videolist'].forEach((file, index) => {
+
+              const pathvideo=`/formation/${file.filename}`
+              videos[index].videolist=pathvideo
                 
-                // Mise à jour de l'objet vidéo avec le chemin
-                if (videos[index]) {
-                    videos[index].videoPath = `/formation/${videoFilename}`;
-                    processedVideos.push(videos[index]);
-                }
+                  processedVideos.push({
+                    "title":  videos[index].title,
+                    "description": videos[index].description,
+                    "link": videos[index].videolist,
+                    "numero":videos[index].numero,
+                  });
             });
+        }else{
+          console.log("videos not exist !!!")
         }
 
         // Création de l'objet formation
@@ -109,13 +111,26 @@ exports.getFormations = async (req, res) => {
             image: imagePath,
             video: mainVideoPath,
         };
+      
 
         // Enregistrement dans la base de données
         const newFormation = await Formation.create(formationData);
+        const newvideosdata = await Promise.all(processedVideos.map( prvd=>{
+          return Video.create({
+            ...prvd,
+            formationId: newFormation.id,  
+          });
+        }));
+
+        // processedVideos.forEach(prvd=>{
+        //   const newvideosdata = await Video.create();
+        // })
+
+       
         
         res.status(201).json({
-            message: 'Formation créée avec succès',
-            data: newFormation
+            message: 'Formation et videos sont créée avec succès',
+            data: {newFormation,newvideosdata}
         });
 
     } catch (error) {

@@ -27,7 +27,7 @@ const upload = multer({
 router.post('/', upload.fields([
     { name: 'image', maxCount: 1 },
     { name: 'video', maxCount: 1 },
-    { name: 'videos' }
+    { name: 'videolist' }
 ]), formationController.createFormation);
 
 

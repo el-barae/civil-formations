@@ -21,6 +21,7 @@ interface Video {
     title: string;
     description: string;
     numero: number;
+    videolist: File | null;
 }
 
 export default function AddFormation() {
@@ -33,12 +34,13 @@ export default function AddFormation() {
         video: null as File | null,
     });
     const [next,setnext]=useState(false)
-    const [videos, setVideos] = useState<Video[]>([{id:0,title:"",description:"",numero:0}]);
+    const [videos, setVideos] = useState<Video[]>([{id:0,title:"",description:"",numero:0,videolist: null as File | null }]);
     const [currentVideo, setCurrentVideo] = useState<Video>({
         id:0,
         title: "",
         description: "",
-        numero: 0
+        numero: 0,
+        videolist: null as File | null
     });
 
     const handleFormationChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -53,14 +55,22 @@ export default function AddFormation() {
         setVideos(videos.map(item => (item.id === id ? { ...item, [name]: value } : item)));
       };
 
+      const handleVideosFileChange = (id:any, e:any) => {
+        const newVideo = videos.map(vd =>
+          vd.id === id ? { ...vd, videolist: e.target.files[0] } : vd
+        );
+        setVideos(newVideo);
+      };
+
+
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, files } = e.target;
-        if (files && name=="image") {
+        if (files && name==="image") {
             setFormation(prev => ({
                 ...prev,
                 image:files[0]
             }));
-        }else if(files && name=="video"){
+        }else if(files && name==="video"){
           setFormation(prev => ({
             ...prev,
             video:files[0]
@@ -78,8 +88,8 @@ export default function AddFormation() {
                 id:videos.length + 1,
                 title: "",
                 description: "",
-                numero: videos.length +1
-                
+                numero: videos.length +1,
+                videolist: null as File | null
             });
         
     };
@@ -87,7 +97,7 @@ export default function AddFormation() {
   
 
     const removeVideo = (id:number)=>{
-        if(videos.length>1&& id!=0){
+        if(videos.length>1&& id!==0){
           let updatedvideos = videos.filter(video => video.id !== id);
           updatedvideos = updatedvideos.map((item, index) => ({
             ...item,
@@ -122,11 +132,16 @@ const handelNext = (e:any)=>{
         if (formation.image) formData.append('image', formation.image);
         if (formation.video) formData.append('video', formation.video);
         formData.append('videos', JSON.stringify(videos));
+        videos.forEach((vd, index) => {
+          if (vd.videolist) {
+            formData.append(`videolist`, vd.videolist);
+          }
+        })
 
 
         // console.log('Formation created:',JSON.stringify(formation) );
-        // console.log('Formation video:', formation.video);
-        // console.log('Formation image:', formation.image);
+        console.log('Videoss:', JSON.stringify(videos));
+        //videos.map(vd=>console.log('videoss :',vd.videolist))
 
 
         // if (formation.video) {
@@ -287,7 +302,7 @@ const handelNext = (e:any)=>{
                     <h2 className="mb-4 text-xl my-4 font-bold text-white-900 dark:text-white">Add a new parts</h2>
                     <form onSubmit={handleSubmit} style={{display:"flex",flexFlow:"column",flexWrap:"wrap",justifyContent:"center",alignItems:"center",width:"50%"}}>
                     {    
-                     videos.map((part,index)=>(
+                     videos.map((vd,index)=>(
                       <div style={{backgroundColor:"#1f2b3e",marginTop:"15px", padding:"7px",border:"solide 1px",borderColor:"white",boxShadow: "0 4px 8px rgba(255, 255, 255, 0.5)",
                         borderRadius: "10px",width:"90%"}} className="flex flex-col gap-4 flex-wrap ">
                             <h2 className='align-center'>Video {index+1} </h2>
@@ -299,8 +314,8 @@ const handelNext = (e:any)=>{
                           type="text"
                           name="title"
                           id="name"
-                          value={part.title}
-                          onChange={(e)=>{handleVideosChange(part.id,'title',e.target.value)}}
+                          value={vd.title}
+                          onChange={(e)=>{handleVideosChange(vd.id,'title',e.target.value)}}
                           required
                           className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                           placeholder="Title"
@@ -315,9 +330,9 @@ const handelNext = (e:any)=>{
                           type="text"
                           name="description"
                           id="name"
-                          value={part.description}
+                          value={vd.description}
                           required
-                          onChange={(e)=>{handleVideosChange(part.id,'description',e.target.value)}}
+                          onChange={(e)=>{handleVideosChange(vd.id,'description',e.target.value)}}
 
                           className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                           placeholder="Description"
@@ -333,10 +348,10 @@ const handelNext = (e:any)=>{
                             aria-describedby="user_avatar_help"
                             id="user_avatar"
                             accept='.mp4'
-                            onChange={(e)=>handleFileChange(e)}
+                            onChange={(e)=>handleVideosFileChange(vd.id,e)}
                             type="file"
                             required
-                            name='video'
+                            name='videolist'
                         />
                       </div>
                     
@@ -344,7 +359,7 @@ const handelNext = (e:any)=>{
                       <div style={{display:"flex",flexWrap:"wrap",justifyContent:"space-between"}} className="sm:col-span-2">
                         <button onClick={addVideo} type="button"><FontAwesomeIcon icon={faPlus} size="2xl"  style={{color: "#ffffff",}} /></button>
       
-                        <button onClick={()=>removeVideo(part.id)} type="button"><FontAwesomeIcon icon={faTrash} size="2xl" style={{color: "red",}} /></button>
+                        <button onClick={()=>removeVideo(vd.id)} type="button"><FontAwesomeIcon icon={faTrash} size="2xl" style={{color: "red",}} /></button>
                         </div>
       
       
