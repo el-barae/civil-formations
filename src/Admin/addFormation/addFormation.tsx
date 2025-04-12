@@ -3,6 +3,7 @@ import axios from 'axios';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { useNavigate } from 'react-router-dom';
 import Barside from '../barside/barside';
 import Swal from 'sweetalert2';
 import API_URL from '../../API_URL';
@@ -34,14 +35,9 @@ export default function AddFormation() {
         video: null as File | null,
     });
     const [next,setnext]=useState(false)
-    const [videos, setVideos] = useState<Video[]>([{id:0,title:"",description:"",numero:0,videolist: null as File | null }]);
-    const [currentVideo, setCurrentVideo] = useState<Video>({
-        id:0,
-        title: "",
-        description: "",
-        numero: 0,
-        videolist: null as File | null
-    });
+    const [videos, setVideos] = useState<Video[]>([{id:1,title:"",description:"",numero:1,videolist: null as File | null }]);
+   
+    const navigate = useNavigate();
 
     const handleFormationChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -52,7 +48,7 @@ export default function AddFormation() {
     };
 
     const handleVideosChange = (id:any, name:string, value: string) => {
-        setVideos(videos.map(item => (item.id === id ? { ...item, [name]: value } : item)));
+        setVideos(videos.map(item => (item.id == id ? { ...item, [name]: value } : item)));
       };
 
       const handleVideosFileChange = (id:any, e:any) => {
@@ -83,14 +79,14 @@ export default function AddFormation() {
 
     const addVideo = () => {
        
-            setVideos(prev => [...prev, currentVideo]);
-            setCurrentVideo({
-                id:videos.length + 1,
-                title: "",
-                description: "",
-                numero: videos.length +1,
-                videolist: null as File | null
-            });
+            setVideos(prev => [...prev, {
+              id:videos.length+1,
+              title: "",
+              description: "",
+              numero: videos.length+1,
+              videolist: null as File | null
+          }]);
+          
         
     };
 
@@ -121,8 +117,8 @@ const handelNext = (e:any)=>{
     setnext(true);
 }
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
+    const handleSubmit = async (e: any) => {
+    e.preventDefault();
         
         const formData = new FormData();
         formData.append('name', formation.name);
@@ -140,7 +136,7 @@ const handelNext = (e:any)=>{
 
 
         // console.log('Formation created:',JSON.stringify(formation) );
-        console.log('Videoss:', JSON.stringify(videos));
+        //console.log('Videoss:', videos);
         //videos.map(vd=>console.log('videoss :',vd.videolist))
 
 
@@ -157,17 +153,21 @@ const handelNext = (e:any)=>{
         //   }
 
         try {
-            const response = await axios.post(`${API_URL}/api/formations`, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                    'X-Auth-Token': localStorage.getItem("token"),
-                }
-            });
-            console.log('Formation created:', response.data);
-            // Reset form or redirect
-        } catch (error) {
-            console.error('Error creating formation:', error);
-        }
+          const response = await axios.post(`${API_URL}/api/formations`, formData, {
+              headers: {
+                  'Content-Type': 'multipart/form-data',
+                  'X-Auth-Token': localStorage.getItem("token"),
+              }
+          });
+      } catch (error) {
+          // Gestion des erreurs
+          Swal.fire({
+              title: "Error!",
+              text: "An error occurred while registering the formation.",
+              icon: "error",
+              confirmButtonText: "OK",
+          });
+      }
     };
 
     return (
