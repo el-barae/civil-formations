@@ -168,7 +168,7 @@ const FormationPage: React.FC = () => {
       };
 
       fetchFormation();
-      //fetchVideos();
+      fetchVideos();
     }
   }, [id, isLoggedIn]);
 

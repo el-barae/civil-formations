@@ -2,7 +2,9 @@ import React from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import './Nav.css'
+import { jwtDecode } from 'jwt-decode';
 import axios from 'axios';
+import { log } from 'node:console';
 
 const Nav: React.FC = () => {
 const navigate = useNavigate();
@@ -37,7 +39,12 @@ const handleSmoothScroll = (event: React.MouseEvent<HTMLAnchorElement, MouseEven
     event.preventDefault();
     const login = localStorage.getItem('token')
     if(login){
-      navigate('/profile');
+      const decoded = jwtDecode(login) as { role: string };
+      const { role} = decoded;
+      if(role==="ADMIN")
+        navigate('/Admin/dashboard');
+      else
+        navigate('/profile');
     }
     else
       navigate('/login');
