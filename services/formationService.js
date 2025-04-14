@@ -85,6 +85,8 @@ exports.getFormations = async (req, res) => {
 
         // Traitement des vidéos supplémentaires
         const processedVideos = [];
+       
+        console.log("number of videosss:"+req.files['videolist'].length)
         if (req.files['videolist']) {
             req.files['videolist'].forEach((file, index) => {
 
