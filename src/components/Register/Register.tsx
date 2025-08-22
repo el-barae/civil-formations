@@ -3,6 +3,8 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import API_URL from '../../API_URL';
 import { jwtDecode } from "jwt-decode";
+import Nav from '../../components/Nav/Nav'
+
 
 const RegisterPage: React.FC = () => {
   const [firstName, setFirstName] = useState('');
@@ -60,8 +62,10 @@ const RegisterPage: React.FC = () => {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gradient-to-r from-amber-500 to-orange-600">
-      <div className="w-full max-w-md p-8 space-y-4 text-white bg-gradient-to-r from-orange-400 to-red-400 rounded shadow-white">
+    <>
+    <Nav></Nav>
+    <div className=" flex justify-center items-center min-h-screen bg-gradient-to-r from-amber-500 to-orange-600">
+      <div className="mt-20 w-full max-w-md p-8 space-y-4 text-white bg-gradient-to-r from-orange-400 to-red-400 rounded shadow-white">
         <h2 className="text-2xl font-bold text-center">Register</h2>
         {error && <p className="text-red-500">{error}</p>}
         <form onSubmit={handleSubmit}>
@@ -147,6 +151,7 @@ const RegisterPage: React.FC = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 
