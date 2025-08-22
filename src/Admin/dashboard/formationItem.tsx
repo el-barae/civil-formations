@@ -47,8 +47,7 @@ useEffect(() => {
     fetchVideos(); // Appel de la fonction lors du montage du composant
 }, []);
 
-const [show2, setshows2] = useState<boolean>(false);
-const [formations, setFormations] = useState<any[]>([]);
+
 // État pour stocker les formations
 const updatehandler = (e: React.MouseEvent)=>{
     e.preventDefault();
@@ -61,10 +60,6 @@ const updatehandler = (e: React.MouseEvent)=>{
   const handleStep2 = ()=>{
   
     setstep2(true)
-  }
-  const handleCloseModal2 = ()=>{
-    setshows(false);
-    
   }
 
 

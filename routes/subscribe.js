@@ -21,7 +21,7 @@ router.delete('/:id',authMiddleware, subscribeController.deleteSubscription);
 
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 
-const MIN_AMOUNT = 0.20; 
+const MIN_AMOUNT = 0.02; 
 
 router.post('/create-payment-intent', authMiddleware, async (req, res) => {
   const { amount, pourcentage, formationId, userId } = req.body;

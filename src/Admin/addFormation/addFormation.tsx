@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { useNavigate } from 'react-router-dom';
 import Barside from '../barside/barside';
 import Swal from 'sweetalert2';
 import API_URL from '../../API_URL';
@@ -37,8 +35,6 @@ export default function AddFormation() {
     const [next,setnext]=useState(false)
     const [videos, setVideos] = useState<Video[]>([{id:1,title:"",description:"",numero:1,videolist: null as File | null }]);
    
-    const navigate = useNavigate();
-
     const handleFormationChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
         setFormation(prev => ({
@@ -48,7 +44,7 @@ export default function AddFormation() {
     };
 
     const handleVideosChange = (id:any, name:string, value: string) => {
-        setVideos(videos.map(item => (item.id == id ? { ...item, [name]: value } : item)));
+        setVideos(videos.map(item => (item.id === id ? { ...item, [name]: value } : item)));
       };
 
       const handleVideosFileChange = (id:any, e:any) => {
@@ -153,7 +149,7 @@ const handelNext = (e:any)=>{
         //   }
 
         try {
-          const response = await axios.post(`${API_URL}/api/formations`, formData, {
+          await axios.post(`${API_URL}/api/formations`, formData, {
               headers: {
                   'Content-Type': 'multipart/form-data',
                   'X-Auth-Token': localStorage.getItem("token"),

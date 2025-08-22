@@ -10,8 +10,6 @@ import LoginPage from './Login/Login';
 import RegisterPage from './components/Register/Register';
 import DashboardPage from './Admin/dashboard/Dashboard';
 import VisualiserPage from './Admin/visualiser/Visualiser';
-import AddPage1 from './Admin/addFormation/add1';
-import AddPage2 from './Admin/addFormation/add2';
 import AddFormation from './Admin/addFormation/addFormation';
 const App: React.FC = () => {
   return (

@@ -1,10 +1,8 @@
 import React from 'react';
 import axios from 'axios';
-import Barside from '../barside/barside';
-import { useEffect,useState } from 'react';
+import { useState } from 'react';
 import API_URL from '../../API_URL';
 import './dashboard.css';
-import { useNavigate } from 'react-router-dom';
 import UpdateVideos from './updateVideos'
 interface Videos{
     id:number;
@@ -29,9 +27,8 @@ interface into{
     price: any;
 }
 
-const UpdateFormation: React.FC<into> = ({show,formationId,step2,videos,handleStep2,onClose,videoUrl,imageUrl,name,description,duree,price}) => {
+const UpdateFormation: React.FC<into> = ({show,formationId,step2,videos,handleStep2,onClose,name,description,duree,price}) => {
     const [info, setInfo] = useState({ name:name,duree:duree,desc:description,price:price});
-    const navigate = useNavigate();
     
     if(!show) return null;
 
@@ -48,9 +45,7 @@ const UpdateFormation: React.FC<into> = ({show,formationId,step2,videos,handleSt
 //       setInfo({ ...info, [name]: files[0] });
 //     }
 //   };
-const sendvideoupdated = ()=>{
-    
-}
+
    const updateformation = async (id:number)=>{
     
    

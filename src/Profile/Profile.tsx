@@ -9,7 +9,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEnvelope, faPhone, faMapMarkerAlt, faGear } from '@fortawesome/free-solid-svg-icons';
 import ProfileEditModal from './ProfileEditModal'
 import { jwtDecode } from 'jwt-decode';
-import useIntersectionObserver from './useIntersectionObserver'
 
 interface User{
   id:number,
@@ -37,11 +36,6 @@ interface Subscribe {
   formationId: string;
   userId: string;
   Formation: Formation;
-}
-
-interface FormationItemProps {
-  formation: Formation;
-  index: number;
 }
 
 const ProfilePage: React.FC = () => {

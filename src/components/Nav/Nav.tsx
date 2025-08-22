@@ -1,10 +1,8 @@
 import React from 'react';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import './Nav.css'
 import { jwtDecode } from 'jwt-decode';
-import axios from 'axios';
-import { log } from 'node:console';
 
 const Nav: React.FC = () => {
 const navigate = useNavigate();
