@@ -31,7 +31,7 @@ exports.createVideo = async (req, res) => {
       const targetPath = path.join(videosDir, file.originalname);
       console.log('Renaming file from:', file.path, 'to:', targetPath);
       fs.renameSync(file.path, targetPath);
-      const videoPath = `public/videos/${file.originalname}`;
+      const videoPath = `uploads/videos/${file.originalname}`;
 
       // Push video metadata into the array
       videoData.push({
@@ -143,13 +143,13 @@ if(file[0]==null){
       console.log("Le fichier est invalide.");
       return res.status(400).send('Le fichier est invalide.');
     }
-    const videosDir = path.join(__dirname, 'public/videos');
+    const videosDir = path.join(__dirname, 'uploads/videos');
     if (!fs.existsSync(videosDir)) {
         fs.mkdirSync(videosDir, { recursive: true });
     }
     const targetPath = path.join(videosDir, file[0].originalname);
     fs.renameSync(file[0].path, targetPath);
-    const link = `public/videos/${file[0].originalname}`;
+    const link = `uploads/videos/${file[0].originalname}`;
 
     
     try {

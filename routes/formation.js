@@ -7,7 +7,7 @@ const {authMiddleware, authorizeRoles} = require('../middleware/auth');
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        const uploadPath = path.join(__dirname, '../public/formation');
+        const uploadPath = path.join(__dirname, '../uploads/formation');
         cb(null, uploadPath);
       },
       filename: (req, file, cb) => {

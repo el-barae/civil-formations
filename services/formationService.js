@@ -57,7 +57,7 @@ exports.getFormations = async (req, res) => {
         }
 
         // Création des répertoires s'ils n'existent pas
-        const stockDir = path.join(__dirname, '../public/formation');
+        const stockDir = path.join(__dirname, '../uploads/formation');
      
       
             if (!fs.existsSync(stockDir)) {
