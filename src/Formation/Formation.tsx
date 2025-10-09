@@ -208,11 +208,12 @@ const FormationPage: React.FC = () => {
     }
   };
 
+const mediaBaseUrl = process.env.REACT_APP_MEDIA_URL || '';
 
   return (
     <div className="bg-white rounded-lg shadow-lg w-full h-full">
       <Nav/>
-      <div className="bg-cover bg-center p-8 text-center" style={{ backgroundImage: `url(${formation.image})`, height:"500px" }} id='header'>
+      <div className="bg-cover bg-center p-8 text-center" style={{ backgroundImage: `url(${mediaBaseUrl}${formation.image})`, height:"500px" }} id='header'>
         <h1 className="text-4xl mt-32 font-bold">{formation.name}</h1>
       </div>
       <div className='m-12'>
