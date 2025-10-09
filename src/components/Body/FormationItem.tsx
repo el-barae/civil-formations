@@ -48,7 +48,7 @@ const FormationItem: React.FC<FormationItemProps> = ({ formation, index }) => {
         show={showModal}
         onClose={handleCloseModal}
         formationID={formation.id}
-        videoUrl={formation.video}
+        videoUrl={`${mediaBaseUrl}${formation.video}`}
         name={formation.name}
         description={formation.description}
         duree={formation.duree}
