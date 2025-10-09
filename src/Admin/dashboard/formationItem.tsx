@@ -69,7 +69,7 @@ return(
                 id={"it"+ formation.id}
                 className="box"
                 style={{
-                  backgroundImage: `url(${formation.image})`,
+              backgroundImage: `url(${process.env.REACT_APP_MEDIA_URL}${formation.image})`,
                   backgroundSize: 'cover',
                 }}
                 >
