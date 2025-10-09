@@ -62,6 +62,7 @@ const updatehandler = (e: React.MouseEvent)=>{
     setstep2(true)
   }
 
+const mediaBaseUrl = process.env.REACT_APP_MEDIA_URL || '';
 
 return(
     <div 
@@ -69,7 +70,7 @@ return(
                 id={"it"+ formation.id}
                 className="box"
                 style={{
-              backgroundImage: `url(${process.env.REACT_APP_MEDIA_URL}${formation.image})`,
+              backgroundImage: `url(${mediaBaseUrl}${formation.image})`,
                   backgroundSize: 'cover',
                 }}
                 >
