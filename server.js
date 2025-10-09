@@ -15,6 +15,10 @@ app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+const path = require('path');
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+
 /*app.post('/api/formation', upload.any(),async (req, res) => {
     const videos = req.body.videos;
   const files = req.files;
@@ -115,6 +119,12 @@ app.use('/api/subscribes', subscribeRoutes);
 app.use('/api/videos', videoRoutes);
 app.use('/api/views', viewRoutes);
 app.use('/api/avis', avisRoutes);
+
+// app.use((err, req, res, next) => {
+//   console.error('💥 Error middleware:', err);
+//   res.status(500).json({ message: 'Server error', error: err.message });
+// });
+
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);

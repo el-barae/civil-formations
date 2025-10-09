@@ -46,104 +46,87 @@ exports.getFormations = async (req, res) => {
   };
   
   exports.createFormation = async (req, res) => {
-    try {
-   
-        const { name, duree, description, price } = req.body;
-        const videos = JSON.parse(req.body.videos || '[]');
-        
-        // Vérification des fichiers
-        if (!req.files) {
-            return res.status(400).json({ message: 'Aucun fichier téléchargé' });
-        }
+  try {
+    const { name, duree, description, price } = req.body;
+    const videos = JSON.parse(req.body.videos || '[]');
 
-        // Création des répertoires s'ils n'existent pas
-        const stockDir = path.join(__dirname, '../uploads/formation');
-     
-      
-            if (!fs.existsSync(stockDir)) {
-                fs.mkdirSync(dir, { recursive: true });
-            }
-   
-
-        // Traitement de l'image principale
-        let imagePath = null;
-        if (req.files['image']) {
-            const imageFile = req.files['image'][0];
-            imagePath =imageFile?`/formation/${req.files['image'][0].filename}`:null;
-        }else{
-          console.log("image not exist !!!")
-        }
-
-        // Traitement de la vidéo principale
-        let mainVideoPath = null;
-        if (req.files['video']) {
-            const videoFile = req.files['video'][0];
-            mainVideoPath = videoFile?`/formation/${req.files['video'][0].filename}`:null;
-        }else{
-          console.log("video not exist !!!")
-        }
-
-        // Traitement des vidéos supplémentaires
-        const processedVideos = [];
-       
-        console.log("number of videosss:"+req.files['videolist'].length)
-        if (req.files['videolist']) {
-            req.files['videolist'].forEach((file, index) => {
-
-              const pathvideo=`/formation/${file.filename}`
-              videos[index].videolist=pathvideo
-                
-                  processedVideos.push({
-                    "title":  videos[index].title,
-                    "description": videos[index].description,
-                    "link": videos[index].videolist,
-                    "numero":videos[index].numero,
-                  });
-            });
-        }else{
-          console.log("videos not exist !!!")
-        }
-
-        // Création de l'objet formation
-        const formationData = {
-            name,
-            duree,
-            description,
-            price,
-            image: imagePath,
-            video: mainVideoPath,
-        };
-      
-
-        // Enregistrement dans la base de données
-        const newFormation = await Formation.create(formationData);
-        const newvideosdata = await Promise.all(processedVideos.map( prvd=>{
-          return Video.create({
-            ...prvd,
-            formationId: newFormation.id,  
-          });
-        }));
-
-        // processedVideos.forEach(prvd=>{
-        //   const newvideosdata = await Video.create();
-        // })
-
-       
-        
-        res.status(201).json({
-            message: 'Formation et videos sont créée avec succès',
-            data: {newFormation,newvideosdata}
-        });
-
-    } catch (error) {
-        console.error('Erreur lors de la création de la formation:', error);
-        res.status(500).json({ 
-            message: 'Erreur lors de la création de la formation',
-            error: error.message
-        });
+    // ✅ Vérification de la présence des fichiers
+    if (!req.files) {
+      return res.status(400).json({ message: 'Aucun fichier téléchargé' });
     }
-};
 
+    // ✅ Dossier de stockage
+    const stockDir = path.join(__dirname, '../uploads/formation');
+    if (!fs.existsSync(stockDir)) {
+      fs.mkdirSync(stockDir, { recursive: true }); // ✅ correction ici
+    }
+
+    // ✅ Image principale
+    let imagePath = null;
+    if (req.files['image']) {
+      const imageFile = req.files['image'][0];
+      imagePath = `/uploads/formation/${imageFile.filename}`;
+    } else {
+      console.log("Image non trouvée !");
+    }
+
+    // ✅ Vidéo principale
+    let mainVideoPath = null;
+    if (req.files['video']) {
+      const videoFile = req.files['video'][0];
+      mainVideoPath = `/uploads/formation/${videoFile.filename}`;
+    } else {
+      console.log("Vidéo principale non trouvée !");
+    }
+
+    // ✅ Traitement des vidéos supplémentaires
+    const processedVideos = [];
+    if (req.files['videolist'] && req.files['videolist'].length > 0) {
+      req.files['videolist'].forEach((file, index) => {
+        const videoData = videos[index];
+        const filePath = `/uploads/formation/${file.filename}`;
+
+        processedVideos.push({
+          title: videoData?.title || `Part ${index + 1}`,
+          description: videoData?.description || '',
+          link: filePath,
+          numero: videoData?.numero || index + 1,
+        });
+      });
+    } else {
+      console.log("Aucune vidéo supplémentaire !");
+    }
+
+    // ✅ Création de la formation
+    const newFormation = await Formation.create({
+      name,
+      duree,
+      description,
+      price,
+      image: imagePath,
+      video: mainVideoPath,
+    });
+
+    // ✅ Création des vidéos liées
+    const newVideosData = await Promise.all(
+      processedVideos.map(video =>
+        Video.create({ ...video, formationId: newFormation.id })
+      )
+    );
+
+    // ✅ Réponse finale
+    res.status(201).json({
+      message: 'Formation et vidéos créées avec succès ✅',
+      data: { newFormation, newVideosData },
+    });
+  } catch (error) {
+    console.error('Erreur lors de la création de la formation:', error);
+    res.status(500).json({
+      message: 'Erreur lors de la création de la formation',
+      error: error.message,
+    });
+  }
+};
 
 
 

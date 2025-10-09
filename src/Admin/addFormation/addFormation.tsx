@@ -299,7 +299,9 @@ const handelNext = (e:any)=>{
                     <form onSubmit={handleSubmit} style={{display:"flex",flexFlow:"column",flexWrap:"wrap",justifyContent:"center",alignItems:"center",width:"50%"}}>
                     {    
                      videos.map((vd,index)=>(
-                      <div style={{backgroundColor:"#1f2b3e",marginTop:"15px", padding:"7px",border:"solide 1px",borderColor:"white",boxShadow: "0 4px 8px rgba(255, 255, 255, 0.5)",
+                      <div 
+                      key={vd.id}
+                      style={{backgroundColor:"#1f2b3e",marginTop:"15px", padding:"7px",border:"solide 1px",borderColor:"white",boxShadow: "0 4px 8px rgba(255, 255, 255, 0.5)",
                         borderRadius: "10px",width:"90%"}} className="flex flex-col gap-4 flex-wrap ">
                             <h2 className='align-center'>Video {index+1} </h2>
                       <div className="sm:col-span-2">
