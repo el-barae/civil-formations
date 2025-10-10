@@ -37,15 +37,15 @@ const FormationItem: React.FC<FormationItemProps> = ({ formation, index }) => {
   return (
     <div
       ref={ref}
-      className={`m-4 p-4 bg-white flex flex-col items-center border rounded-lg shadow-xl max-w-lg transition-opacity duration-1000 ${inView ? animationClass : 'opacity-0'}`}
+      className={`m-4 p-6 bg-white flex flex-col items-center border rounded-lg shadow-xl max-w-lg transition-opacity duration-1000 ${inView ? animationClass : 'opacity-0'}`}
     >
 
-      <img src={`${mediaBaseUrl}${formation.image}`} alt={formation.name} className="rounded mb-4 w-56 h-60" />
+      <img src={`${mediaBaseUrl}${formation.image}`} alt={formation.name} className="rounded mb-4 w-60 h-64" />
 
       <h3 className="text-xl font-bold mb-2">{formation.name}</h3>
       <p><strong>Duree:</strong> {formation.duree}</p>
       <p><strong>Prix:</strong> {formation.price.toFixed(3)} $</p>
-      <a href="#" onClick={handleVideoClick} className="text-blue-500">Details</a>
+      <a href="#" onClick={handleVideoClick} className="mt-2 text-blue-600 font-semibold">Details</a>
       <Modal
         show={showModal}
         onClose={handleCloseModal}

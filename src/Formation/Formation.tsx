@@ -194,12 +194,17 @@ const FormationPage: React.FC = () => {
       if(token){
         const decoded = jwtDecode(token) as { id: string };
         const { id} = decoded;
-      await axios.post(`${API_URL}/api/views/set/${id}/${videoId}`,{
-        headers :{
-          'Content-Type': 'application/json',
-          'x-auth-token': token
+      await axios.post(
+        `${API_URL}/api/views/set/${id}/${videoId}`,
+        {},
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'x-auth-token': token
+          }
         }
-      });
+      );
+
       setVideos(videos.map(video => 
         video.id === videoId 
           ? { ...video, View: video.View ? { ...video.View, view: true } : { id: videoId, view: true, userId: Number(id), videoId } } 
