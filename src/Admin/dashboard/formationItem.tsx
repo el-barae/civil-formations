@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import { useState,useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Update from './updateFormation'
 import './dashboard.css';
 import API_URL from '../../API_URL';
@@ -22,6 +23,7 @@ interface intopro{
 }
 
 const FormationItem: React.FC<intopro> = ({formation,deleteformation,index}) => {
+const navigate = useNavigate();
 const [show, setshows] = useState<boolean>(false);
 const [step2,setstep2] = useState(false);
 const [videos, setVideos] =  useState<any[]>([]);
@@ -49,9 +51,9 @@ useEffect(() => {
 
 
 // État pour stocker les formations
-const updatehandler = (e: React.MouseEvent)=>{
+const updatehandler = (e: React.MouseEvent, id:number)=>{
     e.preventDefault();
-    setshows(true);
+    navigate(`/Admin/updateFormation/${id}`)
   }
   const handleCloseModal = ()=>{
     setshows(false);
@@ -74,7 +76,7 @@ return(
                   backgroundSize: 'cover',
                 }}
                 >
-                  <a  key={formation.id} onClick={updatehandler} href="#"><i id="update" className="fa-sharp fa-solid fa-pen-to-square" ></i></a>
+                  <a  key={formation.id} onClick={e=>(updatehandler(e,formation.id))} href="#"><i id="update" className="fa-sharp fa-solid fa-pen-to-square" ></i></a>
                        <h1>{formation.name}</h1>
                   <a onClick={() => deleteformation(formation.id)}><i className="fa-regular fa-trash-can"></i></a>
               

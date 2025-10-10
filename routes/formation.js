@@ -17,7 +17,20 @@ console.log(uploadPath);
 // ✅ Configuration de Multer
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, uploadPath);
+    let folder = 'uploads/formation'; // Par défaut
+
+    if (file.fieldname === 'videolist') {
+      folder = 'uploads/privatevideos';
+    }
+
+    const uploadDir = path.join(__dirname, '..', folder);
+
+    // Créer le dossier s’il n’existe pas
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir, { recursive: true });
+    }
+
+    cb(null, uploadDir);
   },
   filename: (req, file, cb) => {
     const ext = path.extname(file.originalname);
@@ -25,6 +38,7 @@ const storage = multer.diskStorage({
     cb(null, fileName);
   },
 });
+
 
 const upload = multer({
   storage: storage,
@@ -43,16 +57,19 @@ router.post(
   formationController.createFormation
 );
 
+router.put('/:id', 
+  authMiddleware, 
+  authorizeRoles('ADMIN'), 
+  upload.single('image'),
+  formationController.updateFormation
+);
+
 
 router.get('/:id', formationController.getFormationById);
 
 router.get('/', formationController.getFormations);
   
 router.post('/',authMiddleware, authorizeRoles('ADMIN'), upload.any(), formationController.createFormation);
-  
-
-router.put('/:id',authMiddleware, authorizeRoles('ADMIN'), formationController.updateFormation);
-
   
 router.delete('/:id',authMiddleware, authorizeRoles('ADMIN'), formationController.DeleteFormation);
 

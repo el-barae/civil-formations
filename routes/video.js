@@ -2,41 +2,79 @@ const express = require('express');
 const router = express.Router();
 const videoController = require('../services/videoService'); 
 const multer = require('multer');
-
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-      cb(null, 'uploads/'); // Dossier où les fichiers seront stockés
-    },
-    filename: function (req, file, cb) {
-      cb(null, Date.now() + '-' + file.originalname);
-    },
-  });
-  
-  const uploadfile = multer({ storage: storage });
-const upload = multer({ dest: 'uploads/' }); 
+const path = require('path');
+const fs = require('fs');
 const {authMiddleware, authorizeRoles} = require('../middleware/auth');
 
 
-// Create a new video
-router.post('/',authMiddleware, authorizeRoles('ADMIN'), upload.any(), videoController.createVideo);
+// ✅ Configuration de Multer pour les vidéos
+const uploadPath = path.join(__dirname, '../uploads/privatevideos');
 
-// Get all videos
-router.get('/',authMiddleware, videoController.getAllVideos);
+if (!fs.existsSync(uploadPath)) {
+  fs.mkdirSync(uploadPath, { recursive: true });
+}
 
-// Get videos by formation ID
-router.get('/formation/:formationId',authMiddleware, videoController.getVideosByFormation);
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, uploadPath);
+  },
+  filename: (req, file, cb) => {
+    const ext = path.extname(file.originalname);
+    const fileName = `${Date.now()}-${file.fieldname}${ext}`;
+    cb(null, fileName);
+  },
+});
 
-// Get video by ID
-router.get('/:id',authMiddleware, videoController.getVideoById);
+const upload = multer({
+  storage: storage,
+  limits: { fileSize: 500 * 1024 * 1024 }, // max 500MB pour les vidéos
+  fileFilter: (req, file, cb) => {
+    const allowedTypes = /mp4|avi|mov|mkv|webm/;
+    const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
+    const mimetype = allowedTypes.test(file.mimetype);
+    
+    if (mimetype && extname) {
+      return cb(null, true);
+    } else {
+      cb(new Error('Seules les vidéos sont acceptées!'));
+    }
+  }
+});
 
-// Update a video
-router.put('/:id',authMiddleware, authorizeRoles('ADMIN'), videoController.updateVideo);
 
-// update video with file
-router.put('/file/:id',uploadfile.any(), videoController.updateVideoFile);
+// ✅ Routes
+// Récupérer toutes les vidéos d'une formation
+router.get('/formation/:id', authMiddleware, videoController.getVideosByFormation);
+
+// Mettre à jour une vidéo
+router.put('/:id', authMiddleware, authorizeRoles('ADMIN'), videoController.updateVideo);
+
+// Supprimer une vidéo
+router.delete('/:id', authMiddleware, authorizeRoles('ADMIN'), videoController.deleteVideo);
+
+// Ajouter une vidéo à une formation
+router.post('/formation/:id', authMiddleware, authorizeRoles('ADMIN'), upload.single('video'), videoController.addVideoToFormation);
+
+// // Create a new video
+// router.post('/',authMiddleware, authorizeRoles('ADMIN'), upload.any(), videoController.createVideo);
+
+// // Get all videos
+// router.get('/',authMiddleware, videoController.getAllVideos);
+
+// // Get videos by formation ID
+// router.get('/formation/:formationId',authMiddleware, videoController.getVideosByFormation);
+
+// // Get video by ID
+// router.get('/:id',authMiddleware, videoController.getVideoById);
+
+// // Update a video
+// router.put('/:id',authMiddleware, authorizeRoles('ADMIN'), videoController.updateVideo);
+
+// // update video with file
+// router.put('/file/:id',uploadfile.any(), videoController.updateVideoFile);
 
 
-// Delete a video
-router.delete('/:id',authMiddleware, authorizeRoles('ADMIN'), videoController.deleteVideo);
+// // Delete a video
+// router.delete('/:id',authMiddleware, authorizeRoles('ADMIN'), videoController.deleteVideo);
 
 module.exports = router;
