@@ -147,8 +147,10 @@ const FormationPage: React.FC = () => {
           });
           const videosData = response.data;
 
-
-        const viewsResponse = await axios.get<View[]>(`${API_URL}/api/views/user/1`,{
+          if(token){
+        const decoded = jwtDecode(token) as { id: string };
+        const { id} = decoded;
+        const viewsResponse = await axios.get<View[]>(`${API_URL}/api/views/user/${id}`,{
           headers :{
             'Content-Type': 'application/json',
             'x-auth-token': token
@@ -162,6 +164,7 @@ const FormationPage: React.FC = () => {
         });
 
         setVideos(videosWithViews);
+      }
         } catch (error) {
           console.error('Error fetching videos:', error);
         }

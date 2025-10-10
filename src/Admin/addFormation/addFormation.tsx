@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
@@ -24,6 +25,7 @@ interface Video {
 }
 
 export default function AddFormation() {
+  const navigate = useNavigate()
     const [formation, setFormation] = useState<Formation>({
         name: "",
         duree: "",
@@ -155,6 +157,14 @@ const handelNext = (e:any)=>{
                   'X-Auth-Token': localStorage.getItem("token"),
               }
           });
+
+          Swal.fire({
+                  icon: 'success',
+                  title: 'Creation Successful',
+                  // text: 'Yo in successfully!',
+                }).then(() => {
+                    navigate('/Admin/dashboard');
+                });
       } catch (error) {
           // Gestion des erreurs
           Swal.fire({

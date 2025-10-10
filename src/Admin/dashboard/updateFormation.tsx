@@ -74,7 +74,11 @@ const UpdateFormation: React.FC<into> = ({show,formationId,step2,videos,handleSt
        
    
         handleStep2();
-       const respon = await axios.put(`${API_URL}/api/formations/${id}`,updatedata)
+       const respon = await axios.put(`${API_URL}/api/formations/${id}`,updatedata, {
+              headers: {
+                  'X-Auth-Token': localStorage.getItem("token"),
+              }
+          });
         console.log("response de puis le backend update formation : "+ respon)
 
     }catch(err){
