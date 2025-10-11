@@ -23,44 +23,11 @@ interface intopro{
 
 const FormationItem: React.FC<intopro> = ({formation,deleteformation,index}) => {
 const navigate = useNavigate();
-const [show, setshows] = useState<boolean>(false);
-const [step2,setstep2] = useState(false);
-const [videos, setVideos] =  useState<any[]>([]);
-
-
-useEffect(() => {
-    // Fonction pour récupérer les formations
-    const fetchVideos = async () => {
-        try {
-            const response = await axios.get(`${API_URL}/api/videos/formation/${formation.id}`);
-            response.data.sort((a:any,b:any)=>{
-              return a.numero - b.numero
-            })
-            setVideos(response.data);
-            console.log("les videos de cette formation et :",response.data)
-        } catch (err) {
-            console.log("erreur lors de la recuperation des videos");
-        }
-    };
-   
-   
-
-    fetchVideos(); // Appel de la fonction lors du montage du composant
-}, []);
-
 
 // État pour stocker les formations
 const updatehandler = (e: React.MouseEvent, id:number)=>{
     e.preventDefault();
     navigate(`/Admin/updateFormation/${id}`)
-  }
-  const handleCloseModal = ()=>{
-    setshows(false);
-    setstep2(false)
-  }
-  const handleStep2 = ()=>{
-  
-    setstep2(true)
   }
 
 const mediaBaseUrl = process.env.REACT_APP_MEDIA_URL || '';

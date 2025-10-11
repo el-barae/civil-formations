@@ -144,7 +144,7 @@ export default function Client() {
     };
 
     return (
-        <div className='Clients'>
+        <div className='bodydashboard'>
             <Barside title="dashboard"/>
             <div className="content flex flex-col px-2 md:px-6">
                       <div className="title"><h1>Gestion des Clients</h1></div>

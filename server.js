@@ -54,6 +54,7 @@ const subscribeRoutes = require('./routes/subscribe');
 const videoRoutes = require('./routes/video');
 const viewRoutes = require('./routes/view');
 const avisRoutes = require('./routes/avisRoutes');
+const configRoutes = require('./routes/config');
 
 app.use('/api/formations', formationRoutes);
 app.use('/api/users', userRoutes);
@@ -61,6 +62,7 @@ app.use('/api/subscribes', subscribeRoutes);
 app.use('/api/videos', videoRoutes);
 app.use('/api/views', viewRoutes);
 app.use('/api/avis', avisRoutes);
+app.use('/api/config', configRoutes);
 
 // app.use((err, req, res, next) => {
 //   console.error('💥 Error middleware:', err);

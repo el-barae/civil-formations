@@ -6,6 +6,8 @@ const {authMiddleware} = require('../middleware/auth');
 const Subscribe = require('../models/Subscribe'); 
 const User = require('../models/User');
 const Formation = require('../models/Formation'); 
+const Config = require('../models/Config');
+
 
 // Create a new subscription
 router.post('/',authMiddleware, subscribeController.createSubscription);
@@ -19,18 +21,24 @@ router.get('/user/:userId',authMiddleware, subscribeController.getSubscriptionsB
 // Delete a subscription
 router.delete('/:id',authMiddleware, subscribeController.deleteSubscription);
 
-const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 
 const MIN_AMOUNT = 0.1; 
 
 router.post('/create-payment-intent', authMiddleware, async (req, res) => {
   const { amount, pourcentage, formationId, userId } = req.body;
 
+
   if (!amount || amount < MIN_AMOUNT) {
     return res.status(400).json({ message: `Le montant doit être au moins ${MIN_AMOUNT} USD` });
   }
 
   try {
+    const config = await Config.findOne({ where: { key: 'STRIPE_SECRET_KEY' } });
+    if (!config) return res.status(400).json({ message: 'Clé Stripe non configurée' });
+
+    const stripeSecretKey = Config.decrypt(config.value);
+    const stripe = require('stripe')(stripeSecretKey);
+
     const formation = await Formation.findByPk(formationId);
     if (!formation) return res.status(404).json({ message: 'Formation not found' });
 
