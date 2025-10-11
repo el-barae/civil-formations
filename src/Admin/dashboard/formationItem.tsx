@@ -2,7 +2,6 @@ import React from 'react';
 import axios from 'axios';
 import { useState,useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Update from './updateFormation'
 import './dashboard.css';
 import API_URL from '../../API_URL';
 
@@ -81,20 +80,6 @@ return(
                   <a onClick={() => deleteformation(formation.id)}><i className="fa-regular fa-trash-can"></i></a>
               
                   <div style={{position:'absolute',display:"flex",alignItems:"center",justifyContent:"center",flexFlow:"wrap",flexGrow:"1"}} className='card'>
-                      <Update 
-                    show={show}
-                    step2={step2}
-                    videos={videos}
-                    handleStep2={handleStep2}
-                    onClose={handleCloseModal}
-                    formationId={formation.id}
-                    videoUrl={formation.video}
-                    imageUrl={formation.image}
-                    name={formation.name}
-                    description={formation.description}
-                    duree={formation.duree}
-                    price={formation.price}
-                  />
                  
 
                   </div> 

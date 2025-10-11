@@ -6,7 +6,6 @@ const path = require('path');
 const fs = require('fs');
 const {authMiddleware, authorizeRoles} = require('../middleware/auth');
 
-
 // ✅ Configuration de Multer pour les vidéos
 const uploadPath = path.join(__dirname, '../uploads/privatevideos');
 
@@ -41,19 +40,30 @@ const upload = multer({
   }
 });
 
-
 // ✅ Routes
 // Récupérer toutes les vidéos d'une formation
 router.get('/formation/:id', authMiddleware, videoController.getVideosByFormation);
 
-// Mettre à jour une vidéo
-router.put('/:id', authMiddleware, authorizeRoles('ADMIN'), videoController.updateVideo);
+// ⭐ Mettre à jour une vidéo (AVEC upload.single('video'))
+router.put('/:id', 
+  authMiddleware, 
+  authorizeRoles('ADMIN'), 
+  upload.single('video'),  // ✅ AJOUT ICI
+  videoController.updateVideo
+);
 
 // Supprimer une vidéo
 router.delete('/:id', authMiddleware, authorizeRoles('ADMIN'), videoController.deleteVideo);
 
 // Ajouter une vidéo à une formation
-router.post('/formation/:id', authMiddleware, authorizeRoles('ADMIN'), upload.single('video'), videoController.addVideoToFormation);
+router.post('/formation/:id', 
+  authMiddleware, 
+  authorizeRoles('ADMIN'), 
+  upload.single('video'), 
+  videoController.addVideoToFormation
+);
+
+module.exports = router;
 
 // // Create a new video
 // router.post('/',authMiddleware, authorizeRoles('ADMIN'), upload.any(), videoController.createVideo);

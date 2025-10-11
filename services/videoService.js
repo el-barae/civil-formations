@@ -43,12 +43,34 @@ exports.updateVideo = async (req, res) => {
       return res.status(404).json({ error: 'Vidéo non trouvée' });
     }
 
-    // Mise à jour
-    await video.update({
+    const updateData = {
       title,
       numero,
       description
-    });
+    };
+
+    // ✅ Si un nouveau fichier vidéo est uploadé
+    if (req.file) {
+      const newVideoPath = `/uploads/privatevideos/${req.file.filename}`;
+      updateData.link = newVideoPath;
+
+      // Supprimer l'ancien fichier vidéo
+      if (video.link) {
+        const oldVideoPath = path.join(__dirname, '..', video.link);
+        
+        if (fs.existsSync(oldVideoPath)) {
+          try {
+            fs.unlinkSync(oldVideoPath);
+            console.log('✅ Ancienne vidéo supprimée:', oldVideoPath);
+          } catch (err) {
+            console.error('❌ Erreur lors de la suppression de l\'ancienne vidéo:', err);
+          }
+        }
+      }
+    }
+
+    // Mise à jour
+    await video.update(updateData);
 
     res.json({
       message: 'Vidéo mise à jour avec succès',

@@ -47,7 +47,7 @@ const Contact: React.FC = () => {
           <label htmlFor="message" className="block text-xl font-medium">Message</label>
           <textarea
             id="message"
-            className="mt-1 p-2 border rounded w-full"
+            className="mt-1 p-2 border rounded w-full text-black"
             rows={4}
             value={message}
             onChange={(e) => setMessage(e.target.value)}

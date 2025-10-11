@@ -143,22 +143,39 @@ exports.updateFormation = async (req, res) => {
       price: req.body.price
     };
 
-    // ✅ Avec upload.single(), req.file contient directement le fichier
-    if (req.file) {
-      const imagePath = `/uploads/formation/${req.file.filename}`;
+    // ✅ Gestion de l'image
+    if (req.files && req.files.image) {
+      const imagePath = `/uploads/formation/${req.files.image[0].filename}`;
       updateData.image = imagePath;
 
       // Supprimer l'ancienne image
       if (formation.image) {
         const oldImagePath = path.join(__dirname, '..', formation.image);
-        console.log('Chemin de suppression:', oldImagePath);
-        
         if (fs.existsSync(oldImagePath)) {
           try {
             fs.unlinkSync(oldImagePath);
-            console.log('✅ Image supprimée');
+            console.log('✅ Ancienne image supprimée');
           } catch (err) {
-            console.error('❌ Erreur suppression:', err);
+            console.error('❌ Erreur suppression image:', err);
+          }
+        }
+      }
+    }
+
+    // ✅ Gestion de la vidéo de présentation
+    if (req.files && req.files.video) {
+      const videoPath = `/uploads/formation/${req.files.video[0].filename}`;
+      updateData.video = videoPath;
+
+      // Supprimer l'ancienne vidéo
+      if (formation.video) {
+        const oldVideoPath = path.join(__dirname, '..', formation.video);
+        if (fs.existsSync(oldVideoPath)) {
+          try {
+            fs.unlinkSync(oldVideoPath);
+            console.log('✅ Ancienne vidéo supprimée');
+          } catch (err) {
+            console.error('❌ Erreur suppression vidéo:', err);
           }
         }
       }

@@ -42,7 +42,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({
   storage: storage,
-  limits: { fileSize: 100 * 1024 * 1024 }, // max 100MB
+  limits: { fileSize: 100 * 1024 * 1024 }, 
 });
 
 // ✅ Route : création d'une formation
@@ -55,6 +55,62 @@ router.post(
   ]),
   // authMiddleware, authorizeRoles('admin'), // si tu veux protéger la route
   formationController.createFormation
+);
+
+// Configuration Multer pour formations (images + vidéos)
+const uploadFormation = multer.diskStorage({
+  destination: (req, file, cb) => {
+    const uploadPath = path.join(__dirname, '../uploads/formation');
+    
+    if (!fs.existsSync(uploadPath)) {
+      fs.mkdirSync(uploadPath, { recursive: true });
+    }
+    cb(null, uploadPath);
+  },
+  filename: (req, file, cb) => {
+    const ext = path.extname(file.originalname);
+    const fileName = `${Date.now()}-${file.fieldname}${ext}`;
+    cb(null, fileName);
+  },
+});
+
+const uploadFormationFiles = multer({
+  storage: uploadFormation,
+  limits: { fileSize: 500 * 1024 * 1024 },
+  fileFilter: (req, file, cb) => {
+    if (file.fieldname === 'image') {
+      const allowedImageTypes = /jpeg|jpg|png|gif|webp/;
+      const extname = allowedImageTypes.test(path.extname(file.originalname).toLowerCase());
+      const mimetype = allowedImageTypes.test(file.mimetype);
+      
+      if (mimetype && extname) {
+        return cb(null, true);
+      } else {
+        cb(new Error('Seules les images sont acceptées!'));
+      }
+    } else if (file.fieldname === 'video') {
+      const allowedVideoTypes = /mp4|avi|mov|mkv|webm/;
+      const extname = allowedVideoTypes.test(path.extname(file.originalname).toLowerCase());
+      const mimetype = allowedVideoTypes.test(file.mimetype);
+      
+      if (mimetype && extname) {
+        return cb(null, true);
+      } else {
+        cb(new Error('Seules les vidéos sont acceptées!'));
+      }
+    }
+  }
+});
+
+// Route mise à jour
+router.put('/:id', 
+  authMiddleware, 
+  authorizeRoles('ADMIN'), 
+  uploadFormationFiles.fields([
+    { name: 'image', maxCount: 1 },
+    { name: 'video', maxCount: 1 }
+  ]),
+  formationController.updateFormation
 );
 
 router.put('/:id', 
