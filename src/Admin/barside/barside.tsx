@@ -67,28 +67,28 @@ const Barside: React.FC<ChildProps> = ({ title }) => {
           <h2>Dashboard</h2>
         </NavLink>
       </li>
-      {/* <li className="item">
-        <NavLink to="/Admin/visualiser"   className={({ isActive }) => (isActive ? 'active' : '')}>
+      <li className="item">
+        <NavLink to="/Admin/Visualiser"   className={({ isActive }) => (isActive ? 'active' : '')}>
           <i className="fa-solid fa-chart-simple"></i>
           <h2>Visualiser</h2>
         </NavLink>
-      </li> */}
+      </li>
       <li className="item">
         <NavLink to="/Admin/addFormation"   className={({ isActive }) => (isActive ? 'active' : '')}>
           <i className="fa-solid fa-pen"></i>
           <h2>Add formation</h2>
         </NavLink>
       </li>
-      {/* <li className="item">
-        <NavLink to="/Admin/setting"   className={({ isActive }) => (isActive ? 'active' : '')}>
-          <i className="fa-solid fa-gear"></i>
-          <h2>Settings</h2>
-        </NavLink>
-      </li> */}
       <li className="item">
         <NavLink to="/Admin/clients"   className={({ isActive }) => (isActive ? 'active' : '')}>
         <i className="fa-solid fa-person"></i>
           <h2>Clients</h2>
+        </NavLink>
+      </li>
+      <li className="item">
+        <NavLink to="/Admin/settings"   className={({ isActive }) => (isActive ? 'active' : '')}>
+          <i className="fa-solid fa-gear"></i>
+          <h2>Settings</h2>
         </NavLink>
       </li>
       <li className="item">

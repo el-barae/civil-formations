@@ -180,7 +180,7 @@ const handelNext = (e:any)=>{
         <div className='bodydashboard'>
     
         
-        <Barside title="dashboard"/>
+        <Barside title="Add formation"/>
         <div className="content flex flex-col">
         <div className="title"><h1>Add new formation</h1></div>
             <div className="titlecontent flex flex-col ">

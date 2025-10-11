@@ -70,7 +70,7 @@ const Dashboard: React.FC = () => {
     <div className='bodydashboard'>
     
         
-        <Barside title="dashboard"/>
+        <Barside title="Dashboard"/>
         <div className="content">
         <div className="title"><h1>Dashborad</h1></div>
             <div className="titlecontent">

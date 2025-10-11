@@ -145,10 +145,14 @@ ul{
     bottom: 0;
     width: 100%;
     color: red;  
+    cursor: pointer;
+    background-color: #452009;
+
 }
 
-.logout a  :hover{
+.logout :hover{
    color: red;
+   background-color: #452009;
     transition: 0.5s;
 }
 

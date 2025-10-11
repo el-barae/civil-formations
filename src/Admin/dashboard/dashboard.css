@@ -27,9 +27,12 @@
     display: flex;
     background-color: #452009;
     border-radius: 15px;
-    margin: 20px 0;
+    margin: 20px;
+    margin-bottom: 30px;
     align-items: center;
     justify-content: center;
+    font-size: larger;
+    padding: 3px;
 }
 .titlecontent{
 display: flex;
