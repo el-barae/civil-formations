@@ -15,7 +15,7 @@ const Dashboard: React.FC = () => {
   const deleteformation = async (id: any) => {
     try {
       // Utiliser les backticks pour créer une chaîne de caractères dynamique
-      const response = await axios.delete(`${API_URL}/formations/${id}`, {headers: {
+      const response = await axios.delete(`${API_URL}/api/formations/${id}`, {headers: {
         'X-Auth-Token': localStorage.getItem("token"),
     }});
       console.log('Formation supprimée:', response.data);
@@ -30,7 +30,7 @@ const Dashboard: React.FC = () => {
       // Fonction pour récupérer les formations
       const fetchFormations = async () => {
           try {
-              const response = await axios.get(API_URL+'/formations'); // Remplacez l'URL par celle de votre API
+              const response = await axios.get(API_URL+'/api/formations');
               setFormations(response.data);
               setLoading(false);
           } catch (err) {

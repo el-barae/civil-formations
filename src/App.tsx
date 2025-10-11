@@ -11,6 +11,7 @@ import RegisterPage from './components/Register/Register';
 import DashboardPage from './Admin/dashboard/Dashboard';
 import VisualiserPage from './Admin/visualiser/Visualiser';
 import AddFormation from './Admin/addFormation/addFormation';
+import Clients from './Admin/client/client';
 import UpdateFormation from './Admin/updateFormation/updateFormation';
 const App: React.FC = () => {
   return (
@@ -21,6 +22,7 @@ const App: React.FC = () => {
         <Route path="/Admin/dashboard" element={<DashboardPage />} />
         <Route path="/Admin/Visualiser" element={<VisualiserPage />} />
         <Route path="/Admin/addFormation" element={<AddFormation />} />
+        <Route path="/Admin/clients" element={<Clients />} />
         <Route path="/Admin/updateFormation/:id" element={<UpdateFormation />} />
         <Route path="/Formations" element={<FormationsPage />} />
         <Route path="/Profile" element={<ProfilePage />} />
