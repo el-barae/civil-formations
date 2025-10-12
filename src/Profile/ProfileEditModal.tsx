@@ -86,7 +86,7 @@ const ProfileEditModal: React.FC<ModalProps> = ({ show, onClose, user, onSave })
                 className="w-full p-2 border rounded text-black"
               />
             </div>
-            <div className="mb-4">
+            {/* <div className="mb-4">
               <label className="block text-gray-700">Email</label>
               <input
                 type="email"
@@ -95,7 +95,7 @@ const ProfileEditModal: React.FC<ModalProps> = ({ show, onClose, user, onSave })
                 onChange={handleChange}
                 className="w-full p-2 border rounded text-black"
               />
-            </div>
+            </div> */}
             <div className="mb-4">
               <label className="block text-gray-700">Phone</label>
               <input

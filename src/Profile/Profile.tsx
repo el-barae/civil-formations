@@ -103,7 +103,7 @@ const ProfilePage: React.FC = () => {
   const handleSave = async (updatedUser: User) => {
     try {
       const token = localStorage.getItem('token')
-      const response = await axios.put(`http://localhost:5000/api/users/profile/${user?.id}`, updatedUser,{
+      const response = await axios.put(`${API_URL}/api/users/profile/${user?.id}`, updatedUser,{
         headers :{
           'Content-Type': 'application/json',
           'x-auth-token': token

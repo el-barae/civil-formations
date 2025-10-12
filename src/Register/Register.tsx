@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import API_URL from '../../API_URL';
+import API_URL from '../API_URL';
 import { jwtDecode } from "jwt-decode";
-import Nav from '../../components/Nav/Nav'
-
+import Nav from '../components/Nav/Nav'
+import Swal from 'sweetalert2';
 
 const RegisterPage: React.FC = () => {
   const [firstName, setFirstName] = useState('');
@@ -18,30 +18,48 @@ const RegisterPage: React.FC = () => {
 
   const navigate = useNavigate();
 
-  const handleSubmit = async (e:any) => {
-    e.preventDefault();
-    try {
-      const response = await axios.post(API_URL+'/api/auth/register', {
-        firstName,
-        lastName,
-        email,
-        password,
-        phone,
-        address,
-        role: 'CLIENT',
-      });
-      const { token} = response.data;
-      localStorage.setItem('token', token);
-      const decoded = jwtDecode(token) as { id: string, role: string };
-              const { id,role} = decoded;
-              localStorage.setItem('id', id);
-              localStorage.setItem('role', role);
+const handleSubmit = async (e: any) => {
+  e.preventDefault();
+  try {
+    const response = await axios.post(API_URL + '/api/auth/register', {
+      firstName,
+      lastName,
+      email,
+      password,
+      phone,
+      address,
+      role: 'CLIENT',
+    });
 
-      navigate('/profile');
-    } catch (err) {
-      setError('An error occurred');
-    }
-  };
+    const { token } = response.data;
+    localStorage.setItem('token', token);
+
+    const decoded = jwtDecode(token) as { id: string, role: string };
+    const { id, role } = decoded;
+    localStorage.setItem('id', id);
+    localStorage.setItem('role', role);
+
+    Swal.fire({
+      icon: 'success',
+      title: 'Registration Successful',
+      text: 'You have been registered successfully!',
+    }).then(() => {
+      setTimeout(() => {
+        navigate('/profile');
+      }, 500);
+    });
+
+  } catch (err) {
+    setError('An error occurred');
+    Swal.fire({
+      icon: 'error',
+      title: 'Registration Failed',
+      text: 'An error occurred during registration.',
+    });
+  }
+};
+
+
   const validatePassword = (password: string) => {
     const strongPassword = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\\$%\\^&\\*])(?=.{8,})');
     const mediumPassword = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{6,})');

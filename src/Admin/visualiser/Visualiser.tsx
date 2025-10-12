@@ -116,15 +116,15 @@ const Visualiser: React.FC = () => {
                     onClick={() => openModal(formation)}
                   >
                     {/* Formation Image */}
-                    {formation.image && (
+                    {/* {formation.image && (
                       <div className="h-48 overflow-hidden">
                         <img
-                          src={`${API_URL}/uploads/${formation.image}`}
+                          src={`${API_URL}/${formation.image}`}
                           alt={formation.name}
                           className="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
                         />
                       </div>
-                    )}
+                    )} */}
 
                     {/* Formation Info */}
                     <div className="p-5">

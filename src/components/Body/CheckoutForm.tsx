@@ -119,7 +119,15 @@ const CheckoutForm: React.FC<{ amount: number; formationID: number }> = ({ amoun
           text: 'You have paid successfully!',
         });
         console.log('Subscription created:', subscription);
-        navigate(`/Formation/${formationID}`);
+        
+        // Navigation sécurisée avec state
+        navigate(`/formation/${formationID}`, {
+          state: { 
+            fromProfile: true, 
+            fromPayment: true,
+            subscribeId: subscription?.id 
+          }
+        });
       }
     } catch (err) {
       console.error('Unexpected Error', err);

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import Nav from '../../components/Nav/Nav';
 import API_URL from '../../API_URL';
@@ -35,6 +35,7 @@ interface NewVideo {
 
 const UpdateFormationPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
+  const location = useLocation();
   const navigate = useNavigate();
   const [formation, setFormation] = useState<Formation | null>(null);
   const [videos, setVideos] = useState<Video[]>([]);
@@ -61,34 +62,54 @@ const UpdateFormationPage: React.FC = () => {
 
   const mediaBaseUrl = process.env.REACT_APP_MEDIA_URL || '';
 
+  // Vérification avec useLocation
   useEffect(() => {
-    const checkLoginStatus = () => {
-      const loginStatus = localStorage.getItem('token');
-      if (loginStatus) {
-        setIsLoggedIn(true);
-      } else {
-        Swal.fire({
-          title: 'Non connecté',
-          text: 'Vous devez vous connecter pour modifier cette formation.',
-          icon: 'warning',
-          confirmButtonText: 'OK',
-          customClass: {
-            confirmButton: 'swal2-confirm-custom'
-          }
-        }).then(() => {
-          navigate('/login');
-        });
-      }
-    };
+    const token = localStorage.getItem('token');
+    
+    if (!token) {
+      Swal.fire({
+        title: 'Non connecté',
+        text: 'Vous devez vous connecter pour modifier cette formation.',
+        icon: 'warning',
+        confirmButtonText: 'OK',
+        customClass: {
+          confirmButton: 'swal2-confirm-custom'
+        }
+      }).then(() => {
+        navigate('/login');
+      });
+      return;
+    }
 
-    checkLoginStatus();
-  }, [navigate]);
+    setIsLoggedIn(true);
+
+    // Vérifier si l'utilisateur vient du dashboard admin
+    if (!location.state?.fromDashboard) {
+      Swal.fire({
+        title: 'Accès refusé',
+        text: 'Vous devez accéder à cette page depuis le dashboard admin.',
+        icon: 'error',
+        confirmButtonText: 'OK',
+        customClass: {
+          confirmButton: 'swal2-confirm-custom'
+        }
+      }).then(() => {
+        navigate('/Admin/dashboard');
+      });
+    }
+  }, [location, navigate]);
 
   useEffect(() => {
-    if (isLoggedIn) {
+    if (isLoggedIn && location.state?.fromDashboard) {
       const fetchFormation = async () => {
         try {
-          const response = await axios.get<Formation>(`${API_URL}/api/formations/${id}`);
+          const token = localStorage.getItem('token');
+          const response = await axios.get<Formation>(`${API_URL}/api/formations/${id}`, {
+            headers: {
+              'Content-Type': 'application/json',
+              'x-auth-token': token
+            }
+          });
           const formationData = response.data;
           
           setFormation(formationData);
@@ -123,7 +144,7 @@ const UpdateFormationPage: React.FC = () => {
       fetchFormation();
       fetchVideos();
     }
-  }, [id, isLoggedIn, mediaBaseUrl]);
+  }, [id, isLoggedIn, location.state, mediaBaseUrl]);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -181,7 +202,7 @@ const UpdateFormationPage: React.FC = () => {
         text: 'Formation mise à jour avec succès',
         icon: 'success',
         confirmButtonText: 'OK'
-      })
+      });
     } catch (error) {
       console.error('Error updating formation:', error);
       Swal.fire({
@@ -354,8 +375,20 @@ const UpdateFormationPage: React.FC = () => {
     }
   };
 
+  // Ne rien afficher si l'accès n'est pas autorisé
+  if (!location.state?.fromDashboard) {
+    return null;
+  }
+
   if (!formation) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-orange-500 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Chargement...</p>
+        </div>
+      </div>
+    );
   }
 
   return (

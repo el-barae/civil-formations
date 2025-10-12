@@ -6,6 +6,8 @@ import {NavLink} from 'react-router-dom'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
+import API_URL from '../../API_URL';
+
 interface ChildProps {
   title: string;
 }
@@ -23,7 +25,7 @@ const Barside: React.FC<ChildProps> = ({ title }) => {
     if(login){
       try {
         const token = localStorage.getItem('token')
-        axios.post('http://localhost:5000/api/auth/logout',{
+        axios.post(API_URL+'/api/auth/logout',{
           token
         });
         localStorage.removeItem('token');
@@ -54,12 +56,12 @@ const Barside: React.FC<ChildProps> = ({ title }) => {
     <div className={`barside ${isSidebarVisible ? 'visible' : 'hidden'}`}>
       
     <ul >
-      <li className="img">
+      <li className="img my-4">
         <img
           src="https://tse1.explicit.bing.net/th?id=OIP.ROJLMWQcPybcPj5Pn70_oAHaHa&pid=Api&P=0&h=180"
           alt="Admin"
         />
-        <h1>{title}</h1>
+        <h1 className='mt-2'>{title}</h1>
       </li>
       <li className="item">
         <NavLink to="/Admin/dashboard"   className={({ isActive }) => (isActive ? 'active' : '')}>
@@ -91,13 +93,21 @@ const Barside: React.FC<ChildProps> = ({ title }) => {
           <h2>Settings</h2>
         </NavLink>
       </li>
-      <li className="item">
+      {/* <li className="item">
         <NavLink to="/Admin/message"   className={({ isActive }) => (isActive ? 'active' : '')}>
         <i className="fa-solid fa-envelope"></i>
           <h2>Messages</h2>
         </NavLink>
+      </li> */}
+
+      <li  onClick={(e) => handleLogin(e)} className=" logout mx-2">
+       
+          <i className="fa-solid fa-right-from-bracket"></i>
+          <h2>Home</h2>
+       
       </li>
-      <li  onClick={(e) => handleLogin(e)} className="logout">
+
+      <li  onClick={(e) => handleLogin(e)} className="logout mx-2">
        
           <i className="fa-solid fa-right-from-bracket"></i>
           <h2>Logout</h2>
