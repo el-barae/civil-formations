@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import './Nav.css'
 import { jwtDecode } from 'jwt-decode';
+import axios from 'axios';
+import API_URL from '../../API_URL';
 
 const Nav: React.FC = () => {
 const navigate = useNavigate();
@@ -16,22 +18,27 @@ const handleSmoothScroll = (event: React.MouseEvent<HTMLAnchorElement, MouseEven
 
   const handleLogin = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     event.preventDefault();
-    const login = localStorage.getItem('token')
-    if(login){
-      try {
-        /*const token = localStorage.getItem('token')
-        axios.post('http://localhost:5000/api/auth/logout',{
-          token
-        });*/
-        localStorage.removeItem('token');
-        navigate('/login');
-      } catch (err) {
-        // console.error('Logout failed:', err);
-      }
-    }
-    else
-      navigate('/login');
+    localStorage.removeItem('token');
+    navigate('/login');
   }
+
+//   const handleLogin = async (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+//   const token = localStorage.getItem('token');
+//   if (token) {
+//     try {
+//       await axios.post(
+//         `${API_URL}/api/auth/logout`,
+//         {}, // corps vide
+//         { headers: { 'x-auth-token': token } }
+//       );
+//     } catch (err) {
+//       console.error('Logout failed:', err);
+//     }
+//     localStorage.removeItem('token');
+//   }
+//   navigate('/login');
+// };
+
 
   const handleProfile = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     event.preventDefault();

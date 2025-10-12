@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import API_URL from '../API_URL';
-import { jwtDecode } from "jwt-decode";
 import Nav from '../components/Nav/Nav';
 import Swal from 'sweetalert2';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -36,11 +35,6 @@ const RegisterPage: React.FC = () => {
 
       const { token } = response.data;
       localStorage.setItem('token', token);
-
-      const decoded = jwtDecode(token) as { id: string; role: string };
-      const { id, role } = decoded;
-      localStorage.setItem('id', id);
-      localStorage.setItem('role', role);
 
       Swal.fire({
         icon: 'success',

@@ -20,24 +20,8 @@ const Barside: React.FC<ChildProps> = ({ title }) => {
   const navigate = useNavigate() 
   const handleLogin = (event: any) => {
     event.preventDefault();
-    
-    const login = localStorage.getItem('login')
-    if(login){
-      try {
-        const token = localStorage.getItem('token')
-        axios.post(API_URL+'/api/auth/logout',{
-          token
-        });
-        localStorage.removeItem('token');
-        localStorage.removeItem('login');
-        localStorage.removeItem('role');
-        navigate('/login');
-      } catch (err) {
-        // console.error('Logout failed:', err);
-      }
-    }
-    else
-      navigate('/login');
+    localStorage.removeItem('token');
+    navigate('/login');
   }
 
   const toggleSidebar = () => {

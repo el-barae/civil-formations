@@ -26,10 +26,8 @@ const Login: React.FC = () => {
       const { token } = response.data;
 
       localStorage.setItem('token', token);
-      const decoded = jwtDecode(token) as { id: string; role: string };
-      const { id, role } = decoded;
-      localStorage.setItem('id', id);
-      localStorage.setItem('role', role);
+      const decoded = jwtDecode(token) as { role: string };
+      const { role } = decoded;
 
       Swal.fire({
         icon: 'success',

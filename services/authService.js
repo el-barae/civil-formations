@@ -82,18 +82,18 @@ exports.login = async (req, res) => {
 
 
 exports.logout = (req, res) => {
-  const token = req.body; 
-
+  const token = req.header('x-auth-token');
   if (!token) {
     return res.status(401).json({ msg: 'No token provided' });
   }
 
-  jwt.verify(token, jwtSecret, (err, user) => {
+  jwt.verify(token, jwtSecret, (err) => {
     if (err) {
       return res.status(403).json({ msg: 'Invalid token' });
     }
 
-    res.clearCookie('token'); 
+    // Ici, tu ne peux pas invalider JWT sans blacklist
     res.status(200).json({ msg: 'Logged out successfully' });
   });
 };
+
