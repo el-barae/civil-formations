@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import Barside from '../barside/barside';
 import API_URL from '../../API_URL';
 
@@ -10,10 +12,15 @@ const Settings: React.FC = () => {
   const [newKeyInput, setNewKeyInput] = useState('');
   const [loading, setLoading] = useState(true);
 
-  // 👇 États pour modification de mot de passe
+  // 👇 États pour mot de passe + visibilité
   const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [showOldPassword, setShowOldPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [showNewStripeKey, setShowNewStripeKey] = useState(false);
+  const [showOldStripeKey, setShowOldStripeKey] = useState(false);
 
   useEffect(() => {
     const fetchStripeKey = async () => {
@@ -36,7 +43,6 @@ const Settings: React.FC = () => {
     fetchStripeKey();
   }, []);
 
-  // 🔑 Enregistrer nouvelle clé Stripe
   const handleSaveStripeKey = async () => {
     if (!oldKeyInput || !newKeyInput) {
       Swal.fire('Attention', 'Veuillez remplir les deux champs.', 'warning');
@@ -71,7 +77,6 @@ const Settings: React.FC = () => {
     }
   };
 
-  // 🔐 Changer mot de passe utilisateur
   const handleChangePassword = async () => {
     if (!oldPassword || !newPassword || !confirmPassword) {
       Swal.fire('Attention', 'Tous les champs sont requis.', 'warning');
@@ -120,6 +125,8 @@ const Settings: React.FC = () => {
         </div>
         <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
         {/* 🔸 Bloc Stripe */}
+
+
         <div className="bg-gray-100 p-6 rounded-lg shadow-lg max-w-lg m-6">
           <h2 className="text-xl font-bold mb-4 text-orange-600">Stripe Configuration</h2>
           {loading ? (
@@ -135,27 +142,55 @@ const Settings: React.FC = () => {
                   : 'Aucune clé enregistrée'}
               </p>
 
+              {/* 🔒 Clé actuelle */}
               <label className="block text-gray-700 font-semibold mb-2">
-                Entrez la clé actuelle pour confirmation :
+                Entrez la clé actuelle :
               </label>
-              <input
-                type="password"
-                value={oldKeyInput}
-                onChange={(e) => setOldKeyInput(e.target.value)}
-                className="w-full border border-gray-300 p-3 rounded mb-4 text-black"
-                placeholder="Votre clé actuelle"
-              />
+              <div className="relative mb-4">
+                <input
+                  type={showOldStripeKey ? 'text' : 'password'}
+                  value={oldKeyInput}
+                  onChange={(e) => setOldKeyInput(e.target.value)}
+                  className="w-full border border-gray-300 p-3 rounded text-black pr-10"
+                  placeholder="Votre clé actuelle"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowOldStripeKey(!showOldStripeKey)}
+                  className="absolute right-3 top-3 text-gray-600"
+                >
+                  {showOldStripeKey ? (
+                    <FontAwesomeIcon icon={faEyeSlash} className="text-orange-500" />
+                  ) : (
+                    <FontAwesomeIcon icon={faEye} className="text-orange-500" />
+                  )}
+                </button>
+              </div>
 
+              {/* 🔑 Nouvelle clé */}
               <label className="block text-gray-700 font-semibold mb-2">
                 Nouvelle clé Stripe :
               </label>
-              <input
-                type="password"
-                value={newKeyInput}
-                onChange={(e) => setNewKeyInput(e.target.value)}
-                className="w-full border border-gray-300 p-3 rounded mb-4 text-black"
-                placeholder="sk_live_..."
-              />
+              <div className="relative mb-4">
+                <input
+                  type={showNewStripeKey ? 'text' : 'password'}
+                  value={newKeyInput}
+                  onChange={(e) => setNewKeyInput(e.target.value)}
+                  className="w-full border border-gray-300 p-3 rounded text-black pr-10"
+                  placeholder="sk_live_..."
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowNewStripeKey(!showNewStripeKey)}
+                  className="absolute right-3 top-3 text-gray-600"
+                >
+                  {showNewStripeKey ? (
+                    <FontAwesomeIcon icon={faEyeSlash} className="text-orange-500" />
+                  ) : (
+                    <FontAwesomeIcon icon={faEye} className="text-orange-500" />
+                  )}
+                </button>
+              </div>
 
               <button
                 onClick={handleSaveStripeKey}
@@ -167,38 +202,69 @@ const Settings: React.FC = () => {
           )}
         </div>
 
+
         {/* 🔸 Bloc Changement de mot de passe */}
         <div className="bg-gray-100 p-6 rounded-lg shadow-lg max-w-lg m-6">
           <h2 className="text-xl font-bold mb-4 text-blue-600">Change Password</h2>
 
+          {/* Ancien mot de passe */}
           <label className="block text-gray-700 font-semibold mb-2">Ancien mot de passe :</label>
-          <input
-            type="password"
-            value={oldPassword}
-            onChange={(e) => setOldPassword(e.target.value)}
-            className="w-full border border-gray-300 p-3 rounded mb-4 text-black"
-            placeholder="Votre ancien mot de passe"
-          />
+          <div className="relative mb-4">
+            <input
+              type={showOldPassword ? 'text' : 'password'}
+              value={oldPassword}
+              onChange={(e) => setOldPassword(e.target.value)}
+              className="w-full border border-gray-300 p-3 rounded text-black pr-10"
+              placeholder="Votre ancien mot de passe"
+            />
+            <button
+              type="button"
+              onClick={() => setShowOldPassword(!showOldPassword)}
+              className="absolute right-3 top-3 text-gray-600"
+            >
+              {showOldPassword ? <FontAwesomeIcon icon={faEyeSlash} className="mr-2 text-orange-500" /> : <FontAwesomeIcon icon={faEye} className="mr-2 text-orange-500" />}
+            </button>
+          </div>
 
+          {/* Nouveau mot de passe */}
           <label className="block text-gray-700 font-semibold mb-2">Nouveau mot de passe :</label>
-          <input
-            type="password"
-            value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
-            className="w-full border border-gray-300 p-3 rounded mb-4 text-black"
-            placeholder="Nouveau mot de passe"
-          />
+          <div className="relative mb-4">
+            <input
+              type={showNewPassword ? 'text' : 'password'}
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              className="w-full border border-gray-300 p-3 rounded text-black pr-10"
+              placeholder="Nouveau mot de passe"
+            />
+            <button
+              type="button"
+              onClick={() => setShowNewPassword(!showNewPassword)}
+              className="absolute right-3 top-3 text-gray-600"
+            >
+              {showNewPassword ? <FontAwesomeIcon icon={faEyeSlash} className="mr-2 text-orange-500" /> : <FontAwesomeIcon icon={faEye} className="mr-2 text-orange-500" />}
+            </button>
+          </div>
 
+          {/* Confirmation */}
           <label className="block text-gray-700 font-semibold mb-2">
             Confirmez le nouveau mot de passe :
           </label>
-          <input
-            type="password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            className="w-full border border-gray-300 p-3 rounded mb-4 text-black"
-            placeholder="Confirmez le mot de passe"
-          />
+          <div className="relative mb-4">
+            <input
+              type={showConfirmPassword ? 'text' : 'password'}
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              className="w-full border border-gray-300 p-3 rounded text-black pr-10"
+              placeholder="Confirmez le mot de passe"
+            />
+            <button
+              type="button"
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              className="absolute right-3 top-3 text-gray-600"
+            >
+              {showConfirmPassword ? <FontAwesomeIcon icon={faEyeSlash} className="mr-2 text-orange-500" /> : <FontAwesomeIcon icon={faEye} className="mr-2 text-orange-500" />}
+            </button>
+          </div>
 
           <button
             onClick={handleChangePassword}
