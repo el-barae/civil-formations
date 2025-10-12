@@ -26,7 +26,7 @@ const handleSmoothScroll = (event: React.MouseEvent<HTMLAnchorElement, MouseEven
         localStorage.removeItem('token');
         navigate('/login');
       } catch (err) {
-        console.error('Logout failed:', err);
+        // console.error('Logout failed:', err);
       }
     }
     else

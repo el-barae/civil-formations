@@ -172,8 +172,6 @@ exports.deleteClient = async (req, res) => {
     // Les Subscribes seront supprimés automatiquement grâce à onDelete: 'CASCADE'
     await client.destroy();
 
-    console.log(`Client supprimé: ${clientInfo.firstName} ${clientInfo.lastName} (ID: ${clientInfo.id})`);
-
     return res.status(200).json({
       success: true,
       message: 'Client supprimé avec succès',

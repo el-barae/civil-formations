@@ -56,7 +56,6 @@ const Visualiser: React.FC = () => {
         setFormations(response.data.data);
       }
     } catch (error) {
-      console.error('Error fetching formations:', error);
       Swal.fire({
         icon: 'error',
         title: 'Erreur',

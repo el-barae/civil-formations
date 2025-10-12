@@ -132,24 +132,6 @@ const handelNext = (e:any)=>{
           }
         })
 
-
-        // console.log('Formation created:',JSON.stringify(formation) );
-        //console.log('Videoss:', videos);
-        //videos.map(vd=>console.log('videoss :',vd.videolist))
-
-
-        // if (formation.video) {
-        //     console.log('Video name:', formation.video.name);
-        //     console.log('Video size:', formation.video.size);
-        //     console.log('Video type:', formation.video.type);
-        //   }
-          
-        //   if (formation.image) {
-        //     console.log('Image name:', formation.image.name);
-        //     console.log('Image size:', formation.image.size);
-        //     console.log('Image type:', formation.image.type);
-        //   }
-
         try {
           await axios.post(`${API_URL}/api/formations`, formData, {
               headers: {

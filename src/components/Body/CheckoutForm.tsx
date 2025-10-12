@@ -14,7 +14,6 @@ const CheckoutForm: React.FC<{ amount: number; formationID: number }> = ({ amoun
     event.preventDefault();
 
     if (!stripe || !elements) {
-      console.error('Stripe or Elements not loaded');
       return;
     }
 
@@ -67,12 +66,6 @@ const CheckoutForm: React.FC<{ amount: number; formationID: number }> = ({ amoun
       }
 
       // 2️⃣ Send PaymentIntent request
-      console.log('Payload envoyé :', {
-        amount,
-        pourcentage: 0,
-        formationId: formationID,
-        userId: id,
-      });
 
       const response = await fetch(`${API_URL}/api/subscribes/create-payment-intent`, {
         method: 'POST',
@@ -90,7 +83,6 @@ const CheckoutForm: React.FC<{ amount: number; formationID: number }> = ({ amoun
 
       if (!response.ok) {
         const errorText = await response.text();
-        console.error('Payment Intent creation failed:', errorText);
         Swal.fire({
           icon: 'error',
           title: 'Payment Failed',
@@ -118,7 +110,6 @@ const CheckoutForm: React.FC<{ amount: number; formationID: number }> = ({ amoun
           title: 'Payment Successful',
           text: 'You have paid successfully!',
         });
-        console.log('Subscription created:', subscription);
         
         // Navigation sécurisée avec state
         navigate(`/formation/${formationID}`, {
@@ -130,7 +121,6 @@ const CheckoutForm: React.FC<{ amount: number; formationID: number }> = ({ amoun
         });
       }
     } catch (err) {
-      console.error('Unexpected Error', err);
       Swal.fire({
         icon: 'error',
         title: 'Payment Failed',

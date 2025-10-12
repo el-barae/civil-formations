@@ -156,7 +156,6 @@ useEffect(() => {
         }
       }
     } catch (error) {
-      console.error('Error submitting comment:', error);
       Swal.fire({
         title: 'Erreur',
         text: 'Une erreur est survenue.',
@@ -186,7 +185,6 @@ useEffect(() => {
             setAvis(formationData.Avis);
           }
         } catch (error) {
-          console.error('Error fetching formation:', error);
         }
       };
       
@@ -221,7 +219,6 @@ useEffect(() => {
             setVideos(videosWithViews);
           }
         } catch (error) {
-          console.error('Error fetching videos:', error);
         }
       };
 
@@ -269,7 +266,6 @@ useEffect(() => {
         ));
       }
     } catch (error) {
-      console.error('Error updating view status:', error);
     }
   };
 

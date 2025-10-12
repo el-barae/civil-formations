@@ -9,7 +9,6 @@ const Contact: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log({ name, email, message });
     alert('Message sent!');
     setName('');
     setEmail('');

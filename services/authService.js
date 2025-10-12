@@ -1,9 +1,10 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+require('dotenv').config();
 
 
-const jwtSecret = 'e7a7b3a7abc3d2a39e7d8e2b1a4f3a8b1e3d7c8f3b6e4a3d9e2b3a7d2f4c9b1e8b7f2a3d4e3b7d8f2c3a6e4f7d2e9c3b8a7f2e3d7a6f5';
+const jwtSecret = process.env.JWT_SECRET;
 
 // Register user
 exports.register = async (req, res) => {
@@ -43,7 +44,7 @@ exports.register = async (req, res) => {
     });
 
   } catch (err) {
-    console.error(err.message);
+    // console.error(err.message);
     res.status(500).send('Server error');
   }
 };
@@ -74,7 +75,7 @@ exports.login = async (req, res) => {
 
     res.json({ token });
   } catch (err) {
-    console.error(err.message);
+    // console.error(err.message);
     res.status(500).send('Server error');
   }
 };

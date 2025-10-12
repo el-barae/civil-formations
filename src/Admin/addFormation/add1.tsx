@@ -41,7 +41,7 @@ try{
 
 
 }catch(err){
-  console.log("erreur dans add 1 : "+err);
+  // console.log("erreur dans add 1 : "+err);
 }
 navigate('/Admin/add2', { state: { info } }) 
 

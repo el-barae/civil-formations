@@ -60,7 +60,6 @@ export default function Client() {
                 setClients(response.data.data);
             }
         } catch (error) {
-            console.error('Error fetching clients:', error);
             Swal.fire({
                 icon: 'error',
                 title: 'Erreur',
@@ -87,7 +86,6 @@ export default function Client() {
                 setShowModal(true);
             }
         } catch (error) {
-            console.error('Error fetching client details:', error);
             Swal.fire({
                 icon: 'error',
                 title: 'Erreur',
@@ -128,7 +126,6 @@ export default function Client() {
 
                 fetchClients();
             } catch (error) {
-                console.error('Error deleting client:', error);
                 Swal.fire({
                     icon: 'error',
                     title: 'Erreur',

@@ -18,11 +18,10 @@ const Dashboard: React.FC = () => {
       const response = await axios.delete(`${API_URL}/api/formations/${id}`, {headers: {
         'X-Auth-Token': localStorage.getItem("token"),
     }});
-      console.log('Formation supprimée:', response.data);
       setFormations(formations.filter(formation => formation.id !== id));
 
     } catch (error) {
-      console.error('Erreur lors de la suppression de la formation:', error);
+      // console.error('Erreur lors de la suppression de la formation:', error);
     }
   };
  

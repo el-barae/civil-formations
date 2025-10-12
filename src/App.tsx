@@ -15,10 +15,12 @@ import Clients from './Admin/client/client';
 import Settings from './Admin/settings/Settings';
 import UpdateFormation from './Admin/updateFormation/updateFormation';
 import ProtectedRoute from './ProtectedRoutes';
+import { StripeProvider } from './StripeContext';
 
 const App: React.FC = () => {
   return (
-    <StripeConfig>
+    <StripeProvider>
+      <StripeConfig>
       <Router>
         <Routes>
           <Route path="/" element={<HomePage />} />
@@ -46,6 +48,7 @@ const App: React.FC = () => {
         </Routes>
       </Router>
     </StripeConfig>
+    </StripeProvider>
   );
 };
 

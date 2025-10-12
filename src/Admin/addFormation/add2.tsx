@@ -61,7 +61,6 @@ const Add2: React.FC = () => {
         'x-auth-token': token
       }
     });
-    console.log("Réponse depuis backend formation :", response1.data);
 
 
     const formData = new FormData();
@@ -83,11 +82,10 @@ const Add2: React.FC = () => {
         'x-auth-token': token
       }
     });
-    console.log("Réponse depuis backend videos :", response.data);
 
     
 } catch (error) {
-    console.error('There was an error submitting the videos form!', error);
+    // console.error('There was an error submitting the videos form!', error);
 }
   navigate("/Admin/dashboard");
  

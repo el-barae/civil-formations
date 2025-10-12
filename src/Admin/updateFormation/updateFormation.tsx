@@ -122,7 +122,7 @@ const UpdateFormationPage: React.FC = () => {
             setPresentationVideoPreview(`${mediaBaseUrl}${formationData.video}`);
           }
         } catch (error) {
-          console.error('Error fetching formation:', error);
+          // console.error('Error fetching formation:', error);
         }
       };
 
@@ -137,7 +137,7 @@ const UpdateFormationPage: React.FC = () => {
           });
           setVideos(response.data);
         } catch (error) {
-          console.error('Error fetching videos:', error);
+          // console.error('Error fetching videos:', error);
         }
       };
 
@@ -204,7 +204,6 @@ const UpdateFormationPage: React.FC = () => {
         confirmButtonText: 'OK'
       });
     } catch (error) {
-      console.error('Error updating formation:', error);
       Swal.fire({
         title: 'Erreur',
         text: 'Erreur lors de la mise à jour de la formation',
@@ -258,7 +257,6 @@ const UpdateFormationPage: React.FC = () => {
       });
       setVideos(response.data);
     } catch (error) {
-      console.error('Error updating video:', error);
       Swal.fire({
         title: 'Erreur',
         text: 'Erreur lors de la mise à jour de la vidéo',
@@ -298,7 +296,6 @@ const UpdateFormationPage: React.FC = () => {
             showConfirmButton: false
           });
         } catch (error) {
-          console.error('Error deleting video:', error);
           Swal.fire({
             title: 'Erreur',
             text: 'Erreur lors de la suppression de la vidéo',
@@ -365,7 +362,6 @@ const UpdateFormationPage: React.FC = () => {
       });
       setVideos(response.data);
     } catch (error) {
-      console.error('Error adding video:', error);
       Swal.fire({
         title: 'Erreur',
         text: 'Erreur lors de l\'ajout de la vidéo',

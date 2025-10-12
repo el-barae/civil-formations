@@ -65,12 +65,6 @@ router.post('/create-payment-intent', authMiddleware, async (req, res) => {
       stripePaymentIntentId: paymentIntent.id,
     });
 
-    console.log('✅ Payment Intent Created:', {
-      id: paymentIntent.id,
-      amount: amountInCents,
-      subscription: subscription.id,
-    });
-
     res.status(201).json({
       clientSecret: paymentIntent.client_secret,
       subscription,

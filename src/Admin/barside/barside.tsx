@@ -33,7 +33,7 @@ const Barside: React.FC<ChildProps> = ({ title }) => {
         localStorage.removeItem('role');
         navigate('/login');
       } catch (err) {
-        console.error('Logout failed:', err);
+        // console.error('Logout failed:', err);
       }
     }
     else

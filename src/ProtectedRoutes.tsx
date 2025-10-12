@@ -76,7 +76,6 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, requiredRole 
         setIsAuthorized(true);
 
       } catch (error) {
-        console.error('Error decoding token:', error);
         localStorage.removeItem('token');
         Swal.fire({
           title: 'Erreur',

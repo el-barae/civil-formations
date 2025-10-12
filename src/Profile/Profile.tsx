@@ -127,9 +127,6 @@ const ProfilePage: React.FC = () => {
         confirmButtonColor: '#3085d6',
       });
     } catch (error) {
-      console.error('Error updating profile:', error);
-
-      // ❌ Message erreur
       Swal.fire({
         icon: 'error',
         title: 'Update failed',
@@ -152,8 +149,6 @@ const ProfilePage: React.FC = () => {
           },
         }
       );
-
-      console.log('Password changed successfully:', response.data);
       setIsModalOpen2(false);
 
       // ✅ Message succès
@@ -164,9 +159,6 @@ const ProfilePage: React.FC = () => {
         confirmButtonColor: '#3085d6',
       });
     } catch (error: any) {
-      console.error('Error changing password:', error);
-
-      // 🔍 On peut personnaliser selon le code erreur
       const errorMessage =
         error.response?.data?.msg ||
         error.response?.data?.message ||

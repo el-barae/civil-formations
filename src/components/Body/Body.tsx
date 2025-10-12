@@ -72,7 +72,6 @@ const Body: React.FC = () => {
           setFormations(response.data);
         }
       } catch (error) {
-        console.error('Error fetching formations:', error);
         // En cas d'erreur de l'API, utiliser les formations fictives
         setFormations(fakeFormations);
       } finally {

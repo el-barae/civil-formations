@@ -21,6 +21,9 @@ const Settings: React.FC = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [showNewStripeKey, setShowNewStripeKey] = useState(false);
   const [showOldStripeKey, setShowOldStripeKey] = useState(false);
+  const [publicKeyInput, setPublicKeyInput] = useState('');
+  const [showPublicKey, setShowPublicKey] = useState(false);
+
 
   useEffect(() => {
     const fetchStripeKey = async () => {
@@ -34,7 +37,6 @@ const Settings: React.FC = () => {
         });
         setCurrentStripeKey(response.data.stripeSecretKey || '');
       } catch (error) {
-        console.error('Erreur chargement clé Stripe:', error);
         Swal.fire('Erreur', 'Impossible de charger la clé Stripe.', 'error');
       } finally {
         setLoading(false);
@@ -44,8 +46,8 @@ const Settings: React.FC = () => {
   }, []);
 
   const handleSaveStripeKey = async () => {
-    if (!oldKeyInput || !newKeyInput) {
-      Swal.fire('Attention', 'Veuillez remplir les deux champs.', 'warning');
+    if (!oldKeyInput || !newKeyInput || !publicKeyInput) {
+      Swal.fire('Attention', 'Veuillez remplir tous les champs.', 'warning');
       return;
     }
 
@@ -58,7 +60,10 @@ const Settings: React.FC = () => {
       const token = localStorage.getItem('token');
       await axios.put(
         `${API_URL}/api/config/stripe-key`,
-        { stripeSecretKey: newKeyInput },
+        { 
+          stripeSecretKey: newKeyInput,
+          stripePublicKey: publicKeyInput
+        },
         {
           headers: {
             'Content-Type': 'application/json',
@@ -67,15 +72,16 @@ const Settings: React.FC = () => {
         }
       );
 
-      Swal.fire('Succès', 'Clé Stripe mise à jour avec succès !', 'success');
+      Swal.fire('Succès', 'Clés Stripe mises à jour avec succès !', 'success');
       setCurrentStripeKey(newKeyInput);
       setOldKeyInput('');
       setNewKeyInput('');
+      setPublicKeyInput('');
     } catch (error) {
-      console.error('Erreur maj clé Stripe:', error);
-      Swal.fire('Erreur', 'Impossible de mettre à jour la clé Stripe.', 'error');
+      Swal.fire('Erreur', 'Impossible de mettre à jour les clés Stripe.', 'error');
     }
   };
+
 
   const handleChangePassword = async () => {
     if (!oldPassword || !newPassword || !confirmPassword) {
@@ -102,12 +108,10 @@ const Settings: React.FC = () => {
       );
 
       Swal.fire('Succès', 'Mot de passe mis à jour avec succès !', 'success');
-      console.log('Password changed successfully:', response.data);
       setOldPassword('');
       setNewPassword('');
       setConfirmPassword('');
     } catch (error: any) {
-      console.error('Erreur changement mot de passe:', error);
       const errorMsg =
         error.response?.data?.msg ||
         error.response?.data?.message ||
@@ -185,6 +189,31 @@ const Settings: React.FC = () => {
                   className="absolute right-3 top-3 text-gray-600"
                 >
                   {showNewStripeKey ? (
+                    <FontAwesomeIcon icon={faEyeSlash} className="text-orange-500" />
+                  ) : (
+                    <FontAwesomeIcon icon={faEye} className="text-orange-500" />
+                  )}
+                </button>
+              </div>
+
+                  {/* 🔑 Clé publique */}
+              <label className="block text-gray-700 font-semibold mb-2">
+                Clé publique Stripe :
+              </label>
+              <div className="relative mb-4">
+                <input
+                  type={showPublicKey ? 'text' : 'password'}
+                  value={publicKeyInput}
+                  onChange={(e) => setPublicKeyInput(e.target.value)}
+                  className="w-full border border-gray-300 p-3 rounded text-black pr-10"
+                  placeholder="pk_test_..."
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPublicKey(!showPublicKey)}
+                  className="absolute right-3 top-3 text-gray-600"
+                >
+                  {showPublicKey ? (
                     <FontAwesomeIcon icon={faEyeSlash} className="text-orange-500" />
                   ) : (
                     <FontAwesomeIcon icon={faEye} className="text-orange-500" />
