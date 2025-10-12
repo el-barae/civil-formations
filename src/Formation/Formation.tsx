@@ -240,16 +240,20 @@ useEffect(() => {
     setSelectedVideo(null);
   };
 
-  const handlePlay = async (videoId:number) => {
+  const handlePlay = async (videoId:number, nvideos:number) => {
     try {
       const token = localStorage.getItem('token');
       if(token){
         const decoded = jwtDecode(token) as { id: string };
         const userId = decoded.id;
-        
+        const pourcentage = Math.floor(100/nvideos);
+        const idFormation = id;
         await axios.post(
           `${API_URL}/api/views/set/${userId}/${videoId}`,
-          {},
+          {
+            pourcentage,
+            idFormation
+          },
           {
             headers: {
               'Content-Type': 'application/json',
@@ -303,7 +307,12 @@ useEffect(() => {
             {videos.map(video => (
               <div key={video.id} className="bg-gray-100 rounded-lg p-4 shadow-xl">
                 <h3 className="text-xl font-bold">{video.numero}. {video.title}</h3>
-                <video controls controlsList="nodownload" src={`${mediaBaseUrl}${video.link}`} className="w-full rounded mt-4 mb-4" onPlay={() => handlePlay(video.id)} />
+                <video controls controlsList="nodownload" src={`${mediaBaseUrl}${video.link}`} className="w-full rounded mt-4 mb-4" 
+                onPlay={() => {
+                  if (video.View?.view !== true) {
+                    handlePlay(video.id, videos.length);
+                  }
+                }} />
                 <div className='flex justify-between'>
                   <button
                     onClick={() => handleVideoClick(video)}

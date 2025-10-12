@@ -188,3 +188,39 @@ exports.deleteClient = async (req, res) => {
     });
   }
 };
+
+exports.changePassword = async (req, res) => {
+  const { oldPassword, newPassword } = req.body;
+  const userId = req.user?.id; // récupéré depuis le token (grâce à authMiddleware)
+
+  try {
+    if (!userId) {
+      return res.status(401).json({ msg: 'Unauthorized' });
+    }
+
+    // 1️⃣ Récupérer l'utilisateur depuis la base
+    const user = await User.findByPk(userId);
+    if (!user) {
+      return res.status(404).json({ msg: 'User not found' });
+    }
+
+    // 2️⃣ Vérifier l'ancien mot de passe
+    const isMatch = await bcrypt.compare(oldPassword, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ msg: 'Old password is incorrect' });
+    }
+
+    // 3️⃣ Hacher le nouveau mot de passe
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+    // 4️⃣ Mettre à jour le mot de passe
+    user.password = hashedPassword;
+    await user.save();
+
+    res.json({ msg: 'Password updated successfully' });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+};

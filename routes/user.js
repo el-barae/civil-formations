@@ -19,4 +19,6 @@ router.get('/clients/:id', authMiddleware, authorizeRoles('ADMIN'), userControll
 // Delete client
 router.delete('/clients/:id', authMiddleware, authorizeRoles('ADMIN'), userController.deleteClient);
 
+router.put('/change-password', authMiddleware, userController.changePassword);
+
 module.exports = router;
