@@ -6,8 +6,9 @@ import API_URL from '../API_URL';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom'; 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEnvelope, faPhone, faMapMarkerAlt, faGear } from '@fortawesome/free-solid-svg-icons';
+import { faEnvelope, faPhone, faMapMarkerAlt, faGear, faKey } from '@fortawesome/free-solid-svg-icons';
 import ProfileEditModal from './ProfileEditModal'
+import PasswordEditModal from './PasswordEditModal';
 import { jwtDecode } from 'jwt-decode';
 
 interface User{
@@ -45,6 +46,7 @@ const ProfilePage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen2, setIsModalOpen2] = useState(false);
   const navigate = useNavigate(); 
 
   useEffect(() => {
@@ -93,28 +95,93 @@ const ProfilePage: React.FC = () => {
   };
 
   useEffect(() => {
-    if (isLoggedIn && !isModalOpen) {
+    if (isLoggedIn && !isModalOpen && !isModalOpen2) {
       fetchProfile();
     } else {
       setLoading(false);
     }
-  }, [isLoggedIn, isModalOpen]);
+  }, [isLoggedIn, isModalOpen, isModalOpen2]);
 
   const handleSave = async (updatedUser: User) => {
     try {
-      const token = localStorage.getItem('token')
-      const response = await axios.put(`${API_URL}/api/users/profile/${user?.id}`, updatedUser,{
-        headers :{
-          'Content-Type': 'application/json',
-          'x-auth-token': token
+      const token = localStorage.getItem('token');
+      const response = await axios.put(
+        `${API_URL}/api/users/profile/${user?.id}`,
+        updatedUser,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'x-auth-token': token,
+          },
         }
-      });
-      setUser(response.data); // Update the local state with the new user data
+      );
+
+      setUser(response.data);
       setIsModalOpen(false);
+
+      // ✅ Message succès
+      Swal.fire({
+        icon: 'success',
+        title: 'Profile updated!',
+        text: 'Your profile information has been successfully saved.',
+        confirmButtonColor: '#3085d6',
+      });
     } catch (error) {
       console.error('Error updating profile:', error);
+
+      // ❌ Message erreur
+      Swal.fire({
+        icon: 'error',
+        title: 'Update failed',
+        text: 'An error occurred while updating your profile.',
+        confirmButtonColor: '#d33',
+      });
     }
   };
+
+  const handleChangePassword = async (passData: { oldPassword: string; newPassword: string }) => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.put(
+        `${API_URL}/api/users/change-password`,
+        passData,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'x-auth-token': token,
+          },
+        }
+      );
+
+      console.log('Password changed successfully:', response.data);
+      setIsModalOpen2(false);
+
+      // ✅ Message succès
+      Swal.fire({
+        icon: 'success',
+        title: 'Password changed!',
+        text: 'Your password has been updated successfully.',
+        confirmButtonColor: '#3085d6',
+      });
+    } catch (error: any) {
+      console.error('Error changing password:', error);
+
+      // 🔍 On peut personnaliser selon le code erreur
+      const errorMessage =
+        error.response?.data?.msg ||
+        error.response?.data?.message ||
+        'An unexpected error occurred.';
+
+      // ❌ Message erreur
+      Swal.fire({
+        icon: 'error',
+        title: 'Password change failed',
+        text: errorMessage,
+        confirmButtonColor: '#d33',
+      });
+    }
+  };
+
 
   if (loading) {
     return <div>Loading...</div>;
@@ -150,7 +217,10 @@ const ProfilePage: React.FC = () => {
             </strong> {user.address}
           </p>
           <button onClick={() => setIsModalOpen(true)}>
-          <FontAwesomeIcon icon={faGear} className='mt-6 ml-6 text-4xl text-gray-700 cursor-pointer' />
+          <FontAwesomeIcon icon={faGear} className='mt-6 ml-6 text-3xl text-gray-700 cursor-pointer' />
+        </button>
+        <button onClick={() => setIsModalOpen2(true)}>
+          <FontAwesomeIcon icon={faKey} className='mt-6 ml-10 text-3xl text-gray-700 cursor-pointer' />
         </button>
           </div>
           <ProfileEditModal
@@ -158,6 +228,11 @@ const ProfilePage: React.FC = () => {
         onClose={() => setIsModalOpen(false)}
         user={user}
         onSave={handleSave}
+      />
+      <PasswordEditModal
+        show={isModalOpen2}
+        onClose={() => setIsModalOpen2(false)}
+        onChangePassword={handleChangePassword}
       />
           <div className='mr-32 hidden lg:flex'>
             <img src="/profile.png" width={'250px'} height={'200px'} alt="" />
