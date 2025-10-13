@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {faClock ,faEye, faEyeSlash} from '@fortawesome/free-solid-svg-icons';
 import VideoDescriptionModal from './VideoDescriptionModal';
 import { jwtDecode } from "jwt-decode";
+import VideoPlayer from './VideoPlayer';
 
 interface Formation {
   id: number;
@@ -303,12 +304,14 @@ useEffect(() => {
             {videos.map(video => (
               <div key={video.id} className="bg-gray-100 rounded-lg p-4 shadow-xl">
                 <h3 className="text-xl font-bold">{video.numero}. {video.title}</h3>
-                <video controls controlsList="nodownload" src={`${mediaBaseUrl}${video.link}`} className="w-full rounded mt-4 mb-4" 
-                onPlay={() => {
-                  if (video.View?.view !== true) {
-                    handlePlay(video.id, videos.length);
-                  }
-                }} />
+<VideoPlayer
+  url={`${mediaBaseUrl}${video.link}`}
+  title={video.title}
+  onPlay={() => handlePlay(video.id, videos.length)}
+  hasViewed={video.View?.view || false}
+/>
+
+
                 <div className='flex justify-between'>
                   <button
                     onClick={() => handleVideoClick(video)}
