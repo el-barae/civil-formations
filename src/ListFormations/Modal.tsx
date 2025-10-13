@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import CheckoutForm from './CheckoutForm';
 import VideoPlayer from '../Formation/VideoPlayer';
 
@@ -13,10 +14,14 @@ interface ModalProps {
   price: number;
 }
 
-const Modal: React.FC<ModalProps> = ({ show, onClose, formationID, videoUrl, name, description, duree, price}) => {
-  if (!show) return null;
+const Modal: React.FC<ModalProps> = ({ show, onClose, formationID, videoUrl, name, description, duree, price }) => {
+  const navigate = useNavigate(); 
 
-  // Fonction vide pour onPlay car ce n'est qu'une preview
+  if (!show) return null; 
+
+  const token = localStorage.getItem("token");
+  const isGuest = !token;
+
   const handlePreviewPlay = () => {
     console.log('Preview video playing');
   };
@@ -83,10 +88,23 @@ const Modal: React.FC<ModalProps> = ({ show, onClose, formationID, videoUrl, nam
           </div>
 
           {/* Checkout Form */}
-          <div className="border-t border-gray-200 pt-6">
-            <h3 className="text-lg font-semibold text-gray-800 mb-4">Procéder au paiement</h3>
-            <CheckoutForm amount={price} formationID={formationID} />
-          </div>
+          {!isGuest ? (
+        // ✅ Utilisateur connecté
+        <CheckoutForm amount={price} formationID={formationID} />
+      ) : (
+        // 🚫 Utilisateur guest
+        <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-md">
+          <p className="text-yellow-800 mb-3">
+            Vous devez être connecté pour procéder au paiement.
+          </p>
+          <button
+            onClick={() => navigate("/login")}
+            className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md font-medium transition"
+          >
+            Se connecter
+          </button>
+        </div>
+      )}
         </div>
       </div>
     </div>
