@@ -288,7 +288,7 @@ useEffect(() => {
   const mediaBaseUrl = process.env.REACT_APP_MEDIA_URL || '';
 
   return (
-    <div className="bg-white rounded-lg shadow-lg w-full h-full">
+    <div className="w-full h-full">
       <Nav/>
       <div className="bg-cover bg-center p-8 text-center" style={{ backgroundImage: `url(${mediaBaseUrl}${formation.image})`, height:"500px" }} id='header'>
         <h1 className="text-4xl mt-32 font-bold">{formation.name}</h1>
@@ -304,13 +304,12 @@ useEffect(() => {
             {videos.map(video => (
               <div key={video.id} className="bg-gray-100 rounded-lg p-4 shadow-xl">
                 <h3 className="text-xl font-bold">{video.numero}. {video.title}</h3>
-<VideoPlayer
-  url={`${mediaBaseUrl}${video.link}`}
-  title={video.title}
-  onPlay={() => handlePlay(video.id, videos.length)}
-  hasViewed={video.View?.view || false}
-/>
-
+                <VideoPlayer
+                  url={`${mediaBaseUrl}${video.link}`}
+                  title={video.title}
+                  onPlay={() => handlePlay(video.id, videos.length)}
+                  hasViewed={video.View?.view || false}
+                />
 
                 <div className='flex justify-between'>
                   <button
@@ -333,7 +332,7 @@ useEffect(() => {
       </div>
       
       <div className="m-10">
-        <h2 className="text-2xl font-bold text-orange-500 mb-6">Commentaires</h2>
+        <h2 className="text-2xl font-bold text-orange-500 mb-6">Avis</h2>
         <div className="bg-gray-100 rounded-lg p-6 shadow-lg">
           {avis && avis.length > 0 ? (
             avis.map((avisItem) => (
@@ -345,7 +344,7 @@ useEffect(() => {
               </div>
             ))
           ) : (
-            <p>Aucun commentaire pour le moment.</p>
+            <p>Aucun avis pour le moment.</p>
           )}
 
           <form onSubmit={handleSubmitComment} className="mt-6">

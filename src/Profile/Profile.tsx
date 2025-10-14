@@ -174,17 +174,23 @@ const ProfilePage: React.FC = () => {
     }
   };
 
-
   if (loading) {
-    return <div>Loading...</div>;
-  }// Update the local state with the new user data
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-orange-500 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Chargement...</p>
+        </div>
+      </div>
+    );
+  }
 
   if (error) {
     return <div>{error}</div>;
   }
 
   return (
-    <div>
+    <div className="w-full h-full">
       <Nav />
       {user && (
         <div className="flex justify-between pt-32 p-16 bg-gradient-to-r from-amber-500 to-orange-600 text-white">
