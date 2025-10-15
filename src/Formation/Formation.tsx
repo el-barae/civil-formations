@@ -5,7 +5,7 @@ import Nav from '../components/Nav/Nav';
 import API_URL from '../API_URL';
 import Swal from 'sweetalert2';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {faClock ,faEye, faEyeSlash} from '@fortawesome/free-solid-svg-icons';
+import {faClock, faEye, faEyeSlash, faPlay, faCheckCircle, faLock, faInfo} from '@fortawesome/free-solid-svg-icons';
 import VideoDescriptionModal from './VideoDescriptionModal';
 import { jwtDecode } from "jwt-decode";
 import VideoPlayer from './VideoPlayer';
@@ -44,6 +44,13 @@ interface Avis {
   formationId: number;
 }
 
+interface Commentaire {
+  id: number;
+  commentaire: string;
+  User: User;
+  videoId: number;
+}
+
 interface User{
   id:number,
   firstName: string,
@@ -56,13 +63,13 @@ const FormationPage: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [formation, setFormation] = useState<Formation | null>(null);
-  const [selectedVideo, setSelectedVideo] = useState(null);
+  const [selectedVideo, setSelectedVideo] = useState<Video | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [videos, setVideos] = useState<Video[]>([]);
   const [avis, setAvis] = useState<Avis[]>([]); 
   const [newComment, setNewComment] = useState('');
+  const [currentPlayingVideo, setCurrentPlayingVideo] = useState<Video | null>(null);
 
-  // Vérification simple avec useLocation
 useEffect(() => {
   const token = localStorage.getItem('token');
   
@@ -81,7 +88,6 @@ useEffect(() => {
     return;
   }
 
-  // Vérifier si l'utilisateur vient du profil ou du paiement
   if (!location.state?.fromProfile) {
     Swal.fire({
       title: 'Accès refusé',
@@ -97,7 +103,6 @@ useEffect(() => {
     return;
   }
 
-  // Message de bienvenue si vient du paiement
   if (location.state?.fromPayment) {
     Swal.fire({
       title: 'Bienvenue !',
@@ -167,7 +172,6 @@ useEffect(() => {
   };
 
   useEffect(() => {
-    // Charger les données seulement si l'accès est autorisé
     if (location.state?.fromProfile) {
       const fetchFormation = async () => {
         try {
@@ -218,6 +222,10 @@ useEffect(() => {
             });
 
             setVideos(videosWithViews);
+            // Sélectionner automatiquement la première vidéo
+            if (videosWithViews.length > 0) {
+              setCurrentPlayingVideo(videosWithViews[0]);
+            }
           }
         } catch (error) {
         }
@@ -228,9 +236,13 @@ useEffect(() => {
     }
   }, [id, location.state]);
 
-  const handleVideoClick = (video:any) => {
+  const handleVideoClick = (video: Video) => {
     setSelectedVideo(video);
     setIsModalOpen(true);
+  };
+
+  const handleSelectVideo = (video: Video) => {
+    setCurrentPlayingVideo(video);
   };
 
   const closeModal = () => {
@@ -276,91 +288,245 @@ useEffect(() => {
 
   if (!formation) {
     return (
-      <div className="flex items-center justify-center h-screen">
+      <div className="flex items-center justify-center h-screen bg-gradient-to-br from-orange-50 to-orange-100">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-orange-500 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Chargement...</p>
+          <div className="animate-spin rounded-full h-32 w-32 border-b-4 border-orange-500 mx-auto"></div>
+          <p className="mt-6 text-xl text-gray-700 font-medium">Chargement de votre formation...</p>
         </div>
       </div>
     );
   }
 
   const mediaBaseUrl = process.env.REACT_APP_MEDIA_URL || '';
+  const completedVideos = videos.filter(v => v.View?.view).length;
+  const progressPercentage = videos.length > 0 ? (completedVideos / videos.length) * 100 : 0;
 
   return (
-    <div className="w-full h-full">
+    <div className="w-full min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       <Nav/>
-      <div className="bg-cover bg-center p-8 text-center" style={{ backgroundImage: `url(${mediaBaseUrl}${formation.image})`, height:"500px" }} id='header'>
-        <h1 className="text-4xl mt-32 font-bold">{formation.name}</h1>
+      
+      {/* Hero Section avec Overlay Gradient */}
+      <div className="relative bg-cover bg-center" style={{ backgroundImage: `url(${mediaBaseUrl}${formation.image})`, height:"450px" }}>
+        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/70"></div>
+        <div className="relative z-10 flex flex-col items-center justify-center h-full text-white px-4">
+          <h1 className="text-5xl md:text-6xl font-bold text-center mb-4 drop-shadow-2xl">{formation.name}</h1>
+          <div className="flex items-center gap-4 text-lg">
+            <span className="bg-white/20 backdrop-blur-md px-4 py-2 rounded-full">
+              <FontAwesomeIcon icon={faClock} className="mr-2" />
+              {formation.duree}
+            </span>
+            <span className="bg-white/20 backdrop-blur-md px-4 py-2 rounded-full">
+              {completedVideos}/{videos.length} vidéos complétées
+            </span>
+          </div>
+        </div>
       </div>
-      <div className='m-12'>
-        <p className="mb-4"><strong className='text-2xl text-orange-500'>Description:</strong><br /> {formation.description}</p>
-        <p className="font-bold"><FontAwesomeIcon icon={faClock} className="mr-2 text-xl" />{formation.duree}</p>
-      </div>
-      <div className='m-10'>
-        <h2 className="text-2xl font-bold text-orange-500 mb-6">Vidéos</h2>
-        {videos.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-            {videos.map(video => (
-              <div key={video.id} className="bg-gray-100 rounded-lg p-4 shadow-xl">
-                <h3 className="text-xl font-bold">{video.numero}. {video.title}</h3>
-                <VideoPlayer
-                  url={`${mediaBaseUrl}${video.link}`}
-                  title={video.title}
-                  onPlay={() => handlePlay(video.id, videos.length)}
-                  hasViewed={video.View?.view || false}
-                />
 
-                <div className='flex justify-between'>
-                  <button
-                    onClick={() => handleVideoClick(video)}
-                    className="mt-4 bg-orange-500 text-white py-2 px-4 rounded-lg hover:bg-orange-600 transition-colors"
-                  >
-                    Description
-                  </button>
-                  <span className={`mt-6 p-2 rounded text-white ${video.View?.view ? 'bg-yellow-500' : 'bg-gray-600'}`}>
-                    {video.View?.view ? <FontAwesomeIcon icon={faEye} className="text-xl" />: <FontAwesomeIcon icon={faEyeSlash} className="text-xl" />}
-                  </span>
+      {/* Description Section */}
+      <div className="max-w-7xl mx-auto px-6 py-12">
+        <div className="bg-white rounded-2xl shadow-xl p-8 mb-12">
+          <h2 className="text-2xl font-bold text-gray-800 mb-4 flex items-center">
+            <span className="w-2 h-8 bg-orange-500 rounded-full mr-4"></span>
+            Description
+          </h2>
+          <p className="text-gray-700 text-lg leading-relaxed">{formation.description}</p>
+          
+          {/* Barre de progression */}
+          <div className="mt-8">
+            <div className="flex justify-between items-center mb-2">
+              <span className="text-sm font-semibold text-gray-600">Progression de la formation</span>
+              <span className="text-sm font-bold text-orange-500">{Math.round(progressPercentage)}%</span>
+            </div>
+            <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+              <div 
+                className="bg-gradient-to-r from-orange-400 to-orange-600 h-full rounded-full transition-all duration-500 ease-out"
+                style={{ width: `${progressPercentage}%` }}
+              ></div>
+            </div>
+          </div>
+        </div>
+
+        {/* Section Vidéo Principal + Playlist */}
+        <div className="mb-12">
+          <h2 className="text-2xl font-bold text-gray-800 mb-8 flex items-center">
+            <span className="w-2 h-8 bg-orange-500 rounded-full mr-4"></span>
+            Contenu de la Formation
+          </h2>
+          
+          {videos.length > 0 ? (
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {/* Vidéo Player Principal */}
+              <div className="lg:col-span-2">
+                <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+                  {currentPlayingVideo && (
+                    <>
+                      <div className="relative md:px-12 px-4">
+                        <VideoPlayer
+                          url={`${mediaBaseUrl}${currentPlayingVideo.link}`}
+                          title={currentPlayingVideo.title}
+                          onPlay={() => handlePlay(currentPlayingVideo.id, videos.length)}
+                          hasViewed={currentPlayingVideo.View?.view || false}
+                        />
+                        {currentPlayingVideo.View?.view && (
+                          <div className="absolute top-4 md:right-14 right-8 bg-green-500 text-white px-4 py-2 rounded-full font-semibold shadow-lg">
+                            <FontAwesomeIcon icon={faCheckCircle} className="mr-2" />
+                            Complétée
+                          </div>
+                        )}
+                      </div>
+                      
+                      <div className="py-6 md:px-10 px-4">
+                        <div className="flex items-start justify-between mb-4">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-3 mb-2">
+                              <span className="bg-orange-500 text-white px-3 py-1 rounded-full text-sm font-bold">
+                                Vidéo {currentPlayingVideo.numero}
+                              </span>
+                              <span className={`px-3 py-1 rounded-full text-sm font-semibold ${
+                                currentPlayingVideo.View?.view 
+                                  ? 'bg-green-100 text-green-700' 
+                                  : 'bg-gray-100 text-gray-600'
+                              }`}>
+                                <FontAwesomeIcon icon={currentPlayingVideo.View?.view ? faEye : faEyeSlash} className="mr-1" />
+                                {currentPlayingVideo.View?.view ? 'Vue' : 'Non vue'}
+                              </span>
+                            </div>
+                            <h3 className="text-2xl font-bold text-gray-800 mb-3">
+                              {currentPlayingVideo.title}
+                            </h3>
+                            <p className="text-gray-600 leading-relaxed">
+                              {currentPlayingVideo.description || "Découvrez cette vidéo pour approfondir vos connaissances."}
+                            </p>
+                          </div>
+                        </div>
+                        
+                        {/* <button
+                          onClick={() => handleVideoClick(currentPlayingVideo)}
+                          className="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white py-3 px-6 rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all duration-300 font-semibold shadow-md hover:shadow-lg"
+                        >
+                          <FontAwesomeIcon icon={faInfo} className="mr-2" />
+                          Plus de détails
+                        </button> */}
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
-            ))}
-          </div>
-        ) : (
-          <p>Aucune vidéo disponible</p>
-        )}
-        <VideoDescriptionModal show={isModalOpen} onClose={closeModal} video={selectedVideo} />
-      </div>
-      
-      <div className="m-10">
-        <h2 className="text-2xl font-bold text-orange-500 mb-6">Avis</h2>
-        <div className="bg-gray-100 rounded-lg p-6 shadow-lg">
-          {avis && avis.length > 0 ? (
-            avis.map((avisItem) => (
-              <div key={avisItem.id} className="mb-4 p-4 bg-white rounded-lg shadow-sm">
-                <p className="text-gray-800">{avisItem.commentaire}</p>
-                <p className="text-sm text-gray-500 mt-2">
-                  Par: {avisItem.User?.firstName} {avisItem.User?.lastName || 'Anonyme'}
-                </p>
+
+              {/* Playlist Sidebar */}
+              <div className="lg:col-span-1">
+                <div className="bg-white rounded-2xl shadow-xl p-6 sticky top-6 max-h-[800px] overflow-y-auto">
+                  <h3 className="text-xl font-bold text-gray-800 mb-4 flex items-center">
+                    <FontAwesomeIcon icon={faPlay} className="mr-2 text-orange-500" />
+                    Playlist ({videos.length})
+                  </h3>
+                  
+                  <div className="space-y-3">
+                    {videos.map((video) => (
+                      <div
+                        key={video.id}
+                        onClick={() => handleSelectVideo(video)}
+                        className={`p-4 rounded-xl cursor-pointer transition-all duration-300 ${
+                          currentPlayingVideo?.id === video.id
+                            ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-lg scale-105'
+                            : 'bg-gray-50 hover:bg-gray-100 text-gray-800'
+                        }`}
+                      >
+                        <div className="flex items-start gap-3">
+                          <div className={`flex-shrink-0 w-10 h-10 rounded-lg flex items-center justify-center font-bold text-lg ${
+                            currentPlayingVideo?.id === video.id
+                              ? 'bg-white/20 text-white'
+                              : video.View?.view
+                              ? 'bg-green-500 text-white'
+                              : 'bg-gray-300 text-gray-600'
+                          }`}>
+                            {video.numero}
+                          </div>
+                          
+                          <div className="flex-1 min-w-0">
+                            <h4 className={`font-semibold mb-1 line-clamp-2 ${
+                              currentPlayingVideo?.id === video.id ? 'text-white' : 'text-gray-800'
+                            }`}>
+                              {video.title}
+                            </h4>
+                            <div className="flex items-center gap-2">
+                              <FontAwesomeIcon 
+                                icon={video.View?.view ? faCheckCircle : faLock} 
+                                className={`text-sm ${
+                                  currentPlayingVideo?.id === video.id 
+                                    ? 'text-white' 
+                                    : video.View?.view 
+                                    ? 'text-green-500' 
+                                    : 'text-gray-400'
+                                }`}
+                              />
+                              <span className={`text-xs font-medium ${
+                                currentPlayingVideo?.id === video.id ? 'text-white' : 'text-gray-500'
+                              }`}>
+                                {video.View?.view ? 'Complétée' : 'À voir'}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
-            ))
+            </div>
           ) : (
-            <p>Aucun avis pour le moment.</p>
+            <div className="bg-white rounded-2xl shadow-lg p-12 text-center">
+              <div className="text-gray-400 mb-4">
+                <FontAwesomeIcon icon={faPlay} className="text-6xl" />
+              </div>
+              <p className="text-xl text-gray-600">Aucune vidéo disponible pour le moment</p>
+            </div>
           )}
+          
+          <VideoDescriptionModal show={isModalOpen} onClose={closeModal} video={selectedVideo} />
+        </div>
+
+        {/* Section Avis */}
+        <div className="bg-white rounded-2xl shadow-xl p-8">
+          <h2 className="text-3xl font-bold text-gray-800 mb-6 flex items-center">
+            <span className="w-2 h-8 bg-orange-500 rounded-full mr-4"></span>
+            Avis et Commentaires
+          </h2>
+          
+          <div className="space-y-4 mb-8">
+            {avis && avis.length > 0 ? (
+              avis.map((avisItem) => (
+                <div key={avisItem.id} className="bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl p-6 border-l-4 border-orange-500 hover:shadow-md transition-shadow duration-300">
+                  <p className="text-gray-800 text-lg mb-3">{avisItem.commentaire}</p>
+                  <div className="flex items-center gap-2">
+                    <div className="w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold">
+                      {avisItem.User?.firstName?.charAt(0)}{avisItem.User?.lastName?.charAt(0)}
+                    </div>
+                    <p className="text-sm text-gray-600 font-medium">
+                      {avisItem.User?.firstName} {avisItem.User?.lastName || 'Anonyme'}
+                    </p>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <p className="text-gray-500 text-center py-8">Soyez le premier à laisser un avis sur cette formation!</p>
+            )}
+          </div>
 
           <form onSubmit={handleSubmitComment} className="mt-6">
             <textarea
               value={newComment}
               onChange={(e) => setNewComment(e.target.value)}
-              placeholder="Ajouter un commentaire..."
-              className="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-500"
+              placeholder="Partagez votre expérience avec cette formation..."
+              className="w-full p-4 rounded-xl border-2 border-gray-200 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-300 resize-none"
               rows={4}
               required
             />
             <button
               type="submit"
-              className="mt-4 bg-orange-500 text-white py-2 px-6 rounded-lg hover:bg-orange-600 transition-colors"
+              className="mt-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white py-3 px-8 rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all duration-300 font-semibold shadow-md hover:shadow-lg"
             >
-              Soumettre
+              Publier mon avis
             </button>
           </form>
         </div>
