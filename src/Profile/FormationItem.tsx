@@ -44,7 +44,7 @@ const FormationItem: React.FC<FormationItemProps> = ({ subscribe, index }) => {
             ref={ref}
             key={subscribe.Formation.id}
             onClick={handleClick}
-            className={`m-4 p-4 flex flex-col items-center border rounded-lg shadow-xl max-w-lg transition-opacity duration-1000 cursor-pointer ${inView ? animationClass : 'opacity-0'} hover:bg-red-100`}
+            className={`m-4 p-4 flex flex-col bg-white items-center border rounded-lg shadow-xl max-w-lg transition-opacity duration-1000 cursor-pointer ${inView ? animationClass : 'opacity-0'} hover:bg-red-100`}
         >
             <h3 className='text-2xl font-semibold text-orange-400'>{subscribe.Formation.name}</h3>
             <img src={`${mediaBaseUrl}${subscribe.Formation.image}`} alt={subscribe.Formation.name} className=' w-56 h-60'/>

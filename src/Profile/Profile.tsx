@@ -176,10 +176,10 @@ const ProfilePage: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-screen">
+      <div className="flex items-center justify-center h-screen bg-gradient-to-br from-orange-50 to-orange-100">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-orange-500 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Chargement...</p>
+          <div className="animate-spin rounded-full h-32 w-32 border-b-4 border-orange-500 mx-auto"></div>
+          <p className="mt-6 text-xl text-gray-700 font-medium">Chargement de votre profile...</p>
         </div>
       </div>
     );
@@ -190,7 +190,7 @@ const ProfilePage: React.FC = () => {
   }
 
   return (
-    <div className="w-full h-full">
+    <div className="w-full min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       <Nav />
       {user && (
         <div className="flex justify-between pt-32 p-16 bg-gradient-to-r from-amber-500 to-orange-600 text-white">
