@@ -22,7 +22,7 @@ router.get('/user/:userId',authMiddleware, subscribeController.getSubscriptionsB
 router.delete('/:id',authMiddleware, subscribeController.deleteSubscription);
 
 
-const MIN_AMOUNT = 0.1; 
+const MIN_AMOUNT = 0.6; 
 
 router.post('/create-payment-intent', authMiddleware, async (req, res) => {
   const { amount, pourcentage, formationId, userId } = req.body;

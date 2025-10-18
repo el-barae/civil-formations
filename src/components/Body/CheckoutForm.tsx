@@ -17,7 +17,7 @@ const CheckoutForm: React.FC<{ amount: number; formationID: number }> = ({ amoun
       return;
     }
 
-    const MIN_AMOUNT = 0.2;
+    const MIN_AMOUNT = 0.6;
     if (amount < MIN_AMOUNT) {
       Swal.fire({
         icon: 'error',

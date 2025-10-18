@@ -110,10 +110,24 @@ export default function AddFormation() {
 
        }
 
-const handelNext = (e:any)=>{
-    e.preventDefault();
-    setnext(true);
-}
+const handelNext = (e: React.FormEvent) => {
+  e.preventDefault();
+
+  const parsedPrice = parseFloat(formation.price);
+
+  if (isNaN(parsedPrice) || parsedPrice < 0.6) {
+    Swal.fire({
+      title: "Invalid Price",
+      text: "Le prix doit être un nombre supérieur à 0.6.",
+      icon: "warning",
+      confirmButtonText: "OK",
+    });
+    return;
+  }
+
+  setnext(true);
+};
+
 
     const handleSubmit = async (e: any) => {
     e.preventDefault();
@@ -209,16 +223,18 @@ const handelNext = (e:any)=>{
 
                  <div className="sm:col-span-2">
                    <label htmlFor="name" className="block mb-2 text-sm font-medium text-white-900 dark:text-white">
-                   Price in DH
+                   Price in $
                    </label>
                    <input
                      type="text"
                      name="price"
                      id="price"
                      required
+                     step="0.01"
+                     min="0.6"
                      onChange={(e)=>handleFormationChange(e)}
                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                     placeholder="Price of service in DH"
+                     placeholder="Price of service in $ >= 0.6"
                    />
                  </div>
 
